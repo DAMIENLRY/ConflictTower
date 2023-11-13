@@ -45,6 +45,13 @@
 - **🎮 Use cases**: 
     - pour l'administrateur : expliquer ce que peut/doit faire un administrateur qui souhaite lancer/administrer une arène de jeu avec des apprenants 
     - pour le joueur : renvoyer vers README API
+    - pour le joueur : poser une carte dans son camp du côté gauche ou du côté droit
+    - pour le joueur : connaître la position de toutes les entités (alliées et ennemies)
+    - pour le joueur : bouger chaque carte du camp allié
+    - pour le joueur : modifier la portée et la vitesse de chaque troupe de combat
+    - pour le joueur : modifier les points de vies et les points d'attaque de chaque carte de combat
+    - pour le joueur : choisir les cartes de combat par défaut (ou laisser par défaut : attribution de cartes aléatoire)
+    - pour le joueur : accès à toutes les cartes de son inventaire
 - **🖧 Architecture matériel** (optionnel, peut être décrit avec le diagramme de séquence) : schéma overview présentant les machines et protocoles (serveurs, clients, broker) avec texte expliquant le choix des technologies 
 - **📞 Diagramme de séquence**: expliquer le déroulé d'une partie, les principales étapes à faire dans l'ordre et qui/quoi/comment, les couches s'échangent quelles données pour qui/pour quoi
 - **✅ Pré-requis** 
@@ -59,7 +66,7 @@
 - **⚖️ License**
 
 ## Dans le dossier API : pour les joueurs
-- **Titre** Bagnoles Rapides
+- **Titre** ConflictTower
 - **Description** Jeu de course de F1 en vue du dessus.
 - **🎲 Règles du jeu** :  Faites la courses et arrivez en premier pour gagner.
 - **🎮 Use cases**: actions possibles du joueur via l'API
