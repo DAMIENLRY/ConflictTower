@@ -1,7 +1,7 @@
-from typing import List
 from cards.InterfaceCard import InterfaceCard
 from cards.enums.EnumEntitySpeed import EnumEntitySpeed
 from cards.enums.EnumEntityType import EnumEntityType
+
 
 class ArcherCard(InterfaceCard):
 
@@ -16,7 +16,3 @@ class ArcherCard(InterfaceCard):
         self.POINT = 3
         self._x_position = x
         self._y_position = y
-    
-
-
-    
