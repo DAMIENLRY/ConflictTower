@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import time
 from cards.enums.EnumEntitySpeed import EnumEntitySpeed
 from cards.enums.EnumEntityType import EnumEntityType
 
@@ -27,6 +28,15 @@ class InterfaceCard(ABC):
     def getY(self) -> int:
         return self._y_position
 
+    def move(self, x, y) -> None:
+        if self.SPEED == EnumEntitySpeed["SLOW"]:
+            time.sleep(2)
+        if self.SPEED == EnumEntitySpeed["AVERAGE"]:
+            time.sleep(1)
+        if self.SPEED == EnumEntitySpeed["FAST"]:
+            time.sleep(0.5)
+        self._x_position = self.getX() + x*self.SPEED
+        
 
     
     
