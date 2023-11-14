@@ -1,9 +1,9 @@
 import j2l.pytactx.agent as pytactx
 
-agent = pytactx.Agent(playerId=input("👾 id: "),
-						arena=input("🎲 arena: "),
+agent = pytactx.Agent(playerId=31012003,
+						arena="conflicttower",
 						username="demo",
-						password=input("🔑 password: "),
+						password="demo",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
 
