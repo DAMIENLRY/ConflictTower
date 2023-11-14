@@ -38,13 +38,14 @@ class InterfaceCard(StateCard, ABC):
     def getState(self) -> StateCard:
         return self._state
 
-    @_state.setter
+    @property
     def setState(self, state) -> StateCard:
         self._state = state
 
     def move(self, x: int, y: int) -> None:
         if x < -1 or x > 1 or y < -1 or y > 1:
             return
+
         if self.SPEED == EnumEntitySpeed["SLOW"]:
             time.sleep(2)
         if self.SPEED == EnumEntitySpeed["AVERAGE"]:

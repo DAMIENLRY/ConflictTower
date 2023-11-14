@@ -6,7 +6,7 @@ from cards.enums.EnumEntityType import EnumEntityType
 class ArcherCard(InterfaceCard):
 
     def __init__(self, x, y) -> None:
-        self.ID = 1
+        self.ID = 2
         self.NAME = "Archer"
         self.SPEED = EnumEntitySpeed.AVERAGE
         self.RANGE = 5
