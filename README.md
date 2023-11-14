@@ -27,9 +27,9 @@
 ## Dans le dossier API : pour les joueurs
 - **Titre** ConflictTowers
 - **Description** Lâche ton meilleur "C'est Ciao" à ton ennemi en détruisant sa tour avec tes troupes
-- **🎲 Règles du jeu** :  Faites la courses et arrivez en premier pour gagner.
+- **🎲 Règles du jeu** : Détruire la tour adverse.
 - **🎮 Use cases**: actions possibles du joueur via l'API
 - **✅ Pré-requis** : matériel et logiciel requis pour executer votre projet
 - **⚙️ Installation** : step by step (commandes à executer, paquets à installer ...)
 - **🧑‍💻 Auteur** Gaëtan LANGLOIS, Thibaud LEBRASSEUR, Damien LEROY
-- **⚖️ License** © Copyright Bagnoles Rapides. Tous droits réservés.
+- **⚖️ License** © Copyright ConflictTowers. Tous droits réservés.
