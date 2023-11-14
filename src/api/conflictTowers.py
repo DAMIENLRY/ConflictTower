@@ -3,29 +3,30 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
+arbitrerSecret = os.getenv('arbitrerSecret')
 
-agent = pytactx.Agent(playerId="31012003",
+agent = pytactx.Agent(playerId="joueur",
 						arena="conflicttower",
 						username="demo",
 						password="demo",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
 
-arbitrerSecret = os.getenv('arbitrerSecret')
-
 def initArbitrers():
-	arbitre1 = pytactx.Agent("Architecte", "conflicttower", "Damien", arbitrerSecret)
-	arbitre1.changerArene("info", "⌛ Initialisation de l'arbitre...")
-
-"""	arbitre2 = pytactx.AgentFr("", "conflicttower", "Gaetan",, url="mqtt.jusdeliens.com")
-	arbitre2.changerArene("info", "⌛ Initialisation de l'arbitre...",  url="mqtt.jusdeliens.com")
-
-	arbitre3 = pytactx.AgentFr("", "conflicttower", "Thibaud", "", url="mqtt.jusdeliens.com")
-	arbitre3.changerArene("info", "⌛ Initialisation de l'arbitre...")"""
+	arbitre1 = pytactx.Agent(playerId=arbitrerSecret,
+						arena="conflicttower",
+						username="demo",
+						password="demo",
+						server="mqtt.jusdeliens.com",
+						verbosity=2)
+	
+	arbitre1.ruleArena("mapFriction", [0,1,1,1])
+	arbitre1.ruleArena("mapImgs", ["","rgba(255,255,255,1)","",""])
 
 
 while True:
 	initArbitrers()
 	
+	agent.moveTowards(15,15)
 	agent.update()
 	agent.lookAt((agent.dir + 1) % 4)
