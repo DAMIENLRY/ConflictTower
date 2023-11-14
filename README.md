@@ -26,7 +26,7 @@
 
 ## Dans le dossier API : pour les joueurs
 - **Titre** ConflictTowers
-- **Description** Lâche ton meilleur "C'est Ciao" à ton ennemi en détruisant sa tour avec tes troupes
+- **Description** Lâche ton meilleur "C'est Ciao" à ton adversaire après avoir détruit sa tour (inspiré de Clash Royale)
 - **🎲 Règles du jeu** : Détruire la tour adverse.
 - **🎮 Use cases**: actions possibles du joueur via l'API
 - **✅ Pré-requis** : matériel et logiciel requis pour executer votre projet
