@@ -1,6 +1,11 @@
 import j2l.pytactx.agent as pytactx
+from dotenv import load_dotenv
+import os
 
-agent = pytactx.Agent(playerId="31012003",
+load_dotenv()
+arbitrerSecret = os.getenv('arbitrerSecret')
+
+agent = pytactx.Agent(playerId="joueur",
 						arena="conflicttower",
 						username="demo",
 						password="demo",
@@ -8,18 +13,20 @@ agent = pytactx.Agent(playerId="31012003",
 						verbosity=2)
 
 def initArbitrers():
-	arbitre1 = pytactx.AgentFr("Architecte", "conflicttower", "Damien", "27102003")
-	arbitre1.changerArene("info", "⌛ Initialisation de l'arbitre...")
-
-	arbitre2 = pytactx.AgentFr("", "conflicttower", "Gaetan", "31012003")
-	arbitre2.changerArene("info", "⌛ Initialisation de l'arbitre...")
-
-	arbitre3 = pytactx.AgentFr("", "conflicttower", "Thibaud", "")
-	arbitre3.changerArene("info", "⌛ Initialisation de l'arbitre...")
+	arbitre1 = pytactx.Agent(playerId=arbitrerSecret,
+						arena="conflicttower",
+						username="demo",
+						password="demo",
+						server="mqtt.jusdeliens.com",
+						verbosity=2)
+	
+	arbitre1.ruleArena("mapFriction", [0,1,1,1])
+	arbitre1.ruleArena("mapImgs", ["","rgba(255,255,255,1)","",""])
 
 
 while True:
 	initArbitrers()
 	
+	agent.moveTowards(15,15)
 	agent.update()
 	agent.lookAt((agent.dir + 1) % 4)
