@@ -33,10 +33,11 @@ def dijkstra(graph, start, end):
     visited = []
     visited.append(start)
 
-    display_graph(graph)
+    displayGraph(graph)
 
     for y,x in graph:
-        if((y,x) not in visited): visited.append(y,x)
+        if((y,x) not in visited):
+            visited.append((y,x))
 
     return path
 

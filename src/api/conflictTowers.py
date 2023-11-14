@@ -8,13 +8,14 @@ arbitrerSecret = os.getenv('arbitrerSecret')
 
 COLUMNS = 13
 ROWS = 21
+map = [[0 for j in range(COLUMNS)] for i in range(ROWS)]
 
-agent = pytactx.Agent(playerId="667VELIB",
+"""agent = pytactx.Agent(playerId="667VELIB",
 						arena="conflicttower",
 						username="demo",
 						password="demo",
 						server="mqtt.jusdeliens.com",
-						verbosity=2)
+						verbosity=2)"""
 
 def initArbitrers():
 	arbitre1 = pytactx.Agent(playerId=arbitrerSecret,
@@ -23,10 +24,8 @@ def initArbitrers():
 						password="demo",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
-	
-	time.sleep(1)
-	map = [[0 for j in range(COLUMNS)] for i in range(ROWS)]
-
+	arbitre1.moveTowards
+	time.sleep(0.5)
 	"""	
 	for i in range(ROWS):
 		for j in range(COLUMNS):
@@ -36,7 +35,8 @@ def initArbitrers():
 
 	for i in range(COLUMNS):
 		if i not in (2,3,9,10):
-			map[10][i] = 1 
+			map[10][i] = 1
+	
 
 	arbitre1.ruleArena("bgImg", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/background.png")
 	arbitre1.ruleArena("gridColumns", COLUMNS)
@@ -44,16 +44,16 @@ def initArbitrers():
 	arbitre1.ruleArena("map", map)
 	arbitre1.ruleArena("mapFriction", [0,1,1,1])
 	#arbitre1.ruleArena("mapImgs", ["","rgba(255,255,255,1)"])
-	#arbitre1.ruleArena("mapImgs", ["barbare-bg.png","","",""])
+	arbitre1.ruleArena("mapImgs", ["","","https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png"])
 
 	return arbitre1
 
 def main():
 	arbitre1 = initArbitrers()
-	agent.moveTowards(15,15)
+	map[8][0] = 0
+	map[8][1] = 0
 
-	while True:	
-		arbitre1.update()
-		agent.update()
+	while True:
+		print("")
 
 main()
