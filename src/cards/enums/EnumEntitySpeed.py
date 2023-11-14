@@ -1,7 +1,7 @@
 from enum import Enum
 
 # Définition de l'énumération des types
-class CardSpeed(Enum):
+class EnumEntitySpeed(Enum):
     VERY_SLOW: 1
     SLOW: 2
     AVERAGE: 3
