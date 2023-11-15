@@ -1,10 +1,10 @@
-from cards.enums.EnumEntitySpeed import EnumEntitySpeed
-from cards.enums.EnumEntityType import EnumEntityType
-from cards.states.StateCard import StateCard
+from .enums.EnumEntitySpeed import EnumEntitySpeed
+from .enums.EnumEntityType import EnumEntityType
+from .states.StateCard import StateCard
 from abc import ABC, abstractmethod
-from cards.states.StateCard import StateCard
-from cards.enums.EnumEntitySpeed import EnumEntitySpeed
-from cards.enums.EnumEntityType import EnumEntityType
+from .states.StateCard import StateCard
+from .enums.EnumEntitySpeed import EnumEntitySpeed
+from .enums.EnumEntityType import EnumEntityType
 import time
 
 

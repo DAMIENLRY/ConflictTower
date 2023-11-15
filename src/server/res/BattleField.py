@@ -1,13 +1,23 @@
 from typing import List
-#from ...api.conflictTowers import COLUMNS, ROWS
+import sys
+import os
 
-from cards.InterfaceCard import InterfaceCard
+# Chemin absolu du répertoire parent de conflictTowers.py
+current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
+parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))  # Chemin du répertoire parent du parent du parent
+sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
+
+# Maintenant, vous pouvez importer COLUMNS et ROWS depuis conflictTowers
+from api.globaleVariable import COLUMNS, ROWS
+
+# Maintenant, importez InterfaceCard
+from server.res.cards.InterfaceCard import InterfaceCard
 
 class BattleField:
 
     _instance: 'BattleField' = None
     _map: List[List[int]]
-    _troops: List[InterfaceCard]
+    _troops: List #//: List[InterfaceCard]
 
     def __new__(cls):
         if cls._instance is None:
@@ -15,8 +25,8 @@ class BattleField:
         return cls._instance
 
     def __init__(self):
-        map = [[0 for j in range(13)] for i in range(21)]
-        for i in range(13):
+        map = [[0 for j in range(COLUMNS)] for i in range(ROWS)]
+        for i in range(COLUMNS):
             if i not in (2, 3, 9, 10):
                 map[10][i] = 1
         self._map = map
