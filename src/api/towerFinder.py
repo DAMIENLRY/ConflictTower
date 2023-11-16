@@ -17,7 +17,7 @@ def createAdjacencyListFromList(grid):
                 graph[node] = []
 
                 #check adjacent neighbours : up, down, left, right
-                for di, dj in [(-1,0), (1,0), (0,-1), (0,1)]:
+                for di, dj in [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (1,1), (-1,1), (1,-1)]:
                     xi, xj = i+di, j+dj
 
                     if (xi>=0 and xi<len(grid)) and (xj>=0 and xj<len(grid[i]) and grid[xi][xj] != -1):
