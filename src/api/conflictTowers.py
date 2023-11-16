@@ -12,6 +12,7 @@ sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de r
 # Maintenant, importez votre module
 from server.res.BattleField import BattleField
 from server.res.cards.ArcherCard import ArcherCard
+import api.towerFinder as tf
 
 from globaleVariable import COLUMNS, ROWS
 
@@ -25,6 +26,7 @@ arbitrerSecret = os.getenv('arbitrerSecret')
 						server="mqtt.jusdeliens.com",
 						verbosity=2)"""
 
+battleField = BattleField()
 
 def initArbitrers():
     arbitre1 = pytactx.Agent(playerId=arbitrerSecret,
@@ -41,15 +43,6 @@ def initArbitrers():
 			if (i==0 or i==ROWS-1) or (j==0 or j==COLUMNS-1):
 				map[i][j] = 1
 	"""
- 
-    battleField = BattleField()
-    
-    archer = ArcherCard(8, 4)
-    
-    battleField.addTroop(archer)
-    battleField.onUpdateMap()
-    
-    print(battleField.getMap())
 
     
     arbitre1.ruleArena(
@@ -67,10 +60,21 @@ def initArbitrers():
 
 def main():
     arbitre1 = initArbitrers()
-
+    
+    coords = tf.find()
+    print(coords)
+    
+    i = 0
     while True:
+        archer = ArcherCard(coords[i][0], coords[i][1])
+        battleField.addTroop(archer)
+        battleField.onUpdateMap()
+        
+        arbitre1.ruleArena("map", battleField.getMap())
         arbitre1.update()
-        continue
+        i+=1
+        time.sleep(0.5)
+        print(i)
 
 
 main()
