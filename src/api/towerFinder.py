@@ -54,7 +54,7 @@ def breadthFirstSearch(adjacencyList, start, end):
                 q.put(v)
     return False
 
-def find():
+def find(start,end):
     map = [[1 for j in range(13)] for i in range(21)]
     for i in range(13):
         if i not in (2,3,9,10):
@@ -63,9 +63,9 @@ def find():
     adjacencyList = createAdjacencyListFromList(map)
     #print(adjacencyList)
 
-    bfs = breadthFirstSearch(adjacencyList,(20,12),(4,6))
+    bfs = breadthFirstSearch(adjacencyList,start,end)
     #print(bfs)
     
-    shortestPath = findShortestPath(bfs,(4,6))
+    shortestPath = findShortestPath(bfs,end)
     print(shortestPath)
     return shortestPath

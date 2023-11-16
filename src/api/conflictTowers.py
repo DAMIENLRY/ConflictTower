@@ -61,12 +61,12 @@ def initArbitrers():
 def main():
     arbitre1 = initArbitrers()
     
-    coords = tf.find()
-    print(coords)
+    coords = tf.find((15,4),(3,5))
     
     i = 0
     while True:
         archer = ArcherCard(coords[i][0], coords[i][1])
+
         battleField.addTroop(archer)
         battleField.onUpdateMap()
         
@@ -74,7 +74,6 @@ def main():
         arbitre1.update()
         i+=1
         time.sleep(0.5)
-        print(i)
 
 
 main()
