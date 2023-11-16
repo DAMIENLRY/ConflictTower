@@ -11,13 +11,16 @@ sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de r
 from api.globaleVariable import COLUMNS, ROWS
 
 # Maintenant, importez InterfaceCard
+from server.res.cards.InterfaceCase import InterfaceCase
 from server.res.cards.InterfaceCard import InterfaceCard
+from server.res.cards.EmptyCase import EmptyCase
+from server.res.cards.ObstacleCase import ObstacleCase
 
 class BattleField:
 
     _instance: 'BattleField' = None
-    _map: List[List[int]]
-    _troops: List #//: List[InterfaceCard]
+    _map: List[List[InterfaceCase]]
+    _troops: List[InterfaceCard]
 
     def __new__(cls):
         if cls._instance is None:
@@ -25,26 +28,46 @@ class BattleField:
         return cls._instance
 
     def __init__(self):
-        map = [[0 for j in range(COLUMNS)] for i in range(ROWS)]
-        for i in range(COLUMNS):
-            if i not in (2, 3, 9, 10):
-                map[10][i] = 1
-        self._map = map
+        self.initMap()
         self._troops = []
 
     def getMap(self):
-        return self._map
+        map: List[List[int]] = []
+        for row in range(ROWS):
+            line = []
+            for column in range(COLUMNS):
+                line.append(self._map[row][column].getId())
+            map.append(line)
+        return map
     
     def updateMap(self):
+        self.initMap()
         for troop in self._troops:
             x = troop.getX()
             y = troop.getY()
-            self._map[x][y] = troop.ID
+            self._map[x][y] = troop
         
     def onUpdateMap(self):
         self.updateMap()
-
-
+    
+    def addTroop(self, troop: InterfaceCard):
+        self._troops.append(troop)
+        
+    def removeTroop(self, troop: InterfaceCard):
+        self._troops.remove(troop)
+    
+    def initMap(self):
+        map: List[List[InterfaceCase]] = []
+        for row in range(ROWS):
+            line = []
+            for column in range(COLUMNS):
+                line.append(EmptyCase(row, column))
+            map.append(line)
+        for case in range(ROWS):
+            if case in (0, 1, 4, 5, 6, 7, 8, 11, 12):
+                map[10][case] = ObstacleCase(row, column)
+        self._map = map
+        
 
 battle1 = BattleField()
 battle2 = BattleField()

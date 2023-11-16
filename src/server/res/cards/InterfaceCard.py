@@ -1,38 +1,26 @@
+from abc import ABC
+from .InterfaceCase import InterfaceCase
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
 from .states.StateCard import StateCard
-from abc import ABC, abstractmethod
-from .states.StateCard import StateCard
-from .enums.EnumEntitySpeed import EnumEntitySpeed
-from .enums.EnumEntityType import EnumEntityType
 import time
+import sys
+import os
 
+# Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
+current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
+parent_directory = os.path.dirname(current_file) # Chemin du répertoire parent
+sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
-class InterfaceCard(StateCard, ABC):
+class InterfaceCard(StateCard, InterfaceCase):
 
-    ID: int
-    NAME: str
-    SPEED: EnumEntitySpeed
-    RANGE: float
-    ATTAQUE_SPEED: EnumEntitySpeed
-    TYPE: EnumEntityType
-    HEALTH_POINT: int
-    POINT: int
-    _x_position: int
-    _y_position: int
+    _SPEED: EnumEntitySpeed
+    _RANGE: float
+    _ATTAQUE_SPEED: EnumEntitySpeed
+    _TYPE: EnumEntityType
+    _HEALTH_POINT: int
+    _POINT: int
     _state: StateCard
-
-    def __init__(self, x, y) -> None:
-        self._x_position = x
-        self._y_position = y
-
-    @property
-    def getX(self) -> int:
-        return self._x_position
-
-    @property
-    def getY(self) -> int:
-        return self._y_position
 
     @property
     def getState(self) -> StateCard:

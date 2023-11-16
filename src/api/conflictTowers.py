@@ -11,6 +11,7 @@ sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de r
 
 # Maintenant, importez votre module
 from server.res.BattleField import BattleField
+from server.res.cards.ArcherCard import ArcherCard
 
 from globaleVariable import COLUMNS, ROWS
 
@@ -42,7 +43,15 @@ def initArbitrers():
 	"""
  
     battleField = BattleField()
+    
+    archer = ArcherCard(8, 4)
+    
+    battleField.addTroop(archer)
+    battleField.onUpdateMap()
+    
+    print(battleField.getMap())
 
+    
     arbitre1.ruleArena(
         "bgImg", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/background.png")
     arbitre1.ruleArena("gridColumns", COLUMNS)
@@ -60,6 +69,7 @@ def main():
     arbitre1 = initArbitrers()
 
     while True:
+        arbitre1.update()
         continue
 
 
