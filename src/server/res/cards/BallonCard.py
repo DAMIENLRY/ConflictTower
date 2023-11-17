@@ -2,23 +2,26 @@ from .InterfaceCard import InterfaceCard
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
 from .enums.EnumSide import EnumSide
+from server.res.BattleField import BattleField
 
 from api.globaleVariable import COLUMNS, ROWS
 
 class BallonCard(InterfaceCard):
 
-    def __init__(self, side: EnumSide) -> None:
+    def __init__(self, side: EnumSide,x,y) -> None:
         self._ID = 2
         self._NAME = "Gobelin"
         self._SPEED = EnumEntitySpeed['AVERAGE']
         self._side = side
-        self._RANGE = 5
+        self._RANGE = 1
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
-        self._x_position = 1
-        self._y_position = 1
-
+        self._x_position = x
+        self._y_position = y
+        self._x_prev_position = None
+        self._y_prev_position = None
+        self._battlefield = BattleField.getInstance()
 
     def setLocation(self, x: int, y: int):
         if x>=1 and x<=ROWS-1 and y>=0 and y<=COLUMNS-1:
@@ -29,3 +32,17 @@ class BallonCard(InterfaceCard):
             self._y_position = y
         else:
             return False
+
+    def opponentInRange(self):
+        offsets = [
+            (-1, -1), (-1, 0), (-1, 1),  # Top row (left, center, right)
+            (0, -1),           (0, 1),   # Middle row (left, right)
+            (1, -1), (1, 0), (1, 1)]     # Bottom row (left, center, right)
+
+        for dx, dy in offsets:
+            targetX, targetY = dx+self.getX(), dy+self.getY()
+
+            if(self.isWithinBounds(targetX, targetY)):
+                opponent = self._battlefield.isOccupiedByOpponent(targetX, targetY)
+                if opponent is not False:
+                    print(opponent)

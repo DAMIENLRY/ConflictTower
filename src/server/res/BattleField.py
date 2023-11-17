@@ -22,14 +22,18 @@ class BattleField:
     _map: List[List[InterfaceCase]]
     _troops: List[InterfaceCard]
 
-    def __new__(cls):
+    @classmethod
+    def getInstance(cls):
         if cls._instance is None:
-            cls._instance = super().__new__(cls)
+            cls._instance = cls()
         return cls._instance
 
     def __init__(self):
-        self.initMap()
-        self._troops = []
+        if not self.__class__._instance:
+            self.initMap()
+            self._troops = []
+        else:
+            raise Exception("Cette classe est un singleton !")
 
     def getMap(self):
         map: List[List[int]] = []
@@ -41,7 +45,6 @@ class BattleField:
         return map
     
     def updateMap(self):
-        self.initMap()
         for troop in self._troops:
             prevX = troop.getPreviousX()
             prevY = troop.getPreviousY()
@@ -73,6 +76,11 @@ class BattleField:
                 map[10][case] = ObstacleCase(row, column)
         self._map = map
         
+    def isOccupiedByOpponent(self,x,y):
+        if isinstance(self._map[x][y], InterfaceCard):
+            return self._map[x][y]
+        else:
+            return False
 
 battle1 = BattleField()
 battle2 = BattleField()

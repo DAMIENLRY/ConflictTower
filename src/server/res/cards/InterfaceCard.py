@@ -7,11 +7,13 @@ from .states.StateCard import StateCard
 import time
 import sys
 import os
+from api.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
 
 # Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
 current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
 parent_directory = os.path.dirname(current_file) # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
+
 
 class InterfaceCard(StateCard, InterfaceCase):
 
@@ -35,6 +37,9 @@ class InterfaceCard(StateCard, InterfaceCase):
     def getSide(self) -> EnumSide:
         return self._side
 
+    def isWithinBounds(self, x, y):
+        return 0 <= x < ROWS and 0 <= y < COLUMNS
+
     def move(self, x: int, y: int) -> None:
         if x < -1 or x > 1 or y < -1 or y > 1:
             return
@@ -48,5 +53,11 @@ class InterfaceCard(StateCard, InterfaceCase):
         self._x_position = self.getX() + x
         self._y_position = self.getY() + y
 
+    def getTowerFocusCoordoonates(self):
+        return TOWER_SIDE_2[0] if self.getSide() == EnumSide.SIDE_1 else TOWER_SIDE_1[0]
+
     def attack(self):
         pass
+
+    def focusTower():
+        return

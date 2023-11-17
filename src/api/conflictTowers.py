@@ -24,20 +24,6 @@ import api.towerFinder as tf
 
 from globaleVariable import COLUMNS, ROWS
 
-TOWER_SIDE_1 = [
-    (4,6),
-    (3,5), (3,7),
-    (2,5), (2,7),
-    (1,6)
-]
-TOWER_SIDE_2 = [
-    (16,6),
-    (17,5), (17,7),
-    (18,5), (18,7),
-    (19,6)
-]
-
-
 load_dotenv()
 arbitrerSecret = os.getenv('arbitrerSecret')
 
@@ -48,14 +34,7 @@ agent = AgentTower(playerId="667VELIB",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
 
-archer = BallonCard(EnumSide.SIDE_1)
-archer2 = BallonCard(EnumSide.SIDE_1)
-
-agent.addDeckCard(archer)
-
-agent.print()
-
-battleField = BattleField()
+battleField = BattleField.getInstance()
 
 def initArbitrers():
     arbitre1 = pytactx.Agent(playerId=arbitrerSecret,
@@ -96,44 +75,37 @@ def main():
     coords4 = tf.find((12,1),(1,6))
     """
 
-    i = 0
-    ballon = BallonCard(EnumSide.SIDE_1)
-    if(ballon.getSide()==EnumSide.SIDE_1):
-        towerCoords = TOWER_SIDE_2[0]
-    else:
-        towerCoords = TOWER_SIDE_1[0]
-        
-    coords = tf.pathToTower((ballon.getX(),ballon.getY()),towerCoords)
-    """
-    goblin = GoblinCard(coords2[i][0], coords2[i][1])
-    bowler = BowlerCard(coords3[i][0], coords3[i][1])
-    hogRider = HogRiderCard(coords4[i][0], coords4[i][1])
-    """
+    ballon = BallonCard(EnumSide.SIDE_1,2,1)
     battleField.addTroop(ballon)
+    battleField.onUpdateMap()
+    arbitre1.ruleArena("map", battleField.getMap())
+    arbitre1.update()
+    coords = tf.pathToTower((ballon.getX(),ballon.getY()),ballon.getTowerFocusCoordoonates())
 
-    """
-    battleField.addTroop(goblin)
+    bowler = BallonCard(EnumSide.SIDE_1,3,9)
     battleField.addTroop(bowler)
-    battleField.addTroop(hogRider)
-    """
+    battleField.onUpdateMap()
+    arbitre1.ruleArena("map", battleField.getMap())
+    arbitre1.update()
+    coords2 = tf.pathToTower((bowler.getX(),bowler.getY()),bowler.getTowerFocusCoordoonates())
+
+    i=0
     while True:
         if i<=len(coords)-1:
             ballon.setLocation(coords[i][0], coords[i][1])
+            battleField.onUpdateMap()
+            ballon.opponentInRange()
 
-        """
         if i<=len(coords2)-1:
-            goblin.setLocation(coords2[i][0], coords2[i][1])
-        if i<=len(coords3)-1:
-            bowler.setLocation(coords3[i][0], coords3[i][1])
-        if i<=len(coords4)-1:
-            hogRider.setLocation(coords4[i][0], coords4 [i][1])
-        """
+            bowler.setLocation(coords2[i][0], coords2[i][1])
+            battleField.onUpdateMap()
+            bowler.opponentInRange()
 
-        battleField.onUpdateMap()
         arbitre1.ruleArena("map", battleField.getMap())
         arbitre1.update()
-        i+=1
         time.sleep(0.5)
+        i+=1
+
 
 
 main()
