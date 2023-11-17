@@ -32,8 +32,8 @@ agent = AgentTower(playerId="667VELIB",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
 
-archer = BallonCard(0, 3)
-archer2 = BallonCard(0, 3)
+archer = BallonCard()
+archer2 = BallonCard()
 
 agent.addDeckCard(archer)
 
@@ -111,4 +111,4 @@ def main():
         time.sleep(0.5)
 
 
-#main()
+main()

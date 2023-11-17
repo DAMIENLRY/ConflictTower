@@ -21,6 +21,8 @@ class InterfaceCard(StateCard, InterfaceCase):
     _HEALTH_POINT: int
     _POINT: int
     _state: StateCard
+    _x_position: int
+    _y_position: int
 
     @property
     def getState(self) -> StateCard:
