@@ -12,7 +12,6 @@ current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
 parent_directory = os.path.dirname(os.path.dirname(current_file))  # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
-# Maintenant, importez votre module
 from server.res.BattleField import BattleField
 
 from server.res.cards.enums.EnumSide import EnumSide
@@ -20,7 +19,9 @@ from server.res.cards.BallonCard import BallonCard
 from server.res.cards.BowlerCard import BowlerCard
 from server.res.cards.GoblinCard import GoblinCard
 from server.res.cards.HogRiderCard import HogRiderCard
+from api.enums.TroopEnum import TroopEnum
 import api.towerFinder as tf
+
 
 from globaleVariable import COLUMNS, ROWS
 
@@ -51,9 +52,11 @@ agent = AgentTower(playerId="667VELIB",
 archer = BallonCard(EnumSide.SIDE_1)
 archer2 = BallonCard(EnumSide.SIDE_1)
 
-agent.addDeckCard(archer)
+print(agent.getDeck())
 
-agent.print()
+agent.removeDeckCard(TroopEnum.BALLON)
+
+print(agent.getDeck())
 
 battleField = BattleField()
 
@@ -136,4 +139,4 @@ def main():
         time.sleep(0.5)
 
 
-main()
+#main()
