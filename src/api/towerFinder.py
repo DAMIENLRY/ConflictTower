@@ -54,7 +54,7 @@ def breadthFirstSearch(adjacencyList, start, end):
                 q.put(v)
     return False
 
-def find(start,end):
+def pathToTower(start,end):
     map = [[1 for j in range(13)] for i in range(21)]
     for i in range(13):
         if i not in (2,3,9,10):

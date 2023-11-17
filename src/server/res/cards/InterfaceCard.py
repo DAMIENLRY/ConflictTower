@@ -32,6 +32,9 @@ class InterfaceCard(StateCard, InterfaceCase):
     def setState(self, state) -> StateCard:
         self._state = state
 
+    def getSide(self) -> EnumSide:
+        return self._side
+
     def move(self, x: int, y: int) -> None:
         if x < -1 or x > 1 or y < -1 or y > 1:
             return

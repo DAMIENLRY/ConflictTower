@@ -1,3 +1,4 @@
+from enum import Enum
 import j2l.pytactx.agent as pytactx
 from dotenv import load_dotenv
 import os
@@ -14,6 +15,7 @@ sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de r
 # Maintenant, importez votre module
 from server.res.BattleField import BattleField
 
+from server.res.cards.enums.EnumSide import EnumSide
 from server.res.cards.BallonCard import BallonCard
 from server.res.cards.BowlerCard import BowlerCard
 from server.res.cards.GoblinCard import GoblinCard
@@ -21,6 +23,20 @@ from server.res.cards.HogRiderCard import HogRiderCard
 import api.towerFinder as tf
 
 from globaleVariable import COLUMNS, ROWS
+
+TOWER_SIDE_1 = [
+    (4,6),
+    (3,5), (3,7),
+    (2,5), (2,7),
+    (1,6)
+]
+TOWER_SIDE_2 = [
+    (16,6),
+    (17,5), (17,7),
+    (18,5), (18,7),
+    (19,6)
+]
+
 
 load_dotenv()
 arbitrerSecret = os.getenv('arbitrerSecret')
@@ -32,8 +48,8 @@ agent = AgentTower(playerId="667VELIB",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
 
-archer = BallonCard()
-archer2 = BallonCard()
+archer = BallonCard(EnumSide.SIDE_1)
+archer2 = BallonCard(EnumSide.SIDE_1)
 
 agent.addDeckCard(archer)
 
@@ -74,13 +90,20 @@ def initArbitrers():
 def main():
     arbitre1 = initArbitrers()
 
-    coords = tf.find((17,4),(3,5))
+    """    
     coords2 = tf.find((19,9),(3,7))
     coords3 = tf.find((15,7),(4,6))
     coords4 = tf.find((12,1),(1,6))
+    """
 
     i = 0
-    ballon = BallonCard()
+    ballon = BallonCard(EnumSide.SIDE_1)
+    if(ballon.getSide()==EnumSide.SIDE_1):
+        towerCoords = TOWER_SIDE_2[0]
+    else:
+        towerCoords = TOWER_SIDE_1[0]
+        
+    coords = tf.pathToTower((ballon.getX(),ballon.getY()),towerCoords)
     """
     goblin = GoblinCard(coords2[i][0], coords2[i][1])
     bowler = BowlerCard(coords3[i][0], coords3[i][1])
