@@ -4,6 +4,8 @@ import os
 import time
 import sys
 
+from agentTower import AgentTower
+
 # Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
 current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
 parent_directory = os.path.dirname(os.path.dirname(current_file))  # Chemin du répertoire parent
@@ -23,12 +25,19 @@ from globaleVariable import COLUMNS, ROWS
 load_dotenv()
 arbitrerSecret = os.getenv('arbitrerSecret')
 
-"""agent = pytactx.Agent(playerId="667VELIB",
+agent = AgentTower(playerId="667VELIB",
 						arena="conflicttower",
 						username="demo",
 						password="demo",
 						server="mqtt.jusdeliens.com",
-						verbosity=2)"""
+						verbosity=2)
+
+archer = BallonCard(0, 3)
+archer2 = BallonCard(0, 3)
+
+agent.addDeckCard(archer)
+
+agent.print()
 
 battleField = BattleField()
 
@@ -71,10 +80,15 @@ def main():
     coords4 = tf.find((12,1),(1,6))
     
     i = 0
-    ballon = BallonCard(coords[i][0], coords[i][1])
-    goblin = GoblinCard(coords2[i][0], coords2[i][1])
-    bowler = BowlerCard(coords3[i][0], coords3[i][1])
-    hogRider = HogRiderCard(coords4[i][0], coords4[i][1])
+    ballon = BallonCard()
+    goblin = GoblinCard()
+    bowler = BowlerCard()
+    hogRider = HogRiderCard()
+    
+    ballon.setLocation(coords[i][0], coords[i][1])
+    goblin.setLocation(coords[i][0], coords[i][1])
+    bowler.setLocation(coords[i][0], coords[i][1])
+    hogRider.setLocation(coords[i][0], coords[i][1])
 
     battleField.addTroop(ballon)
     battleField.addTroop(goblin)
@@ -97,4 +111,4 @@ def main():
         time.sleep(0.5)
 
 
-main()
+#main()

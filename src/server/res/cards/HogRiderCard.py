@@ -6,7 +6,7 @@ from api.globaleVariable import COLUMNS, ROWS
 
 class HogRiderCard(InterfaceCard):
         
-    def __init__(self, x: int, y: int) -> None:
+    def __init__(self) -> None:
         self._ID = 5
         self._NAME = "Chevaucheur de cochon"
         self._SPEED = EnumEntitySpeed['AVERAGE']
