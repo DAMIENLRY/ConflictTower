@@ -1,15 +1,17 @@
 from .InterfaceCard import InterfaceCard
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
+from .enums.EnumSide import EnumSide
 
 from api.globaleVariable import COLUMNS, ROWS
 
 class BallonCard(InterfaceCard):
-        
-    def __init__(self) -> None:
+
+    def __init__(self, side: EnumSide) -> None:
         self._ID = 2
         self._NAME = "Gobelin"
         self._SPEED = EnumEntitySpeed['AVERAGE']
+        self._side = side
         self._RANGE = 5
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
         self._TYPE = EnumEntityType['GROUND']

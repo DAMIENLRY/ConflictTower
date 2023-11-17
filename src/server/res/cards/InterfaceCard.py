@@ -2,6 +2,7 @@ from abc import ABC
 from .InterfaceCase import InterfaceCase
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
+from .enums.EnumSide import EnumSide
 from .states.StateCard import StateCard
 import time
 import sys
@@ -21,8 +22,7 @@ class InterfaceCard(StateCard, InterfaceCase):
     _HEALTH_POINT: int
     _POINT: int
     _state: StateCard
-    _x_position: int
-    _y_position: int
+    _side: EnumSide
 
     @property
     def getState(self) -> StateCard:

@@ -50,14 +50,14 @@ def initArbitrers():
                              verbosity=2)
     arbitre1.moveTowards
     time.sleep(0.5)
-    """	
+    """
 	for i in range(ROWS):
 		for j in range(COLUMNS):
 			if (i==0 or i==ROWS-1) or (j==0 or j==COLUMNS-1):
 				map[i][j] = 1
 	"""
 
-    
+
     arbitre1.ruleArena(
         "bgImg", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/background.png")
     arbitre1.ruleArena("gridColumns", COLUMNS)
@@ -73,36 +73,38 @@ def initArbitrers():
 
 def main():
     arbitre1 = initArbitrers()
-    
+
     coords = tf.find((17,4),(3,5))
     coords2 = tf.find((19,9),(3,7))
     coords3 = tf.find((15,7),(4,6))
     coords4 = tf.find((12,1),(1,6))
-    
+
     i = 0
     ballon = BallonCard()
-    goblin = GoblinCard()
-    bowler = BowlerCard()
-    hogRider = HogRiderCard()
-    
-    ballon.setLocation(coords[i][0], coords[i][1])
-    goblin.setLocation(coords[i][0], coords[i][1])
-    bowler.setLocation(coords[i][0], coords[i][1])
-    hogRider.setLocation(coords[i][0], coords[i][1])
-
+    """
+    goblin = GoblinCard(coords2[i][0], coords2[i][1])
+    bowler = BowlerCard(coords3[i][0], coords3[i][1])
+    hogRider = HogRiderCard(coords4[i][0], coords4[i][1])
+    """
     battleField.addTroop(ballon)
+
+    """
     battleField.addTroop(goblin)
     battleField.addTroop(bowler)
     battleField.addTroop(hogRider)
+    """
     while True:
         if i<=len(coords)-1:
             ballon.setLocation(coords[i][0], coords[i][1])
+
+        """
         if i<=len(coords2)-1:
             goblin.setLocation(coords2[i][0], coords2[i][1])
         if i<=len(coords3)-1:
             bowler.setLocation(coords3[i][0], coords3[i][1])
         if i<=len(coords4)-1:
             hogRider.setLocation(coords4[i][0], coords4 [i][1])
+        """
 
         battleField.onUpdateMap()
         arbitre1.ruleArena("map", battleField.getMap())
