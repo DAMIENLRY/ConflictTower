@@ -53,6 +53,17 @@ class InterfaceCard(InterfaceCase):
         self._x_position = self.getX() + x
         self._y_position = self.getY() + y
 
+    """    def getAttackInterval(self):
+        match self._ATTAQUE_SPEED:
+            case EnumEntitySpeed.SLOW:
+                return 2
+            case EnumEntitySpeed.AVERAGE:
+                return 1
+            case EnumEntitySpeed.FAST:
+                return 0.5
+            case _:
+                return 1"""
+    
     def getTowerFocusCoordoonates(self):
         return TOWER_SIDE_2[0] if self.getSide() == EnumSide.SIDE_1 else TOWER_SIDE_1[0]
 

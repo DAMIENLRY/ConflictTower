@@ -6,6 +6,7 @@ from server.res.BattleField import BattleField
 from server.res.cards.states.FocusTowerState import FocusTowerState
 
 from api.globaleVariable import COLUMNS, ROWS
+import time
 
 class BallonCard(InterfaceCard):
 
@@ -15,7 +16,7 @@ class BallonCard(InterfaceCard):
         self._SPEED = EnumEntitySpeed['AVERAGE']
         self._side = side
         self._state = FocusTowerState()
-        self._RANGE = 4
+        self._RANGE = 3
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
@@ -24,7 +25,7 @@ class BallonCard(InterfaceCard):
         self._x_prev_position = None
         self._y_prev_position = None
         self._battlefield = BattleField.getInstance()
-
+    
     def setLocation(self, x: int, y: int):
         if x>=1 and x<=ROWS-1 and y>=0 and y<=COLUMNS-1:
             if self._x_position and self._y_position:

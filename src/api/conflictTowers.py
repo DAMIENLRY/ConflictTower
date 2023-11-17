@@ -90,18 +90,15 @@ def main():
 
     i=0
     while True:
-        if i<=len(coords)-1:
+        if i < len(coords):
             ballon.setLocation(coords[i][0], coords[i][1])
 
-        if i<=len(coords2)-1:
+        if i < len(coords2):
             bowler.setLocation(coords2[i][0], coords2[i][1])
 
         arbitre1.ruleArena("map", battleField.getMap())
         arbitre1.update()
-        time.sleep(0.2)
-        print("----------")
+        time.sleep(0.5) 
         i+=1
-
-
 
 main()
