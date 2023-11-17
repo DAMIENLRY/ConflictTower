@@ -43,6 +43,11 @@ class BattleField:
     def updateMap(self):
         self.initMap()
         for troop in self._troops:
+            prevX = troop.getPreviousX()
+            prevY = troop.getPreviousY()
+            if prevX is not None and prevY is not None:
+                self._map[prevX][prevY] = EmptyCase(prevX, prevY)
+
             x = troop.getX()
             y = troop.getY()
             self._map[x][y] = troop

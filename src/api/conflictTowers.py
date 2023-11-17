@@ -64,12 +64,11 @@ def main():
     coords = tf.find((15,4),(3,5))
     
     i = 0
+    archer = ArcherCard(coords[i][0], coords[i][1])
+    battleField.addTroop(archer)
     while True:
-        archer = ArcherCard(coords[i][0], coords[i][1])
-
-        battleField.addTroop(archer)
+        archer.setLocation(coords[i][0], coords[i][1])
         battleField.onUpdateMap()
-        
         arbitre1.ruleArena("map", battleField.getMap())
         arbitre1.update()
         i+=1
