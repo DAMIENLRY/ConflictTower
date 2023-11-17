@@ -52,11 +52,21 @@ agent = AgentTower(playerId="667VELIB",
 archer = BallonCard(EnumSide.SIDE_1)
 archer2 = BallonCard(EnumSide.SIDE_1)
 
+# agent.addDeckCard(TroopEnum.BALLON)
+# agent.addDeckCard(TroopEnum.GOBLIN)
+# agent.addDeckCard(TroopEnum.BOWLER)
+# agent.addDeckCard(TroopEnum.HOGRIDER)
+# agent.addDeckCard(TroopEnum.MINION)
+# agent.addDeckCard(TroopEnum.KNIGHT)
+# agent.addDeckCard(TroopEnum.ROYALEGIANT)
+# agent.addDeckCard(TroopEnum.ARCHER)
+
+agent.generateDeck()
+
 print(agent.getDeck())
 
-agent.removeDeckCard(TroopEnum.BALLON)
-
-print(agent.getDeck())
+agent.selectTeam(EnumSide['SIDE_1'])
+agent.launchGame()
 
 battleField = BattleField()
 
@@ -137,6 +147,5 @@ def main():
         arbitre1.update()
         i+=1
         time.sleep(0.5)
-
 
 #main()

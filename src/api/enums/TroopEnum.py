@@ -11,6 +11,10 @@ from server.res.cards.BallonCard import BallonCard
 from server.res.cards.BowlerCard import BowlerCard
 from server.res.cards.GoblinCard import GoblinCard
 from server.res.cards.HogRiderCard import HogRiderCard
+from server.res.cards.RoyalGiantCard import RoyalGiantCard
+from server.res.cards.ArcherCard import ArcherCard
+from server.res.cards.KnightCard import KnightCard
+from server.res.cards.MinionCard import MinionCard
 
 
 class TroopEnum(Enum):
@@ -18,4 +22,8 @@ class TroopEnum(Enum):
     BOWLER = BowlerCard
     GOBLIN = GoblinCard
     HOGRIDER = HogRiderCard
+    ROYALEGIANT = RoyalGiantCard
+    ARCHER = ArcherCard
+    KNIGHT = KnightCard
+    MINION = MinionCard
     

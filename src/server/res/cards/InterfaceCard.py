@@ -50,3 +50,6 @@ class InterfaceCard(StateCard, InterfaceCase):
 
     def attack(self):
         pass
+    
+    def focusTower(self):
+        return
