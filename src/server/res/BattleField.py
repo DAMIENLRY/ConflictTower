@@ -16,6 +16,9 @@ from server.res.cards.InterfaceCard import InterfaceCard
 from server.res.cards.EmptyCase import EmptyCase
 from server.res.cards.ObstacleCase import ObstacleCase
 
+from server.res.cards.states.FocusTowerState import FocusTowerState
+from server.res.cards.states.AttackState import AttackState
+
 class BattleField:
 
     _instance: 'BattleField' = None
@@ -54,12 +57,14 @@ class BattleField:
             x = troop.getX()
             y = troop.getY()
             self._map[x][y] = troop
+        self.checkAndUpdateCardStates()
         
     def onUpdateMap(self):
         self.updateMap()
     
     def addTroop(self, troop: InterfaceCard):
         self._troops.append(troop)
+        self.onUpdateMap()
         
     def removeTroop(self, troop: InterfaceCard):
         self._troops.remove(troop)
@@ -81,6 +86,17 @@ class BattleField:
             return self._map[x][y]
         else:
             return False
+
+    def checkAndUpdateCardStates(self):
+        for card in self._troops:
+            opponent = card.opponentInRange()
+            print(opponent)
+            if opponent!=False:
+                card.state = AttackState()
+            else:
+                card.state = FocusTowerState()
+        if card.state:
+            card.state.handle_request()
 
 battle1 = BattleField()
 battle2 = BattleField()

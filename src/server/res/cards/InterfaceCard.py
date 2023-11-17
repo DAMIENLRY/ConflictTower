@@ -15,7 +15,7 @@ parent_directory = os.path.dirname(current_file) # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
 
-class InterfaceCard(StateCard, InterfaceCase):
+class InterfaceCard(InterfaceCase):
 
     _SPEED: EnumEntitySpeed
     _RANGE: int
@@ -27,12 +27,12 @@ class InterfaceCard(StateCard, InterfaceCase):
     _side: EnumSide
 
     @property
-    def getState(self) -> StateCard:
+    def state(self):
         return self._state
-
-    @property
-    def setState(self, state) -> StateCard:
-        self._state = state
+    
+    @state.setter
+    def state(self, new_state: StateCard):
+        self._state = new_state
 
     def getSide(self) -> EnumSide:
         return self._side

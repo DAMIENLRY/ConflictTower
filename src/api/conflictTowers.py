@@ -58,8 +58,7 @@ def initArbitrers():
     arbitre1.ruleArena("gridColumns", COLUMNS)
     arbitre1.ruleArena("gridRows", ROWS)
     arbitre1.ruleArena("map", battleField.getMap())
-    arbitre1.ruleArena("mapFriction", [0, 1, 1, 1])
-    # arbitre1.ruleArena("mapImgs", ["","rgba(255,255,255,1)"])
+    arbitre1.ruleArena("mapFriction", [0,1,1,1,1,1])
     arbitre1.ruleArena("mapImgs", [
                        "", "", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/bowler.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/gobelin.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/hog-rider.png"])
 
@@ -84,7 +83,7 @@ def main():
 
     bowler = BallonCard(EnumSide.SIDE_1,3,9)
     battleField.addTroop(bowler)
-    battleField.onUpdateMap()
+    
     arbitre1.ruleArena("map", battleField.getMap())
     arbitre1.update()
     coords2 = tf.pathToTower((bowler.getX(),bowler.getY()),bowler.getTowerFocusCoordoonates())
@@ -93,17 +92,14 @@ def main():
     while True:
         if i<=len(coords)-1:
             ballon.setLocation(coords[i][0], coords[i][1])
-            battleField.onUpdateMap()
-            ballon.opponentInRange()
 
         if i<=len(coords2)-1:
             bowler.setLocation(coords2[i][0], coords2[i][1])
-            battleField.onUpdateMap()
-            bowler.opponentInRange()
 
         arbitre1.ruleArena("map", battleField.getMap())
         arbitre1.update()
-        time.sleep(0.5)
+        time.sleep(0.2)
+        print("----------")
         i+=1
 
 
