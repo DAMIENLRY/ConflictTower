@@ -61,13 +61,26 @@ def initArbitrers():
 def main():
     arbitre1 = initArbitrers()
     
-    coords = tf.find((15,4),(3,5))
+    coords = tf.find((17,4),(3,5))
+    coords2 = tf.find((19,9),(3,7))
+    coords3 = tf.find((15,7),(4,6))
     
     i = 0
     archer = ArcherCard(coords[i][0], coords[i][1])
+    archer2 = ArcherCard(coords2[i][0], coords2[i][1])
+    archer3 = ArcherCard(coords2[i][0], coords2[i][1])
+
     battleField.addTroop(archer)
+    battleField.addTroop(archer2)
+    battleField.addTroop(archer3)
     while True:
-        archer.setLocation(coords[i][0], coords[i][1])
+        if i<=len(coords)-1:
+            archer.setLocation(coords[i][0], coords[i][1])
+        if i<=len(coords2)-1:
+            archer2.setLocation(coords2[i][0], coords2[i][1])
+        if i<=len(coords3)-1:
+            archer3.setLocation(coords3[i][0], coords3[i][1])
+
         battleField.onUpdateMap()
         arbitre1.ruleArena("map", battleField.getMap())
         arbitre1.update()
