@@ -11,7 +11,11 @@ sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de r
 
 # Maintenant, importez votre module
 from server.res.BattleField import BattleField
-from server.res.cards.ArcherCard import ArcherCard
+
+from server.res.cards.BallonCard import BallonCard
+from server.res.cards.BowlerCard import BowlerCard
+from server.res.cards.GoblinCard import GoblinCard
+from server.res.cards.HogRiderCard import HogRiderCard
 import api.towerFinder as tf
 
 from globaleVariable import COLUMNS, ROWS
@@ -53,7 +57,7 @@ def initArbitrers():
     arbitre1.ruleArena("mapFriction", [0, 1, 1, 1])
     # arbitre1.ruleArena("mapImgs", ["","rgba(255,255,255,1)"])
     arbitre1.ruleArena("mapImgs", [
-                       "", "", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png"])
+                       "", "", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/bowler.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/gobelin.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/hog-rider.png"])
 
     return arbitre1
 
@@ -64,22 +68,27 @@ def main():
     coords = tf.find((17,4),(3,5))
     coords2 = tf.find((19,9),(3,7))
     coords3 = tf.find((15,7),(4,6))
+    coords4 = tf.find((12,1),(1,6))
     
     i = 0
-    archer = ArcherCard(coords[i][0], coords[i][1])
-    archer2 = ArcherCard(coords2[i][0], coords2[i][1])
-    archer3 = ArcherCard(coords2[i][0], coords2[i][1])
+    ballon = BallonCard(coords[i][0], coords[i][1])
+    goblin = GoblinCard(coords2[i][0], coords2[i][1])
+    bowler = BowlerCard(coords3[i][0], coords3[i][1])
+    hogRider = HogRiderCard(coords4[i][0], coords4[i][1])
 
-    battleField.addTroop(archer)
-    battleField.addTroop(archer2)
-    battleField.addTroop(archer3)
+    battleField.addTroop(ballon)
+    battleField.addTroop(goblin)
+    battleField.addTroop(bowler)
+    battleField.addTroop(hogRider)
     while True:
         if i<=len(coords)-1:
-            archer.setLocation(coords[i][0], coords[i][1])
+            ballon.setLocation(coords[i][0], coords[i][1])
         if i<=len(coords2)-1:
-            archer2.setLocation(coords2[i][0], coords2[i][1])
+            goblin.setLocation(coords2[i][0], coords2[i][1])
         if i<=len(coords3)-1:
-            archer3.setLocation(coords3[i][0], coords3[i][1])
+            bowler.setLocation(coords3[i][0], coords3[i][1])
+        if i<=len(coords4)-1:
+            hogRider.setLocation(coords4[i][0], coords4 [i][1])
 
         battleField.onUpdateMap()
         arbitre1.ruleArena("map", battleField.getMap())

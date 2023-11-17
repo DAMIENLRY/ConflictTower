@@ -3,13 +3,12 @@ from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
 
 from api.globaleVariable import COLUMNS, ROWS
-from server.res.BattleField import BattleField
 
-class ArcherCard(InterfaceCard):
+class BowlerCard(InterfaceCard):
         
     def __init__(self, x: int, y: int) -> None:
-        self._ID = 2
-        self._NAME = "Archer"
+        self._ID = 3
+        self._NAME = "Bouliste"
         self._SPEED = EnumEntitySpeed['AVERAGE']
         self._RANGE = 5
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
@@ -19,7 +18,6 @@ class ArcherCard(InterfaceCard):
         self._y_position = y
         self._x_prev_position = x
         self._y_prev_position = y
-        #self.battleField = BattleField()
 
 
     def setLocation(self, x: int, y: int):
