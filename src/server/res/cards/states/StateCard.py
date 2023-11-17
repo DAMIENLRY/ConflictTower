@@ -7,5 +7,5 @@ class StateCard(ABC):
         pass
 
     @abstractmethod
-    def move(self):
+    def focusTower(self):
         pass

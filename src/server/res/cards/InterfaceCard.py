@@ -16,7 +16,7 @@ sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de r
 class InterfaceCard(StateCard, InterfaceCase):
 
     _SPEED: EnumEntitySpeed
-    _RANGE: float
+    _RANGE: int
     _ATTAQUE_SPEED: EnumEntitySpeed
     _TYPE: EnumEntityType
     _HEALTH_POINT: int
