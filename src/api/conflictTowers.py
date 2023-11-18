@@ -57,7 +57,7 @@ def initArbitrers():
 
 
 def main():
-    arbitre1 = initArbitrers()
+    arbitre = initArbitrers()
 
     ballon = BallonCard(EnumSide.SIDE_1,2,1)
     bowler = BowlerCard(EnumSide.SIDE_2,17,3)
@@ -66,8 +66,8 @@ def main():
     battleField.addTroop(bowler)
 
     while True:
-        arbitre1.ruleArena("map", battleField.getMap())
-        arbitre1.update()
+        arbitre.ruleArena("map", battleField.getMap())
+        arbitre.update()
         time.sleep(0.1) 
 
 main()
