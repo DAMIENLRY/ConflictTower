@@ -24,32 +24,3 @@ class BowlerCard(InterfaceCard):
         self._x_prev_position = None
         self._y_prev_position = None
         self._battlefield = BattleField.getInstance()
-
-
-    def setLocation(self, x: int, y: int):
-        if x>=1 and x<=ROWS-1 and y>=0 and y<=COLUMNS-1:
-            if self._x_position and self._y_position:
-                self._x_prev_position = self._x_position
-                self._y_prev_position = self._y_position
-            self._x_position = x
-            self._y_position = y
-            BattleField.getInstance().onUpdateMap()
-        else:
-            return False
-
-    def opponentInRange(self):
-        offsets = [
-            (dx, dy) for dx in range(-self._RANGE, self._RANGE + 1) 
-            for dy in range(-self._RANGE, self._RANGE + 1) 
-            if not (dx == 0 and dy == 0)
-        ]
-
-        for dx, dy in offsets:
-            targetX, targetY = dx + self._x_position, dy + self._y_position
-
-            if self.isWithinBounds(targetX, targetY):
-                opponent = self._battlefield.isOccupiedByOpponent(targetX, targetY)
-                if opponent:
-                    return opponent
-
-        return False

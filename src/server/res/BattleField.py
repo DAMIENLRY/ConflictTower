@@ -97,8 +97,3 @@ class BattleField:
                 card.state = FocusTowerState()
         if card.state:
             card.state.handle_request()
-
-battle1 = BattleField()
-battle2 = BattleField()
-
-print(battle1 is battle2)
