@@ -81,24 +81,19 @@ def main():
     arbitre1.update()
     coords = tf.pathToTower((ballon.getX(),ballon.getY()),ballon.getTowerFocusCoordoonates())
 
-    bowler = BallonCard(EnumSide.SIDE_1,3,9)
+    bowler = BowlerCard(EnumSide.SIDE_1,3,9)
     battleField.addTroop(bowler)
     
     arbitre1.ruleArena("map", battleField.getMap())
     arbitre1.update()
     coords2 = tf.pathToTower((bowler.getX(),bowler.getY()),bowler.getTowerFocusCoordoonates())
 
-    i=0
+    ballon.start_movement_thread(coords)
+    bowler.start_movement_thread(coords2)
+
     while True:
-        if i < len(coords):
-            ballon.setLocation(coords[i][0], coords[i][1])
-
-        if i < len(coords2):
-            bowler.setLocation(coords2[i][0], coords2[i][1])
-
         arbitre1.ruleArena("map", battleField.getMap())
         arbitre1.update()
-        time.sleep(0.5) 
-        i+=1
+        time.sleep(0.1) 
 
 main()

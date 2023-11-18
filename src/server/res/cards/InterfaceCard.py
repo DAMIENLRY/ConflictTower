@@ -7,6 +7,7 @@ from .states.StateCard import StateCard
 import time
 import sys
 import os
+import threading
 from api.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
 
 # Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
@@ -40,21 +41,18 @@ class InterfaceCard(InterfaceCase):
     def isWithinBounds(self, x, y):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
 
-    def move(self, x: int, y: int) -> None:
-        if x < -1 or x > 1 or y < -1 or y > 1:
-            return
 
-        if self.SPEED == EnumEntitySpeed["SLOW"]:
-            time.sleep(2)
-        if self.SPEED == EnumEntitySpeed["AVERAGE"]:
-            time.sleep(1)
-        if self.SPEED == EnumEntitySpeed["FAST"]:
-            time.sleep(0.5)
-        self._x_position = self.getX() + x
-        self._y_position = self.getY() + y
+    def start_movement_thread(self, path):
+        self.movement_thread = threading.Thread(target=self.movement_loop, args=(path,))
+        self.movement_thread.start()
 
-    """    def getAttackInterval(self):
-        match self._ATTAQUE_SPEED:
+    def movement_loop(self, path):
+        for x, y in path:
+            self.setLocation(x, y)
+            time.sleep(self.getMoveSpeedInterval())
+
+    def getMoveSpeedInterval(self):
+        match self._SPEED:
             case EnumEntitySpeed.SLOW:
                 return 2
             case EnumEntitySpeed.AVERAGE:
@@ -62,7 +60,7 @@ class InterfaceCard(InterfaceCase):
             case EnumEntitySpeed.FAST:
                 return 0.5
             case _:
-                return 1"""
+                return 1
     
     def getTowerFocusCoordoonates(self):
         return TOWER_SIDE_2[0] if self.getSide() == EnumSide.SIDE_1 else TOWER_SIDE_1[0]

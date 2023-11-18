@@ -9,18 +9,18 @@ from api.globaleVariable import COLUMNS, ROWS
 
 class BowlerCard(InterfaceCard):
 
-    def __init__(self, side: EnumSide) -> None:
+    def __init__(self, side: EnumSide,x,y) -> None:
         self._ID = 3
         self._NAME = "Bouliste"
-        self._SPEED = EnumEntitySpeed['AVERAGE']
+        self._SPEED = EnumEntitySpeed['FAST']
         self._state = FocusTowerState()
         self._side = side
         self._RANGE = 2
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
-        self._x_position = 4
-        self._y_position = 4
+        self._x_position = x
+        self._y_position = y
         self._x_prev_position = None
         self._y_prev_position = None
         self._battlefield = BattleField.getInstance()
@@ -33,6 +33,7 @@ class BowlerCard(InterfaceCard):
                 self._y_prev_position = self._y_position
             self._x_position = x
             self._y_position = y
+            BattleField.getInstance().onUpdateMap()
         else:
             return False
 
@@ -44,14 +45,11 @@ class BowlerCard(InterfaceCard):
         ]
 
         for dx, dy in offsets:
-            x = self._x_position + dx
-            y = self._y_position + dy
-                    
-            targetX, targetY = dx+self._x_position, dy+self._y_position
+            targetX, targetY = dx + self._x_position, dy + self._y_position
 
-            if(self.isWithinBounds(targetX, targetY)):
+            if self.isWithinBounds(targetX, targetY):
                 opponent = self._battlefield.isOccupiedByOpponent(targetX, targetY)
-                if opponent is not False:
+                if opponent:
                     return opponent
-                else:
-                    return False
+
+        return False
