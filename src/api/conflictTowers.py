@@ -60,7 +60,7 @@ def initArbitrers():
     arbitre1.ruleArena("map", battleField.getMap())
     arbitre1.ruleArena("mapFriction", [0,1,1,1,1,1])
     arbitre1.ruleArena("mapImgs", [
-                       "", "", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/bowler.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/gobelin.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/hog-rider.png"])
+                       "", "rgba(0,0,0,0)", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/bowler.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/gobelin.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/hog-rider.png"])
 
     return arbitre1
 
@@ -81,7 +81,7 @@ def main():
     arbitre1.update()
     coords = tf.pathToTower((ballon.getX(),ballon.getY()),ballon.getTowerFocusCoordoonates())
 
-    bowler = BowlerCard(EnumSide.SIDE_1,3,9)
+    bowler = BowlerCard(EnumSide.SIDE_2,17,9)
     battleField.addTroop(bowler)
     
     arbitre1.ruleArena("map", battleField.getMap())
