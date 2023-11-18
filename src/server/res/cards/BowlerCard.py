@@ -12,7 +12,7 @@ class BowlerCard(InterfaceCard):
     def __init__(self, side: EnumSide,x,y) -> None:
         self._ID = 3
         self._NAME = "Bouliste"
-        self._SPEED = EnumEntitySpeed['FAST']
+        self._SPEED = EnumEntitySpeed['LIGHT_SPEED']
         self._state = FocusTowerState()
         self._side = side
         self._RANGE = 2
