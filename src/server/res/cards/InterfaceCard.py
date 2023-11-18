@@ -8,6 +8,7 @@ import time
 import sys
 import os
 import threading
+import api.towerFinder as tf
 
 from api.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
 
@@ -46,7 +47,8 @@ class InterfaceCard(InterfaceCase):
 
 
 
-    def start_movement_thread(self, path):
+    def start_movement_thread(self):
+        path = tf.pathToTower((self.getX(),self.getY()),self.getTowerFocusCoordoonates())
         self.movement_thread = threading.Thread(target=self.movement_loop, args=(path,))
         self.movement_thread.start()
 
@@ -61,6 +63,8 @@ class InterfaceCard(InterfaceCase):
             self.setLocation(x, y)
             time.sleep(self.getMoveSpeedInterval())
         print("Movement thread stopped.")
+
+
 
     def getMoveSpeedInterval(self):
         return self._SPEED.value

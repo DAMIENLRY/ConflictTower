@@ -37,53 +37,33 @@ agent = AgentTower(playerId="667VELIB",
 battleField = BattleField.getInstance()
 
 def initArbitrers():
-    arbitre1 = pytactx.Agent(playerId=arbitrerSecret,
+    arbitre = pytactx.Agent(playerId=arbitrerSecret,
                              arena="conflicttower",
                              username="demo",
                              password="demo",
                              server="mqtt.jusdeliens.com",
                              verbosity=2)
-    arbitre1.moveTowards
-    time.sleep(0.5)
-    """
-	for i in range(ROWS):
-		for j in range(COLUMNS):
-			if (i==0 or i==ROWS-1) or (j==0 or j==COLUMNS-1):
-				map[i][j] = 1
-	"""
-
-
-    arbitre1.ruleArena(
+    
+    arbitre.ruleArena(
         "bgImg", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/background.png")
-    arbitre1.ruleArena("gridColumns", COLUMNS)
-    arbitre1.ruleArena("gridRows", ROWS)
-    arbitre1.ruleArena("map", battleField.getMap())
-    arbitre1.ruleArena("mapFriction", [0,1,1,1,1,1])
-    arbitre1.ruleArena("mapImgs", [
+    arbitre.ruleArena("gridColumns", COLUMNS)
+    arbitre.ruleArena("gridRows", ROWS)
+    arbitre.ruleArena("map", battleField.getMap())
+    arbitre.ruleArena("mapFriction", [0,1,1,1,1,1])
+    arbitre.ruleArena("mapImgs", [
                        "", "rgba(0,0,0,0)", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/bowler.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/gobelin.png", "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/hog-rider.png"])
 
-    return arbitre1
+    return arbitre
 
 
 def main():
     arbitre1 = initArbitrers()
 
     ballon = BallonCard(EnumSide.SIDE_1,2,1)
-    battleField.addTroop(ballon)
-    battleField.onUpdateMap()
-    arbitre1.ruleArena("map", battleField.getMap())
-    arbitre1.update()
-    coords = tf.pathToTower((ballon.getX(),ballon.getY()),ballon.getTowerFocusCoordoonates())
-
     bowler = BowlerCard(EnumSide.SIDE_2,17,3)
-    battleField.addTroop(bowler)
-    
-    arbitre1.ruleArena("map", battleField.getMap())
-    arbitre1.update()
-    coords2 = tf.pathToTower((bowler.getX(),bowler.getY()),bowler.getTowerFocusCoordoonates())
 
-    ballon.start_movement_thread(coords)
-    bowler.start_movement_thread(coords2)
+    battleField.addTroop(ballon)
+    battleField.addTroop(bowler)
 
     while True:
         arbitre1.ruleArena("map", battleField.getMap())

@@ -65,6 +65,8 @@ class BattleField:
     def addTroop(self, troop: InterfaceCard):
         self._troops.append(troop)
         self.onUpdateMap()
+        troop.state.handle_request(troop)
+
         
     def removeTroop(self, troop: InterfaceCard):
         self._troops.remove(troop)
