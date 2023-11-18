@@ -91,9 +91,9 @@ class BattleField:
         for card in self._troops:
             opponent = card.opponentInRange()
             print(opponent)
-            if opponent!=False:
+            if opponent and not isinstance(card.state, AttackState):
                 card.state = AttackState()
-            else:
+                card.state.handle_request(card)
+            elif not opponent and not isinstance(card.state, FocusTowerState):
                 card.state = FocusTowerState()
-        if card.state:
-            card.state.handle_request()
+                card.state.handle_request(card)

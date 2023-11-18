@@ -27,6 +27,7 @@ class InterfaceCard(InterfaceCase):
     _POINT: int
     _state: StateCard
     _side: EnumSide
+    _stop_movement = True
     _battlefield = None
 
     @property
@@ -44,14 +45,22 @@ class InterfaceCard(InterfaceCase):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
 
 
+
     def start_movement_thread(self, path):
         self.movement_thread = threading.Thread(target=self.movement_loop, args=(path,))
         self.movement_thread.start()
 
+    def stop_movement_thread(self):
+        self._stop_movement = True
+
     def movement_loop(self, path):
+        self._stop_movement = False
         for x, y in path:
+            if self._stop_movement:
+                break
             self.setLocation(x, y)
             time.sleep(self.getMoveSpeedInterval())
+        print("Movement thread stopped.")
 
     def getMoveSpeedInterval(self):
         return self._SPEED.value

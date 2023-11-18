@@ -15,7 +15,7 @@ class BallonCard(InterfaceCard):
     def __init__(self, side: EnumSide,x,y) -> None:
         self._ID = 2
         self._NAME = "Gobelin"
-        self._SPEED = EnumEntitySpeed['AVERAGE']
+        self._SPEED = EnumEntitySpeed['FAST']
         self._side = side
         self._state = FocusTowerState()
         self._RANGE = 3

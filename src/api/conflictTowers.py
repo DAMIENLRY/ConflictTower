@@ -68,12 +68,6 @@ def initArbitrers():
 def main():
     arbitre1 = initArbitrers()
 
-    """    
-    coords2 = tf.find((19,9),(3,7))
-    coords3 = tf.find((15,7),(4,6))
-    coords4 = tf.find((12,1),(1,6))
-    """
-
     ballon = BallonCard(EnumSide.SIDE_1,2,1)
     battleField.addTroop(ballon)
     battleField.onUpdateMap()
@@ -81,7 +75,7 @@ def main():
     arbitre1.update()
     coords = tf.pathToTower((ballon.getX(),ballon.getY()),ballon.getTowerFocusCoordoonates())
 
-    bowler = BowlerCard(EnumSide.SIDE_2,17,9)
+    bowler = BowlerCard(EnumSide.SIDE_2,17,3)
     battleField.addTroop(bowler)
     
     arbitre1.ruleArena("map", battleField.getMap())
