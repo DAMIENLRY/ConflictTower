@@ -21,7 +21,7 @@ from server.res.cards.GoblinCard import GoblinCard
 from server.res.cards.HogRiderCard import HogRiderCard
 from api.enums.TroopEnum import TroopEnum
 import api.towerFinder as tf
-from api.ArenaWrapper import MapFrictionWrapper 
+from api.MapFrictionWrapper import MapFrictionWrapper 
 
 from globaleVariable import COLUMNS, ROWS
 
@@ -81,7 +81,6 @@ def initArbitrers():
     map_rule_manager.add_friction(4, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/gobelin.png")
     map_rule_manager.add_friction(5, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/hog-rider.png")
     map_rule_manager.add_friction(6, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/damages/10.png")
-    map_rule_manager.add_friction(7, 0, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/explosive-balloon.png")
 
     return arbitre
 

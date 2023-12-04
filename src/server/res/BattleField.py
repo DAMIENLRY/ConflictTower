@@ -15,6 +15,8 @@ from server.res.cards.InterfaceCase import InterfaceCase
 from server.res.cards.InterfaceCard import InterfaceCard
 from server.res.cards.EmptyCase import EmptyCase
 from server.res.cards.ObstacleCase import ObstacleCase
+from server.res.cards.ObstacleCase import ObstacleCase
+from server.res.cases.DamageCase import DamageCase 
 
 from server.res.cards.states.FocusTowerState import FocusTowerState
 from server.res.cards.states.AttackState import AttackState
@@ -67,7 +69,14 @@ class BattleField:
         self.onUpdateMap()
         troop.state.handle_request(troop)
 
-        
+    def addDamageCase(self, damageCase: DamageCase):
+        self._map[damageCase.getX()][damageCase.getY()] = damageCase
+        self.onUpdateMap()
+
+    def removeDamageCase(self, damageCase: DamageCase):
+        self._map[damageCase.getX()][damageCase.getY()] = EmptyCase()
+        self.onUpdateMap()
+
     def removeTroop(self, troop: InterfaceCard):
         self._troops.remove(troop)
     
@@ -88,14 +97,19 @@ class BattleField:
             return self._map[x][y]
         else:
             return False
+        
+    def isCaseEmpty(self,x,y):
+        if isinstance(self._map[x][y], EmptyCase):
+            return True
+        return False
 
     def checkAndUpdateCardStates(self):
         for card in self._troops:
             opponent = card.opponentInRange()
-            print(opponent)
+
             if opponent and not isinstance(card.state, AttackState):
                 card.state = AttackState()
                 card.state.handle_request(card)
-            elif not opponent and not isinstance(card.state, FocusTowerState):
+            elif not opponent and not isinstance(card.state, FocusTowerState) and not isinstance(card.state, AttackState):
                 card.state = FocusTowerState()
                 card.state.handle_request(card)
