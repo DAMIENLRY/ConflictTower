@@ -5,3 +5,4 @@ class EnumEntitySpeed(Enum):
     SLOW = 2
     AVERAGE = 1
     FAST = 0.5
+    LIGHT_SPEED = 0.25

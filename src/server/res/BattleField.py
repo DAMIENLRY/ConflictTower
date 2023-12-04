@@ -16,20 +16,27 @@ from server.res.cards.InterfaceCard import InterfaceCard
 from server.res.cards.EmptyCase import EmptyCase
 from server.res.cards.ObstacleCase import ObstacleCase
 
+from server.res.cards.states.FocusTowerState import FocusTowerState
+from server.res.cards.states.AttackState import AttackState
+
 class BattleField:
 
     _instance: 'BattleField' = None
     _map: List[List[InterfaceCase]]
     _troops: List[InterfaceCard]
 
-    def __new__(cls):
+    @classmethod
+    def getInstance(cls):
         if cls._instance is None:
-            cls._instance = super().__new__(cls)
+            cls._instance = cls()
         return cls._instance
 
     def __init__(self):
-        self.initMap()
-        self._troops = []
+        if not self.__class__._instance:
+            self.initMap()
+            self._troops = []
+        else:
+            raise Exception("Cette classe est un singleton !")
 
     def getMap(self):
         map: List[List[int]] = []
@@ -41,7 +48,6 @@ class BattleField:
         return map
     
     def updateMap(self):
-        self.initMap()
         for troop in self._troops:
             prevX = troop.getPreviousX()
             prevY = troop.getPreviousY()
@@ -51,12 +57,16 @@ class BattleField:
             x = troop.getX()
             y = troop.getY()
             self._map[x][y] = troop
+        self.checkAndUpdateCardStates()
         
     def onUpdateMap(self):
         self.updateMap()
     
     def addTroop(self, troop: InterfaceCard):
         self._troops.append(troop)
+        self.onUpdateMap()
+        troop.state.handle_request(troop)
+
         
     def removeTroop(self, troop: InterfaceCard):
         self._troops.remove(troop)
@@ -73,8 +83,19 @@ class BattleField:
                 map[10][case] = ObstacleCase(row, column)
         self._map = map
         
+    def isOccupiedByOpponent(self,x,y):
+        if isinstance(self._map[x][y], InterfaceCard):
+            return self._map[x][y]
+        else:
+            return False
 
-battle1 = BattleField()
-battle2 = BattleField()
-
-print(battle1 is battle2)
+    def checkAndUpdateCardStates(self):
+        for card in self._troops:
+            opponent = card.opponentInRange()
+            print(opponent)
+            if opponent and not isinstance(card.state, AttackState):
+                card.state = AttackState()
+                card.state.handle_request(card)
+            elif not opponent and not isinstance(card.state, FocusTowerState):
+                card.state = FocusTowerState()
+                card.state.handle_request(card)

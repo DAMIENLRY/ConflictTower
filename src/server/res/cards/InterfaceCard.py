@@ -7,13 +7,18 @@ from .states.StateCard import StateCard
 import time
 import sys
 import os
+import threading
+import api.towerFinder as tf
+
+from api.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
 
 # Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
 current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
 parent_directory = os.path.dirname(current_file) # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
-class InterfaceCard(StateCard, InterfaceCase):
+
+class InterfaceCard(InterfaceCase):
 
     _SPEED: EnumEntitySpeed
     _RANGE: int
@@ -23,33 +28,74 @@ class InterfaceCard(StateCard, InterfaceCase):
     _POINT: int
     _state: StateCard
     _side: EnumSide
+    _stop_movement = True
+    _battlefield = None
 
     @property
-    def getState(self) -> StateCard:
+    def state(self):
         return self._state
 
-    @property
-    def setState(self, state) -> StateCard:
-        self._state = state
+    @state.setter
+    def state(self, new_state: StateCard):
+        self._state = new_state
 
     def getSide(self) -> EnumSide:
         return self._side
 
-    def move(self, x: int, y: int) -> None:
-        if x < -1 or x > 1 or y < -1 or y > 1:
-            return
+    def isWithinBounds(self, x, y):
+        return 0 <= x < ROWS and 0 <= y < COLUMNS
 
-        if self.SPEED == EnumEntitySpeed["SLOW"]:
-            time.sleep(2)
-        if self.SPEED == EnumEntitySpeed["AVERAGE"]:
-            time.sleep(1)
-        if self.SPEED == EnumEntitySpeed["FAST"]:
-            time.sleep(0.5)
-        self._x_position = self.getX() + x
-        self._y_position = self.getY() + y
 
-    def attack(self):
-        pass
-    
-    def focusTower(self):
-        return
+
+    def start_movement_thread(self):
+        path = tf.pathToTower((self.getX(),self.getY()),self.getTowerFocusCoordoonates())
+        self.movement_thread = threading.Thread(target=self.movement_loop, args=(path,))
+        self.movement_thread.start()
+
+    def stop_movement_thread(self):
+        self._stop_movement = True
+
+    def movement_loop(self, path):
+        self._stop_movement = False
+        for x, y in path:
+            if self._stop_movement:
+                break
+            self.setLocation(x, y)
+            time.sleep(self.getMoveSpeedInterval())
+        print("Movement thread stopped.")
+
+
+
+    def getMoveSpeedInterval(self):
+        return self._SPEED.value
+
+    def getTowerFocusCoordoonates(self):
+        return TOWER_SIDE_2[0] if self.getSide() == EnumSide.SIDE_1 else TOWER_SIDE_1[0]
+
+    def setLocation(self, x: int, y: int):
+        if x>=1 and x<=ROWS-1 and y>=0 and y<=COLUMNS-1:
+            if self._x_position and self._y_position:
+                self._x_prev_position = self._x_position
+                self._y_prev_position = self._y_position
+            self._x_position = x
+            self._y_position = y
+            self._battlefield.onUpdateMap()
+        else:
+            return False
+
+    def opponentInRange(self):
+        offsets = [
+            (dx, dy) for dx in range(-self._RANGE, self._RANGE + 1)
+            for dy in range(-self._RANGE, self._RANGE + 1)
+            if not (dx == 0 and dy == 0)
+        ]
+
+        for dx, dy in offsets:
+            targetX, targetY = dx + self._x_position, dy + self._y_position
+
+            if self.isWithinBounds(targetX, targetY):
+                opponent = self._battlefield.isOccupiedByOpponent(targetX, targetY)
+                if opponent:
+                    return opponent
+
+        return False
