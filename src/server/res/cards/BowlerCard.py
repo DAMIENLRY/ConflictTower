@@ -19,7 +19,7 @@ class BowlerCard(InterfaceCard):
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
         self._ATTACK_DAMAGE = 10
         self._TYPE = EnumEntityType['GROUND']
-        self._HEALTH_POINT = 100
+        self._HEALTH_POINT = 30
         self._x_position = x
         self._y_position = y
         self._x_prev_position = None

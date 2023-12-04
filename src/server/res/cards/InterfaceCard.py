@@ -18,7 +18,7 @@ parent_directory = os.path.dirname(current_file) # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
 from server.res.cases.DamageCase import DamageCase
-
+from server.res.cards.states.FocusTowerState import FocusTowerState
 
 class InterfaceCard(InterfaceCase):
 
@@ -48,6 +48,20 @@ class InterfaceCard(InterfaceCase):
     def isWithinBounds(self, x, y):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
 
+
+    def reduceHealth(self, damage_amount):
+        self._HEALTH_POINT -= damage_amount
+        if self._HEALTH_POINT <= 0:
+            self.handleDefeat()
+            self._HEALTH_POINT = 0
+
+    def handleDefeat(self):
+        print(f"{self.__class__.__name__} a été vaincu.")
+        self._battlefield.removeTroop(self)
+
+
+
+
     def start_attack_thread(self):
         self.attack_thread = threading.Thread(target=self.attack_loop)
         self.attack_thread.start()
@@ -57,17 +71,28 @@ class InterfaceCard(InterfaceCase):
 
     def attack_loop(self):
         self._stop_attack = False
-        while not self._stop_attack:
+        while not self._stop_attack and self._HEALTH_POINT > 0:
+            print(self._NAME + " "+str(self._HEALTH_POINT))
+
             opponent = self.opponentInRange()            
             if(opponent):
                 opponentEmptyCase = self.getNearestEmptyCase(opponent._x_position, opponent._y_position, opponent._RANGE)
                 if(opponentEmptyCase is not False):
+                    opponentCard = self._battlefield.isOccupiedByOpponent(opponent._x_position, opponent._y_position)
+                    opponentCard.reduceHealth(self._ATTACK_DAMAGE)
+                    if(opponentCard._HEALTH_POINT <= 0):
+                        self._stop_attack = True
+                    
                     dmgCase = DamageCase(opponentEmptyCase[0], opponentEmptyCase[1])
                     self._battlefield.addDamageCase(dmgCase)
                     time.sleep(0.3)
                     self._battlefield.removeDamageCase(dmgCase)
-            time.sleep(self.getAttackSpeedInterval())
-        
+                    
+                    time.sleep(self.getAttackSpeedInterval())
+            else:
+                self._stop_attack = True
+        self.state = FocusTowerState()
+        self.state.handle_request(self)
 
 
 

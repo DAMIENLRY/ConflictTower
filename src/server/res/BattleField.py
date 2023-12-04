@@ -69,6 +69,11 @@ class BattleField:
         self.onUpdateMap()
         troop.state.handle_request(troop)
 
+    def removeTroop(self, troop: InterfaceCard):
+        self._troops.remove(troop)
+        self._map[troop._x_position][troop._y_position] = EmptyCase()
+        self.onUpdateMap()
+
     def addDamageCase(self, damageCase: DamageCase):
         self._map[damageCase.getX()][damageCase.getY()] = damageCase
         self.onUpdateMap()
@@ -76,9 +81,6 @@ class BattleField:
     def removeDamageCase(self, damageCase: DamageCase):
         self._map[damageCase.getX()][damageCase.getY()] = EmptyCase()
         self.onUpdateMap()
-
-    def removeTroop(self, troop: InterfaceCard):
-        self._troops.remove(troop)
     
     def initMap(self):
         map: List[List[InterfaceCase]] = []
