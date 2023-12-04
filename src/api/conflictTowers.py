@@ -35,18 +35,17 @@ agent = AgentTower(playerId="667VELIB",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
 
-"""
-archer = BallonCard(EnumSide.SIDE_1)
-archer2 = BallonCard(EnumSide.SIDE_1)
 
-# agent.addDeckCard(TroopEnum.BALLON)
-# agent.addDeckCard(TroopEnum.GOBLIN)
-# agent.addDeckCard(TroopEnum.BOWLER)
-# agent.addDeckCard(TroopEnum.HOGRIDER)
-# agent.addDeckCard(TroopEnum.MINION)
-# agent.addDeckCard(TroopEnum.KNIGHT)
-# agent.addDeckCard(TroopEnum.ROYALEGIANT)
-# agent.addDeckCard(TroopEnum.ARCHER)
+"""
+agent.addDeckCard(TroopEnum.BALLON)
+agent.addDeckCard(TroopEnum.GOBLIN)
+agent.addDeckCard(TroopEnum.BOWLER)
+agent.addDeckCard(TroopEnum.HOGRIDER)
+agent.addDeckCard(TroopEnum.MINION)
+agent.addDeckCard(TroopEnum.KNIGHT)
+agent.addDeckCard(TroopEnum.ROYALEGIANT)
+agent.addDeckCard(TroopEnum.ARCHER)
+"""
 
 agent.generateDeck()
 
@@ -54,7 +53,7 @@ print(agent.getDeck())
 
 agent.selectTeam(EnumSide['SIDE_1'])
 agent.launchGame()
-"""
+
 battleField = BattleField.getInstance()
 
 
