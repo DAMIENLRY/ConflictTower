@@ -79,18 +79,23 @@ class InterfaceCard(InterfaceCase):
                 opponentEmptyCase = self.getNearestEmptyCase(opponent._x_position, opponent._y_position, opponent._RANGE)
                 if(opponentEmptyCase is not False):
                     opponentCard = self._battlefield.isOccupiedByOpponent(opponent._x_position, opponent._y_position)
+                    dmgCase = DamageCase(opponentEmptyCase[0], opponentEmptyCase[1])
+                    
+                    self._battlefield.addDamageCase(dmgCase)
+                    time.sleep(0.2)
+                    self._battlefield.removeDamageCase(dmgCase)
+
                     opponentCard.reduceHealth(self._ATTACK_DAMAGE)
                     if(opponentCard._HEALTH_POINT <= 0):
                         self._stop_attack = True
                     
-                    dmgCase = DamageCase(opponentEmptyCase[0], opponentEmptyCase[1])
-                    self._battlefield.addDamageCase(dmgCase)
-                    time.sleep(0.3)
-                    self._battlefield.removeDamageCase(dmgCase)
-                    
                     time.sleep(self.getAttackSpeedInterval())
             else:
                 self._stop_attack = True
+
+            if(not self._stop_attack and self._HEALTH_POINT > 0):
+                time.sleep(self.getAttackSpeedInterval())
+
         self.state = FocusTowerState()
         self.state.handle_request(self)
 
