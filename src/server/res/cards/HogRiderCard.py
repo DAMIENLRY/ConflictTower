@@ -12,6 +12,7 @@ class HogRiderCard(InterfaceCard):
         self._SPEED = EnumEntitySpeed['AVERAGE']
         self._RANGE = 5
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
+        self._ATTACK_DAMAGE = 6
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
         self._x_position = 1

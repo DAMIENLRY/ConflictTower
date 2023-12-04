@@ -12,6 +12,7 @@ class RoyalGiantCard(InterfaceCard):
         self._SPEED = EnumEntitySpeed['SLOW']
         self._RANGE = 5
         self._ATTAQUE_SPEED = EnumEntitySpeed['SLOW']
+        self._ATTACK_DAMAGE = 20
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
         self._x_position = 1
