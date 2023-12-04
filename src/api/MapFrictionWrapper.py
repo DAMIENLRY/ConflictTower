@@ -21,6 +21,10 @@ class MapFrictionWrapper:
 
         self.map_imgs[frictionIndex] = imageURL
 
+        # Mise à jour de la configuration via arbitre.ruleArena
+        self.arbitre.ruleArena("mapFriction", self.map_friction)
+        self.arbitre.ruleArena("mapImgs", self.map_imgs)
+
     def get_map_friction(self):
         return self.map_friction
 
