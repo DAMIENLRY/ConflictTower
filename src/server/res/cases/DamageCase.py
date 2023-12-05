@@ -9,7 +9,7 @@ from server.res.cards.InterfaceCase import InterfaceCase
 
 class DamageCase(InterfaceCase):
     
-    def __init__(self, x, y):
+    def __init__(self, x=0, y=0):
         self._ID = 6
         self._NAME = 'DamageCase'
         self._x_position = x

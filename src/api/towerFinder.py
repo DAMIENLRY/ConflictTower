@@ -67,5 +67,5 @@ def pathToTower(start,end):
     #print(bfs)
     
     shortestPath = findShortestPath(bfs,end)
-    print(shortestPath)
+    #print(shortestPath)
     return shortestPath

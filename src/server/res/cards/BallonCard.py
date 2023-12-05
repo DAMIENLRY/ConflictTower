@@ -19,7 +19,7 @@ class BallonCard(InterfaceCard):
         self._side = side
         self._state = FocusTowerState()
         self._RANGE = 2
-        self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
+        self._ATTAQUE_SPEED = EnumEntitySpeed['SLOW']
         self._ATTACK_DAMAGE = 10
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
