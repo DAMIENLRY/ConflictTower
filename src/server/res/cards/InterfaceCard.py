@@ -140,13 +140,7 @@ class InterfaceCard(InterfaceCase):
             return False
 
     def getNearestEmptyCase(self, xOp, yOp, rangeOp):
-        offsets = [
-            (dx, dy) for dx in range(-rangeOp, rangeOp + 1)
-            for dy in range(-rangeOp, rangeOp + 1)
-            if not (dx == 0 and dy == 0)
-        ]
-
-        for dx, dy in offsets:
+        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (1,1), (-1,1), (1,-1)]:
             targetX, targetY = dx + xOp, dy + yOp
 
             if self.isWithinBounds(targetX, targetY):
@@ -156,13 +150,7 @@ class InterfaceCard(InterfaceCase):
         return False
 
     def opponentInRange(self):
-        offsets = [
-            (dx, dy) for dx in range(-self._RANGE, self._RANGE + 1)
-            for dy in range(-self._RANGE, self._RANGE + 1)
-            if not (dx == 0 and dy == 0)
-        ]
-
-        for dx, dy in offsets:
+        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (1,1), (-1,1), (1,-1)]:
             targetX, targetY = dx + self._x_position, dy + self._y_position
 
             if self.isWithinBounds(targetX, targetY):

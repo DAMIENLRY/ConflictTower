@@ -21,6 +21,10 @@ from server.res.cases.DamageCase import DamageCase
 from server.res.cards.states.FocusTowerState import FocusTowerState
 from server.res.cards.states.AttackState import AttackState
 
+import time
+import threading
+from queue import Queue
+
 class BattleField:
 
     _instance: 'BattleField' = None
@@ -37,8 +41,20 @@ class BattleField:
         if not self.__class__._instance:
             self.initMap()
             self._troops = []
+            self.damageQueue = Queue()
+            self.damageThread = threading.Thread(target=self.processDamageQueue)
+            self.damageThread.daemon = True
+            self.damageThread.start()
         else:
             raise Exception("Cette classe est un singleton !")
+
+    def processDamageQueue(self):
+        while True:
+            damageCase, duration = self.damageQueue.get()
+            self.addDamageCase(damageCase)
+            time.sleep(duration)
+            self.removeDamageCase(damageCase)
+
 
     def getMap(self):
         map: List[List[int]] = []
