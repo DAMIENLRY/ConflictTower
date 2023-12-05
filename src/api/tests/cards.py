@@ -1,6 +1,7 @@
 import unittest
 import sys
 import os
+import random
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.dirname(current_directory)
 grandparent_directory = os.path.dirname(parent_directory)
@@ -10,44 +11,53 @@ from server.res.cards.enums.EnumEntitySpeed import EnumEntitySpeed
 from server.res.cards.enums.EnumEntityType import EnumEntityType
 from server.res.cards.enums.EnumSide import EnumSide
 from server.res.cards.states.StateCard import StateCard
+from api.enums.TroopEnum import TroopEnum
 
 class TestCards(unittest.TestCase):
 
     def setUp(self):
-        self.card = BallonCard(EnumSide.SIDE_1, 0, 0)
+        troops = list(TroopEnum)
+        random.shuffle(troops)
+        self.cards = [troop.value(EnumSide.SIDE_1, 0, 0) for troop in troops]
 
     def test_state(self):
-        state = StateCard()
-        self.card.state = state
-        self.assertEqual(self.card.state, state)
+        for card in self.cards:
+            state = StateCard()
+            card.state = state
+            self.assertEqual(card.state, state)
 
     def test_getSide(self):
-        self.card._side = EnumSide.SIDE_1
-        self.assertEqual(self.card.getSide(), EnumSide.SIDE_1)
+        for card in self.cards:
+            card._side = EnumSide.SIDE_1
+            self.assertEqual(card.getSide(), EnumSide.SIDE_1)
 
     def test_isWithinBounds(self):
-        self.assertTrue(self.card.isWithinBounds(5, 5))
-        self.assertFalse(self.card.isWithinBounds(-1, 5))
-        self.assertFalse(self.card.isWithinBounds(5, -1))
-        self.assertFalse(self.card.isWithinBounds(100, 5))
-        self.assertFalse(self.card.isWithinBounds(5, 100))
+        for card in self.cards:
+            self.assertTrue(card.isWithinBounds(5, 5))
+            self.assertFalse(card.isWithinBounds(-1, 5))
+            self.assertFalse(card.isWithinBounds(5, -1))
+            self.assertFalse(card.isWithinBounds(100, 5))
+            self.assertFalse(card.isWithinBounds(5, 100))
 
     def test_getMoveSpeedInterval(self):
-        self.card._SPEED = EnumEntitySpeed.SPEED_1
-        self.assertEqual(self.card.getMoveSpeedInterval(), EnumEntitySpeed.SPEED_1.value)
+        for card in self.cards:
+            card._SPEED = EnumEntitySpeed.SPEED_1
+            self.assertEqual(card.getMoveSpeedInterval(), EnumEntitySpeed.SPEED_1.value)
 
     def test_setLocation(self):
-        self.assertTrue(self.card.setLocation(5, 5))
-        self.assertFalse(self.card.setLocation(-1, 5))
-        self.assertFalse(self.card.setLocation(5, -1))
-        self.assertFalse(self.card.setLocation(100, 5))
-        self.assertFalse(self.card.setLocation(5, 100))
+        for card in self.cards:
+            self.assertTrue(card.setLocation(5, 5))
+            self.assertFalse(card.setLocation(-1, 5))
+            self.assertFalse(card.setLocation(5, -1))
+            self.assertFalse(card.setLocation(100, 5))
+            self.assertFalse(card.setLocation(5, 100))
 
     def test_opponentInRange(self):
-        self.card._RANGE = 1
-        self.card._x_position = 5
-        self.card._y_position = 5
-        self.assertIsNone(self.card.opponentInRange())
+        for card in self.cards:
+            card._RANGE = 1
+            card._x_position = 5
+            card._y_position = 5
+            self.assertIsNone(card.opponentInRange())
 
 if __name__ == '__main__':
     unittest.main()
