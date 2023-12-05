@@ -5,16 +5,16 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.dirname(current_directory)
 grandparent_directory = os.path.dirname(parent_directory)
 sys.path.append(grandparent_directory)
-from server.res.cards.InterfaceCard import InterfaceCard
+from server.res.cards.BallonCard import BallonCard
 from server.res.cards.enums.EnumEntitySpeed import EnumEntitySpeed
 from server.res.cards.enums.EnumEntityType import EnumEntityType
 from server.res.cards.enums.EnumSide import EnumSide
 from server.res.cards.states.StateCard import StateCard
 
-class TestInterfaceCard(unittest.TestCase):
+class TestCards(unittest.TestCase):
 
     def setUp(self):
-        self.card = InterfaceCard()
+        self.card = BallonCard(EnumSide.SIDE_1, 0, 0)
 
     def test_state(self):
         state = StateCard()
