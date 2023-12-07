@@ -75,7 +75,6 @@ class InterfaceCard(InterfaceCase):
                 opponentEmptyCase = self.getNearestEmptyCase(opponent._x_position, opponent._y_position, opponent._RANGE)
                 if opponentEmptyCase is not False:
                     dmgCase = DamageCase(self._ATTACK_DAMAGE, opponentEmptyCase[0], opponentEmptyCase[1])
-                    #self._battlefield.damageQueue.put((dmgCase, 0.2))
 
                     self._battlefield.addDamageCase(dmgCase)
                     time.sleep(0.3)

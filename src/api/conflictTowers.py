@@ -71,6 +71,7 @@ def initArbitrers():
     arbitre.ruleArena("gridColumns", COLUMNS)
     arbitre.ruleArena("gridRows", ROWS)
     arbitre.ruleArena("map", battleField.getMap())
+    arbitre.ruleArena("info", " 🟠 3 - 7  💗 432 - 667 ⌛ 2:59")
 
     map_rule_manager = MapFrictionWrapper(arbitre)
 
@@ -98,9 +99,13 @@ def main():
 
     ballon = BallonCard(EnumSide.SIDE_1,2,1)
     bowler = BowlerCard(EnumSide.SIDE_2,17,3)
-
     battleField.addTroop(ballon)
     battleField.addTroop(bowler)
+    
+    ballon2 = BallonCard(EnumSide.SIDE_1,2,9)
+    bowler2 = BowlerCard(EnumSide.SIDE_2,17,9)
+    battleField.addTroop(ballon2)
+    battleField.addTroop(bowler2)
 
     while True:
         arbitre.ruleArena("map", battleField.getMap())
