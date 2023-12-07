@@ -16,7 +16,7 @@ from server.res.cards.InterfaceCard import InterfaceCard
 from server.res.cards.EmptyCase import EmptyCase
 from server.res.cards.ObstacleCase import ObstacleCase
 from server.res.cards.ObstacleCase import ObstacleCase
-from server.res.cases.DamageCase import DamageCase 
+from server.res.cases.DamageCase import DamageCase
 
 from server.res.cards.states.FocusTowerState import FocusTowerState
 from server.res.cards.states.AttackState import AttackState
@@ -54,7 +54,7 @@ class BattleField:
                 line.append(self._map[row][column].getId())
             map.append(line)
         return map
-    
+
     def updateMap(self):
         for troop in self._troops:
             prevX = troop.getPreviousX()
@@ -66,11 +66,12 @@ class BattleField:
             x = troop.getX()
             y = troop.getY()
             self._map[x][y] = troop
+        print(self.getMap())
         self.checkAndUpdateCardStates()
-        
+
     def onUpdateMap(self):
         self.updateMap()
-    
+
     def addTroop(self, troop: InterfaceCard):
         self._troops.append(troop)
         self.onUpdateMap()
@@ -80,7 +81,7 @@ class BattleField:
         self._troops.remove(troop)
         self._map[troop._x_position][troop._y_position] = EmptyCase()
         self.onUpdateMap()
-    
+
     def addDamageCase(self, damageCase):
         x, y = damageCase.getX(), damageCase.getY()
         self._map[x][y] = damageCase
@@ -102,21 +103,20 @@ class BattleField:
             if case in (0, 1, 4, 5, 6, 7, 8, 11, 12):
                 map[10][case] = ObstacleCase(row, column)
         self._map = map
-        
+
     def isOccupiedByOpponent(self,entity,x,y):
         if isinstance(self._map[x][y], InterfaceCard):
             if(entity._side != self._map[x][y]._side):
                 return self._map[x][y]
         else:
             return False
-        
+
     def isCaseEmpty(self,x,y):
         return isinstance(self._map[x][y], EmptyCase)
-        
+
     def checkAndUpdateCardStates(self):
         for card in self._troops:
             opponent = card.opponentInRange()
-
             if opponent and not isinstance(card.state, AttackState):
                 card.state = AttackState()
                 card.state.handle_request(card)

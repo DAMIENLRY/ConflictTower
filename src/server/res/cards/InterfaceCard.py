@@ -45,6 +45,10 @@ class InterfaceCard(InterfaceCase):
     def getSide(self) -> EnumSide:
         return self._side
 
+    def setPosition(self, x: int, y: int) -> None:
+        self._x_position = x
+        self._y_position = y
+
     def isWithinBounds(self, x, y):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
 
@@ -150,7 +154,7 @@ class InterfaceCard(InterfaceCase):
             for dy in range(-self._RANGE, self._RANGE + 1)
             if not (dx == 0 and dy == 0)
         ]
-        
+
         for dx, dy in offsets:
             targetX, targetY = dx + self._x_position, dy + self._y_position
             if self.isWithinBounds(targetX, targetY):

@@ -38,7 +38,7 @@ def findShortestPath(backtrackPaths, targetNode):
 
 
 def breadthFirstSearch(adjacencyList, start, end):
-    visited = {start: None}    
+    visited = {start: None}
     q = Queue()
     q.put(start)
 
@@ -65,7 +65,7 @@ def pathToTower(start,end):
 
     bfs = breadthFirstSearch(adjacencyList,start,end)
     #print(bfs)
-    
+
     shortestPath = findShortestPath(bfs,end)
     #print(shortestPath)
     return shortestPath
