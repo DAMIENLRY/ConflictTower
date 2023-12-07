@@ -47,9 +47,10 @@ def initArbitrers():
     arbitre.ruleArena("gridColumns", COLUMNS)
     arbitre.ruleArena("gridRows", ROWS)
     arbitre.ruleArena("map", battleField.getMap())
-    arbitre.ruleArena("info", " 🟠 3 - 7  💗 432 - 667 ⌛ 2:59")
 
     map_rule_manager = MapFrictionWrapper(arbitre)
+
+    map_rule_manager.init_status_bar()
 
     map_rule_manager.add_friction(0, 0, "")
     map_rule_manager.add_friction(1, 1, "rgba(0,0,0,0)")
@@ -99,12 +100,23 @@ def placeCardOnBattlefield(player):
     print(selectCard._x_position, selectCard._y_position)
     battleField.addTroop(selectCard)
 
+
+def afficher_temps(temps):
+    minutes, secondes = divmod(temps, 60)
+    return f"{minutes}:{secondes:02}"
+
+def minuteur(duree_en_secondes,arbitre):
+    map_rule_manager = MapFrictionWrapper(arbitre)
+
+    temps_restant = duree_en_secondes
+    while temps_restant >= 0:
+        map_rule_manager.update_status_bar("countdown", [afficher_temps(temps_restant)])
+        time.sleep(1)
+        temps_restant -= 1
+    print("Temps écoulé !")
+
 def main():
     arbitre = initArbitrers()
-
-    color_listener_thread = threading.Thread(target=changeColorListener, args=(arbitre, placeCardOnBattlefield))
-    color_listener_thread.daemon = True
-    color_listener_thread.start()
 
     agent = AgentTower(playerId="667VELIB",
 						arena="conflicttower",
@@ -112,17 +124,23 @@ def main():
 						password="demo",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
-
     agent.generateDeck()
 
     agent.selectTeam(EnumSide.SIDE_1)
     agent.launchGame()
 
     agent.getDeck()
-
     agent.placeCard(2, EnumPlacement["CENTER"])
-
     agent.getDeck()
+
+    duree_totale_en_secondes = 3 * 60
+    countdown_thread = threading.Thread(target=minuteur, args=(duree_totale_en_secondes,arbitre,))
+    countdown_thread.daemon = True
+    countdown_thread.start()
+
+    color_listener_thread = threading.Thread(target=changeColorListener, args=(arbitre, placeCardOnBattlefield))
+    color_listener_thread.daemon = True
+    color_listener_thread.start()
 
     while True:
         arbitre.ruleArena("map", battleField.getMap())
