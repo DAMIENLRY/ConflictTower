@@ -17,6 +17,8 @@ current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
 parent_directory = os.path.dirname(current_file) # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
+from server.res.cases.DamageCase import DamageCase
+from server.res.cards.states.FocusTowerState import FocusTowerState
 
 class InterfaceCard(InterfaceCase):
 
@@ -29,6 +31,7 @@ class InterfaceCard(InterfaceCase):
     _state: StateCard
     _side: EnumSide
     _stop_movement = True
+    _stop_attack = False
     _battlefield = None
 
     @property
@@ -44,6 +47,49 @@ class InterfaceCard(InterfaceCase):
 
     def isWithinBounds(self, x, y):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
+
+
+    def reduceHealth(self, damage_amount):
+        self._HEALTH_POINT -= damage_amount
+        if self._HEALTH_POINT <= 0:
+            self.handleDefeat()
+            self._HEALTH_POINT = 0
+
+    def handleDefeat(self):
+        print(f"{self.__class__.__name__} a été vaincu.")
+        self._battlefield.removeTroop(self)
+
+
+    def start_attack_thread(self):
+        self.attack_thread = threading.Thread(target=self.attack_loop)
+        self.attack_thread.start()
+
+    def stop_attack_thread(self):
+        self._stop_attack = True
+
+    def attack_loop(self):
+        self._stop_attack = False
+        while not self._stop_attack and self._HEALTH_POINT > 0:
+            opponent = self.opponentInRange()
+            if opponent:
+                opponentEmptyCase = self.getNearestEmptyCase(opponent._x_position, opponent._y_position, opponent._RANGE)
+                if opponentEmptyCase is not False:
+                    dmgCase = DamageCase(self._ATTACK_DAMAGE, opponentEmptyCase[0], opponentEmptyCase[1])
+
+                    self._battlefield.addDamageCase(dmgCase)
+                    time.sleep(0.3)
+                    self._battlefield.removeDamageCase(dmgCase)
+
+                    opponentCard = self._battlefield.isOccupiedByOpponent(self, opponent._x_position, opponent._y_position)
+                    opponentCard.reduceHealth(self._ATTACK_DAMAGE)
+                    if opponentCard._HEALTH_POINT <= 0:
+                        self._stop_attack = True
+
+            if not self._stop_attack and self._HEALTH_POINT > 0:
+                time.sleep(self.getAttackSpeedInterval())
+
+        self.state = FocusTowerState()
+        self.state.handle_request(self)
 
 
 
@@ -65,6 +111,8 @@ class InterfaceCard(InterfaceCase):
         print("Movement thread stopped.")
 
 
+    def getAttackSpeedInterval(self):
+        return self._ATTAQUE_SPEED.value
 
     def getMoveSpeedInterval(self):
         return self._SPEED.value
@@ -83,19 +131,30 @@ class InterfaceCard(InterfaceCase):
         else:
             return False
 
+    def getNearestEmptyCase(self, xOp, yOp, rangeOp):
+        for dx, dy in [
+            (-1,0), (1,0), (0,-1), (0,1),
+            (-1,-1), (1,1), (-1,1), (1,-1)
+        ]:
+            targetX, targetY = dx + xOp, dy + yOp
+
+            if self.isWithinBounds(targetX, targetY):
+                emptyCase = self._battlefield.isCaseEmpty(targetX, targetY)
+                if emptyCase:
+                    return (targetX,targetY)
+        return False
+
     def opponentInRange(self):
         offsets = [
             (dx, dy) for dx in range(-self._RANGE, self._RANGE + 1)
             for dy in range(-self._RANGE, self._RANGE + 1)
             if not (dx == 0 and dy == 0)
         ]
-
+        
         for dx, dy in offsets:
             targetX, targetY = dx + self._x_position, dy + self._y_position
-
             if self.isWithinBounds(targetX, targetY):
-                opponent = self._battlefield.isOccupiedByOpponent(targetX, targetY)
+                opponent = self._battlefield.isOccupiedByOpponent(self, targetX, targetY)
                 if opponent:
                     return opponent
-
         return False

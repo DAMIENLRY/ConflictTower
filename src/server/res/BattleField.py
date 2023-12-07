@@ -15,9 +15,16 @@ from server.res.cards.InterfaceCase import InterfaceCase
 from server.res.cards.InterfaceCard import InterfaceCard
 from server.res.cards.EmptyCase import EmptyCase
 from server.res.cards.ObstacleCase import ObstacleCase
+from server.res.cards.ObstacleCase import ObstacleCase
+from server.res.cases.DamageCase import DamageCase 
 
 from server.res.cards.states.FocusTowerState import FocusTowerState
 from server.res.cards.states.AttackState import AttackState
+
+import time
+import threading
+import queue
+from queue import Queue
 
 class BattleField:
 
@@ -38,6 +45,7 @@ class BattleField:
         else:
             raise Exception("Cette classe est un singleton !")
 
+
     def getMap(self):
         map: List[List[int]] = []
         for row in range(ROWS):
@@ -52,7 +60,8 @@ class BattleField:
             prevX = troop.getPreviousX()
             prevY = troop.getPreviousY()
             if prevX is not None and prevY is not None:
-                self._map[prevX][prevY] = EmptyCase(prevX, prevY)
+                if not isinstance(self._map[prevX][prevY], DamageCase):
+                    self._map[prevX][prevY] = EmptyCase(prevX, prevY)
 
             x = troop.getX()
             y = troop.getY()
@@ -67,10 +76,21 @@ class BattleField:
         self.onUpdateMap()
         troop.state.handle_request(troop)
 
-        
     def removeTroop(self, troop: InterfaceCard):
         self._troops.remove(troop)
+        self._map[troop._x_position][troop._y_position] = EmptyCase()
+        self.onUpdateMap()
     
+    def addDamageCase(self, damageCase):
+        x, y = damageCase.getX(), damageCase.getY()
+        self._map[x][y] = damageCase
+        self.onUpdateMap()
+
+    def removeDamageCase(self, damageCase):
+        x, y = damageCase.getX(), damageCase.getY()
+        self._map[x][y] = EmptyCase(x, y)
+        self.onUpdateMap()
+
     def initMap(self):
         map: List[List[InterfaceCase]] = []
         for row in range(ROWS):
@@ -83,19 +103,23 @@ class BattleField:
                 map[10][case] = ObstacleCase(row, column)
         self._map = map
         
-    def isOccupiedByOpponent(self,x,y):
+    def isOccupiedByOpponent(self,entity,x,y):
         if isinstance(self._map[x][y], InterfaceCard):
-            return self._map[x][y]
+            if(entity._side != self._map[x][y]._side):
+                return self._map[x][y]
         else:
             return False
-
+        
+    def isCaseEmpty(self,x,y):
+        return isinstance(self._map[x][y], EmptyCase)
+        
     def checkAndUpdateCardStates(self):
         for card in self._troops:
             opponent = card.opponentInRange()
-            print(opponent)
+
             if opponent and not isinstance(card.state, AttackState):
                 card.state = AttackState()
                 card.state.handle_request(card)
-            elif not opponent and not isinstance(card.state, FocusTowerState):
+            elif not opponent and not isinstance(card.state, FocusTowerState) and not isinstance(card.state, AttackState):
                 card.state = FocusTowerState()
                 card.state.handle_request(card)
