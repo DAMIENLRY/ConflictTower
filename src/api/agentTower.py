@@ -13,12 +13,13 @@ sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de r
 
 from api.enums.TroopEnum import TroopEnum
 from server.res.cards.enums.EnumSide import EnumSide
+from server.res.cards.enums.EnumPlacement import EnumPlacement
 
 class AgentTower:
     
     _agent: Agent
     _deck: Set[TroopEnum]
-    _deckPlayed: Queue[TroopEnum]
+    _deckPlayed: List[TroopEnum]
     _elixir: int
     _team: EnumSide
     
@@ -52,11 +53,29 @@ class AgentTower:
         self._agent.connect()
         listDeck = list(self._deck)
         random.shuffle(listDeck)
-        self._deckPlayed = deque(listDeck)
+        self._deckPlayed = list(listDeck)
+        self._agent.setColor(self._team.value, 0, 0)
+        self._agent.moveTowards(18, 6)
+        self._agent.update()
     
     def generateDeck(self) -> None:
         deckGenerated = random.sample(list(TroopEnum), 8)
         self._deck = set(deckGenerated)
+        
+    def placeCard(self, slot: int, placement: EnumPlacement) -> None:
+        if(not( 1 <= slot <= 4)): raise("Vous devez choisir votre carte situé sur le slot 1, 2, 3, 4")
+        card = (self._deckPlayed.pop(slot)).value(self._team)
+        print(card.getId())
+        #self._agent.setColor(self._team.value, card.getId(), placement.value)
+        self._agent.setColor(self._team.value, 2, placement.value)
+        self._agent.update()
+        self._deckPlayed.append(card)
+        
+    def getDeck(self) -> None:
+        return self._deckPlayed[:4]
+        
+    def update(self) -> None:
+        self._agent.update()
     
     def print(self):
         print("Deck: " + str(self._deck))

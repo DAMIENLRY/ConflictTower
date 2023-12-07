@@ -29,6 +29,10 @@ class InterfaceCard(InterfaceCase):
     _state: StateCard
     _side: EnumSide
     _stop_movement = True
+    _x_position: int
+    _y_position: int
+    _x_prev_position: int
+    _y_prev_position: int
     _battlefield = None
 
     @property
@@ -41,11 +45,13 @@ class InterfaceCard(InterfaceCase):
 
     def getSide(self) -> EnumSide:
         return self._side
+    
+    def setPosition(self, x: int, y: int) -> None:
+        self._x_position = x
+        self._y_position = y
 
     def isWithinBounds(self, x, y):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
-
-
 
     def start_movement_thread(self):
         path = tf.pathToTower((self.getX(),self.getY()),self.getTowerFocusCoordoonates())

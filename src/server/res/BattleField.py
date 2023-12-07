@@ -53,10 +53,10 @@ class BattleField:
             prevY = troop.getPreviousY()
             if prevX is not None and prevY is not None:
                 self._map[prevX][prevY] = EmptyCase(prevX, prevY)
-
             x = troop.getX()
             y = troop.getY()
             self._map[x][y] = troop
+        print(self.getMap())
         self.checkAndUpdateCardStates()
         
     def onUpdateMap(self):
@@ -67,7 +67,6 @@ class BattleField:
         self.onUpdateMap()
         troop.state.handle_request(troop)
 
-        
     def removeTroop(self, troop: InterfaceCard):
         self._troops.remove(troop)
     
@@ -92,7 +91,6 @@ class BattleField:
     def checkAndUpdateCardStates(self):
         for card in self._troops:
             opponent = card.opponentInRange()
-            print(opponent)
             if opponent and not isinstance(card.state, AttackState):
                 card.state = AttackState()
                 card.state.handle_request(card)

@@ -12,7 +12,7 @@ from api.globaleVariable import COLUMNS, ROWS
 
 class BallonCard(InterfaceCard):
 
-    def __init__(self, side: EnumSide,x,y) -> None:
+    def __init__(self, side: EnumSide) -> None:
         self._ID = 2
         self._NAME = "Gobelin"
         self._SPEED = EnumEntitySpeed['FAST']
@@ -22,8 +22,8 @@ class BallonCard(InterfaceCard):
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
-        self._x_position = x
-        self._y_position = y
+        self._x_position = None
+        self._y_position = None
         self._x_prev_position = None
         self._y_prev_position = None
         self._battlefield = BattleField.getInstance()
