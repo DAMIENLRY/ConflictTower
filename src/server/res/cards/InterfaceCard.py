@@ -60,8 +60,6 @@ class InterfaceCard(InterfaceCase):
         self._battlefield.removeTroop(self)
 
 
-
-
     def start_attack_thread(self):
         self.attack_thread = threading.Thread(target=self.attack_loop)
         self.attack_thread.start()
@@ -72,25 +70,23 @@ class InterfaceCard(InterfaceCase):
     def attack_loop(self):
         self._stop_attack = False
         while not self._stop_attack and self._HEALTH_POINT > 0:
-            print(self._NAME + " "+str(self._HEALTH_POINT))
-
-            opponent = self.opponentInRange()            
-            if(opponent):
+            opponent = self.opponentInRange()
+            if opponent:
                 opponentEmptyCase = self.getNearestEmptyCase(opponent._x_position, opponent._y_position, opponent._RANGE)
-                if(opponentEmptyCase is not False):
-                    opponentCard = self._battlefield.isOccupiedByOpponent(opponent._x_position, opponent._y_position)
+                if opponentEmptyCase is not False:
                     dmgCase = DamageCase(self._ATTACK_DAMAGE, opponentEmptyCase[0], opponentEmptyCase[1])
-                    self._battlefield.damageQueue.put((dmgCase, 0.2))
- 
-                    opponentCard.reduceHealth(self._ATTACK_DAMAGE)
-                    if(opponentCard._HEALTH_POINT <= 0):
-                        self._stop_attack = True
-                    
-                    time.sleep(self.getAttackSpeedInterval())
-            else:
-                self._stop_attack = True
+                    #self._battlefield.damageQueue.put((dmgCase, 0.2))
 
-            if(not self._stop_attack and self._HEALTH_POINT > 0):
+                    self._battlefield.addDamageCase(dmgCase)
+                    time.sleep(0.3)
+                    self._battlefield.removeDamageCase(dmgCase)
+
+                    opponentCard = self._battlefield.isOccupiedByOpponent(self, opponent._x_position, opponent._y_position)
+                    opponentCard.reduceHealth(self._ATTACK_DAMAGE)
+                    if opponentCard._HEALTH_POINT <= 0:
+                        self._stop_attack = True
+
+            if not self._stop_attack and self._HEALTH_POINT > 0:
                 time.sleep(self.getAttackSpeedInterval())
 
         self.state = FocusTowerState()
@@ -137,7 +133,10 @@ class InterfaceCard(InterfaceCase):
             return False
 
     def getNearestEmptyCase(self, xOp, yOp, rangeOp):
-        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (1,1), (-1,1), (1,-1)]:
+        for dx, dy in [
+            (-1,0), (1,0), (0,-1), (0,1),
+            (-1,-1), (1,1), (-1,1), (1,-1)
+        ]:
             targetX, targetY = dx + xOp, dy + yOp
 
             if self.isWithinBounds(targetX, targetY):
@@ -147,11 +146,16 @@ class InterfaceCard(InterfaceCase):
         return False
 
     def opponentInRange(self):
-        for dx, dy in [(-1,0), (1,0), (0,-1), (0,1), (-1,-1), (1,1), (-1,1), (1,-1)]:
+        offsets = [
+            (dx, dy) for dx in range(-self._RANGE, self._RANGE + 1)
+            for dy in range(-self._RANGE, self._RANGE + 1)
+            if not (dx == 0 and dy == 0)
+        ]
+        
+        for dx, dy in offsets:
             targetX, targetY = dx + self._x_position, dy + self._y_position
-
             if self.isWithinBounds(targetX, targetY):
-                opponent = self._battlefield.isOccupiedByOpponent(targetX, targetY)
+                opponent = self._battlefield.isOccupiedByOpponent(self, targetX, targetY)
                 if opponent:
                     return opponent
         return False

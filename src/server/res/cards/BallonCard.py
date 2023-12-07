@@ -15,12 +15,12 @@ class BallonCard(InterfaceCard):
     def __init__(self, side: EnumSide,x,y) -> None:
         self._ID = 2
         self._NAME = "Ballon"
-        self._SPEED = EnumEntitySpeed['FAST']
+        self._SPEED = EnumEntitySpeed['LIGHT_SPEED']
         self._side = side
         self._state = FocusTowerState()
-        self._RANGE = 2
+        self._RANGE = 3
         self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
-        self._ATTACK_DAMAGE = 10
+        self._ATTACK_DAMAGE = 25
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
         self._x_position = x

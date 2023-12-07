@@ -23,6 +23,7 @@ from server.res.cards.states.AttackState import AttackState
 
 import time
 import threading
+import queue
 from queue import Queue
 
 class BattleField:
@@ -41,19 +42,8 @@ class BattleField:
         if not self.__class__._instance:
             self.initMap()
             self._troops = []
-            self.damageQueue = Queue()
-            self.damageThread = threading.Thread(target=self.processDamageQueue)
-            self.damageThread.daemon = True
-            self.damageThread.start()
         else:
             raise Exception("Cette classe est un singleton !")
-
-    def processDamageQueue(self):
-        while True:
-            damageCase, duration = self.damageQueue.get()
-            self.addDamageCase(damageCase)
-            time.sleep(duration)
-            self.removeDamageCase(damageCase)
 
 
     def getMap(self):
@@ -70,7 +60,8 @@ class BattleField:
             prevX = troop.getPreviousX()
             prevY = troop.getPreviousY()
             if prevX is not None and prevY is not None:
-                self._map[prevX][prevY] = EmptyCase(prevX, prevY)
+                if not isinstance(self._map[prevX][prevY], DamageCase):
+                    self._map[prevX][prevY] = EmptyCase(prevX, prevY)
 
             x = troop.getX()
             y = troop.getY()
@@ -89,15 +80,17 @@ class BattleField:
         self._troops.remove(troop)
         self._map[troop._x_position][troop._y_position] = EmptyCase()
         self.onUpdateMap()
-
-    def addDamageCase(self, damageCase: DamageCase):
-        self._map[damageCase.getX()][damageCase.getY()] = damageCase
-        self.onUpdateMap()
-
-    def removeDamageCase(self, damageCase: DamageCase):
-        self._map[damageCase.getX()][damageCase.getY()] = EmptyCase()
-        self.onUpdateMap()
     
+    def addDamageCase(self, damageCase):
+        x, y = damageCase.getX(), damageCase.getY()
+        self._map[x][y] = damageCase
+        self.onUpdateMap()
+
+    def removeDamageCase(self, damageCase):
+        x, y = damageCase.getX(), damageCase.getY()
+        self._map[x][y] = EmptyCase(x, y)
+        self.onUpdateMap()
+
     def initMap(self):
         map: List[List[InterfaceCase]] = []
         for row in range(ROWS):
@@ -110,17 +103,16 @@ class BattleField:
                 map[10][case] = ObstacleCase(row, column)
         self._map = map
         
-    def isOccupiedByOpponent(self,x,y):
+    def isOccupiedByOpponent(self,entity,x,y):
         if isinstance(self._map[x][y], InterfaceCard):
-            return self._map[x][y]
+            if(entity._side != self._map[x][y]._side):
+                return self._map[x][y]
         else:
             return False
         
     def isCaseEmpty(self,x,y):
-        if isinstance(self._map[x][y], EmptyCase):
-            return True
-        return False
-
+        return isinstance(self._map[x][y], EmptyCase)
+        
     def checkAndUpdateCardStates(self):
         for card in self._troops:
             opponent = card.opponentInRange()
