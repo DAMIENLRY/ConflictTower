@@ -61,11 +61,6 @@ def pathToTower(start,end):
             map[10][i] = -1
 
     adjacencyList = createAdjacencyListFromList(map)
-    #print(adjacencyList)
-
     bfs = breadthFirstSearch(adjacencyList,start,end)
-    #print(bfs)
-
     shortestPath = findShortestPath(bfs,end)
-    #print(shortestPath)
     return shortestPath

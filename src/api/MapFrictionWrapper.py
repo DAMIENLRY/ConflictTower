@@ -6,31 +6,32 @@ class MapFrictionWrapper:
             cls._instance = super(MapFrictionWrapper, cls).__new__(cls)
             cls._instance.map_friction = []
             cls._instance.map_imgs = []
-            cls._instance.copper = "🟠 0 - 0"
-            cls._instance.life = "💗 0 - 0"
-            cls._instance.countdown = "⌛ 0:00"
+            cls._instance.lifeSide1 = 0
+            cls._instance.lifeSide2 = 0
+            cls._instance.countdown = 0
         return cls._instance
 
     def __init__(self, arbitre):
         self.arbitre = arbitre
-
+        
+    def afficher_temps(self):
+        minutes, secondes = divmod(self.countdown, 60)
+        return f"{minutes}:{secondes:02}"
+    
+    def get_status_bar(self):
+        return f"💗 {self.lifeSide1} - {self.lifeSide2} ⌛ {self.afficher_temps()}"
 
     def init_status_bar(self):
-        updatedStatus = f" {self.copper} {self.life} {self.countdown}"
-        self.arbitre.ruleArena("info", updatedStatus)
+        self.arbitre.ruleArena("info", self.get_status_bar())
 
-    def update_status_bar(self, name, args):
+    def update_status_bar(self, name, value, side=1):
         match name:
-            case "copper":
-                copper = f"🟠 {args[0]} - {args[1]}"
-                updatedStatus = f" {copper} {self.life} {self.countdown}"
             case "life":
-                life = f"💗 {args[0]} - {args[1]}"
-                updatedStatus = f" {self.copper} {life} {self.countdown}"
+                if(side == 1): self.lifeSide1 = value
+                if(side == 2): self.lifeSide2 = value
             case "countdown":
-                countdown = f"⌛ {args[0]}"
-                updatedStatus = f" {self.copper} {self.life} {countdown}"
-        self.arbitre.ruleArena("info", updatedStatus)
+                self.countdown = value
+        self.arbitre.ruleArena("info", self.get_status_bar())
 
     def add_friction(self, frictionIndex, frictionCollision, imageURL):
         while len(self.map_friction) <= frictionIndex:
@@ -51,3 +52,6 @@ class MapFrictionWrapper:
 
     def get_map_imgs(self):
         return self.map_imgs
+    
+    def getTime(self):
+        return self.countdown;

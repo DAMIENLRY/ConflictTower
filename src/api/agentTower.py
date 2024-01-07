@@ -20,13 +20,11 @@ class AgentTower:
     _agent: Agent
     _deck: Set[TroopEnum]
     _deckPlayed: List[TroopEnum]
-    _elixir: int
     _team: EnumSide
     
     def __init__(self,playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883, imgOutputPath:str or None="img.jpeg", autoconnect:bool=True, waitArenaConnection:bool=True, verbosity:int=3, robotId:str or None="_", welcomePrint:bool=True, sourcesdir:str or None=None):
         self._agent = Agent(playerId, arena, username, password, server, port, imgOutputPath, autoconnect, waitArenaConnection, verbosity, robotId, welcomePrint, sourcesdir)
         self._deck = set()
-        self._elixir = 0
         
     def setDeck(self, deck:List[TroopEnum]) -> None:
         self._deck = deck
@@ -44,6 +42,7 @@ class AgentTower:
         
     def selectTeam(self, team: EnumSide):
         self._team = team
+        self._agent.team = team.value
         
     def launchGame(self) -> None:
         if len(self._deck) != 8:
@@ -65,7 +64,6 @@ class AgentTower:
     def placeCard(self, slot: int, placement: EnumPlacement) -> None:
         if(not( 1 <= slot <= 4)): raise("Vous devez choisir votre carte situé sur le slot 1, 2, 3, 4")
         card = (self._deckPlayed.pop(slot)).value(self._team)
-        print(card.getId())
         #self._agent.setColor(self._team.value, card.getId(), placement.value)
         self._agent.setColor(self._team.value, 2, placement.value)
         self._agent.update()
@@ -73,6 +71,9 @@ class AgentTower:
         
     def getDeck(self) -> None:
         return self._deckPlayed[:4]
+    
+    def getCopper(self) -> int:
+        return self._agent.ammo
         
     def update(self) -> None:
         self._agent.update()

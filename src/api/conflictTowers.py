@@ -26,7 +26,7 @@ from api.enums.TroopEnum import TroopEnum
 import api.towerFinder as tf
 from api.MapFrictionWrapper import MapFrictionWrapper
 
-from globaleVariable import COLUMNS, ROWS
+from globaleVariable import COLUMNS, ROWS, TIME, TIME_TO_GET_COPPER, MAX_COPPER
 
 load_dotenv()
 arbitrerSecret = os.getenv('arbitrerSecret')
@@ -86,7 +86,6 @@ def getColorOfPlayers(agents: dict):
     return playerColor
 
 def placeCardOnBattlefield(player):
-    print("Changement de couleur")
     print(player)
     playerTeam = EnumSide.SIDE_1
     if player[0] == 2: playerTeam = EnumSide.SIDE_2
@@ -95,25 +94,75 @@ def placeCardOnBattlefield(player):
         spawnTroop = troop.value(playerTeam)
         if spawnTroop.getId() == player[1]:
             selectCard = spawnTroop
-    print(selectCard._x_position, selectCard._y_position)
     selectCard.setPosition(5, 5)
-    print(selectCard._x_position, selectCard._y_position)
     battleField.addTroop(selectCard)
+    
+def changeLifeListener(arbitre: pytactx.Agent, callback):
+    playerLife = getLifeOfPlayers(arbitre.range)
+    while True:
+        newPlayerColor = getLifeOfPlayers(arbitre.range)
+        for name, color in newPlayerColor.items():
+            if playerLife[name] != color:
+                playerLife[name] = color
+                callback(arbitre, playerLife[name])
+                
+def getLifeOfPlayers(agents: dict):
+    playerLife = {}
+    for key, value in agents.items():
+        playerLife[key] = value['life']
+    return playerLife
 
+def changeLifeTower(arbitre, player):
+    map_rule_manager = MapFrictionWrapper(arbitre)
+    map_rule_manager.update_status_bar("life", [])
 
-def afficher_temps(temps):
-    minutes, secondes = divmod(temps, 60)
-    return f"{minutes}:{secondes:02}"
-
-def minuteur(duree_en_secondes,arbitre):
+def minuteur(arbitre):
     map_rule_manager = MapFrictionWrapper(arbitre)
 
-    temps_restant = duree_en_secondes
-    while temps_restant >= 0:
-        map_rule_manager.update_status_bar("countdown", [afficher_temps(temps_restant)])
+    temps_restant = TIME
+    while temps_restant >= -1:
+        map_rule_manager.update_status_bar("countdown", temps_restant)
         time.sleep(1)
         temps_restant -= 1
     print("Temps écoulé !")
+    
+def add_copper(arbitre: pytactx.Agent):
+    while True:
+        for key, value in arbitre.range.items():
+            new_copper_amount = value['ammo'] + 10
+            if new_copper_amount <= MAX_COPPER: 
+                arbitre.rulePlayer(key, "ammo", new_copper_amount)
+        time.sleep(TIME_TO_GET_COPPER)
+
+def can_start_game(arbitre: pytactx.Agent):
+    if len(arbitre.range.keys()) < 2: return False
+    return True
+    
+def lunchGame(arbitre: pytactx.Agent):
+    robotId = 0
+    for key, value in arbitre.range.items():
+        robotId += 1
+        arbitre.rulePlayer("EKIP", "profile", 0)
+        #arbitre.rulePlayer(key, "robotId", str(robotId))
+        arbitre.rulePlayer(key, "team", value['led'][0])
+        arbitre.rulePlayer(key, "ammo", 60)
+        
+    countdown_thread = threading.Thread(target=minuteur, args=(arbitre,))
+    countdown_thread.daemon = True
+    countdown_thread.start()
+
+    color_listener_thread = threading.Thread(target=changeColorListener, args=(arbitre, placeCardOnBattlefield))
+    color_listener_thread.daemon = True
+    color_listener_thread.start()
+    
+    copper_thread = threading.Thread(target=add_copper, args=(arbitre,))
+    copper_thread.daemon = True
+    copper_thread.start()
+
+def game_is_finised(arbitre: pytactx.Agent):
+    map_rule_manager = MapFrictionWrapper(arbitre)
+    if map_rule_manager.getTime() < 0: return True
+    return False
 
 def main():
     arbitre = initArbitrers()
@@ -124,6 +173,19 @@ def main():
 						password="demo",
 						server="mqtt.jusdeliens.com",
 						verbosity=2)
+    
+    agent2 = AgentTower(playerId="EKIP",
+						arena="conflicttower",
+						username="demo",
+						password="demo",
+						server="mqtt.jusdeliens.com",
+						verbosity=2)
+    
+    agent2.generateDeck()
+
+    agent2.selectTeam(EnumSide.SIDE_2)
+    agent2.launchGame()
+    
     agent.generateDeck()
 
     agent.selectTeam(EnumSide.SIDE_1)
@@ -132,19 +194,21 @@ def main():
     agent.getDeck()
     agent.placeCard(2, EnumPlacement["CENTER"])
     agent.getDeck()
-
-    duree_totale_en_secondes = 3 * 60
-    countdown_thread = threading.Thread(target=minuteur, args=(duree_totale_en_secondes,arbitre,))
-    countdown_thread.daemon = True
-    countdown_thread.start()
-
-    color_listener_thread = threading.Thread(target=changeColorListener, args=(arbitre, placeCardOnBattlefield))
-    color_listener_thread.daemon = True
-    color_listener_thread.start()
-
-    while True:
+    
+    print(arbitre.range)
+    
+    while not can_start_game(arbitre):
+        print("La game ne peux pas être lancée")
+        time.sleep(2)
+        
+    lunchGame(arbitre)
+    print("partie lancée")
+    
+    while not game_is_finised(arbitre=arbitre) and can_start_game(arbitre):
         arbitre.ruleArena("map", battleField.getMap())
         arbitre.update()
         time.sleep(0.1)
 
 main()
+
+

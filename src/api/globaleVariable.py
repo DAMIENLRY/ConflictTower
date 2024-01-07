@@ -1,5 +1,8 @@
 COLUMNS = 13
 ROWS = 21
+TIME = 180
+MAX_COPPER = 100
+TIME_TO_GET_COPPER = 2
 TOWER_SIDE_1 = [
     (4,6),
     (3,5), (3,7),

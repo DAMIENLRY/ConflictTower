@@ -66,7 +66,6 @@ class BattleField:
             x = troop.getX()
             y = troop.getY()
             self._map[x][y] = troop
-        print(self.getMap())
         self.checkAndUpdateCardStates()
 
     def onUpdateMap(self):
