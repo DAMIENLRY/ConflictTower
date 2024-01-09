@@ -27,7 +27,7 @@ class InterfaceCard(InterfaceCase):
     _ATTAQUE_SPEED: EnumEntitySpeed
     _TYPE: EnumEntityType
     _HEALTH_POINT: int
-    _POINT: int
+    _COPPER_COST: int
     _state: StateCard
     _side: EnumSide
     _stop_movement = True
@@ -147,6 +147,9 @@ class InterfaceCard(InterfaceCase):
                 if emptyCase:
                     return (targetX,targetY)
         return False
+
+    def getCopperCost(self) -> int:
+        return self._COPPER_COST
 
     def opponentInRange(self):
         offsets = [

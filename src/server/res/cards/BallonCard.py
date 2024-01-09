@@ -23,6 +23,7 @@ class BallonCard(InterfaceCard):
         self._ATTACK_DAMAGE = 15
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
+        self._COPPER_COST = 50
         self._x_position = None
         self._y_position = None
         self._x_prev_position = None

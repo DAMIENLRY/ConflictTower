@@ -54,7 +54,7 @@ class AgentTower:
         random.shuffle(listDeck)
         self._deckPlayed = list(listDeck)
         self._agent.setColor(self._team.value, 0, 0)
-        self._agent.moveTowards(18, 6)
+        #self._agent.moveTowards(6, 18)
         self._agent.update()
     
     def generateDeck(self) -> None:

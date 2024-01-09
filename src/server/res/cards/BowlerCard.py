@@ -20,6 +20,7 @@ class BowlerCard(InterfaceCard):
         self._ATTACK_DAMAGE = 10
         self._TYPE = EnumEntityType['GROUND']
         self._HEALTH_POINT = 100
+        self._COPPER_COST = 40
         self._x_position = None
         self._y_position = None
         self._x_prev_position = None

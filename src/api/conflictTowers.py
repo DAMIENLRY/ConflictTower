@@ -76,6 +76,7 @@ def changeColorListener(arbitre: pytactx.Agent, callback):
         newPlayerColor = getColorOfPlayers(arbitre.range)
         for name, color in newPlayerColor.items():
             if playerColor[name] != color:
+                print(name, ' changement de couleur : ', color)
                 playerColor[name] = color
                 callback(playerColor[name])
 
@@ -86,7 +87,6 @@ def getColorOfPlayers(agents: dict):
     return playerColor
 
 def placeCardOnBattlefield(player):
-    print(player)
     playerTeam = EnumSide.SIDE_1
     if player[0] == 2: playerTeam = EnumSide.SIDE_2
     selectCard: InterfaceCard = BowlerCard(playerTeam)
@@ -94,8 +94,11 @@ def placeCardOnBattlefield(player):
         spawnTroop = troop.value(playerTeam)
         if spawnTroop.getId() == player[1]:
             selectCard = spawnTroop
-    selectCard.setPosition(5, 5)
-    battleField.addTroop(selectCard)
+    print('player: ', player)
+    if selectCard.getCopperCost() <= player["ammo"]:   
+        selectCard.setPosition(5, 5)
+        player["ammo"] -= selectCard.getCopperCost()
+        battleField.addTroop(selectCard)
     
 def changeLifeListener(arbitre: pytactx.Agent, callback):
     playerLife = getLifeOfPlayers(arbitre.range)
@@ -143,7 +146,7 @@ def lunchGame(arbitre: pytactx.Agent):
     for key, value in arbitre.range.items():
         robotId += 1
         arbitre.rulePlayer("EKIP", "profile", 0)
-        #arbitre.rulePlayer(key, "robotId", str(robotId))
+        arbitre.rulePlayer(key, "robotId", str(robotId))
         arbitre.rulePlayer(key, "team", value['led'][0])
         arbitre.rulePlayer(key, "ammo", 60)
         
@@ -192,10 +195,7 @@ def main():
     agent.launchGame()
 
     agent.getDeck()
-    agent.placeCard(2, EnumPlacement["CENTER"])
     agent.getDeck()
-    
-    print(arbitre.range)
     
     while not can_start_game(arbitre):
         print("La game ne peux pas être lancée")
@@ -204,11 +204,11 @@ def main():
     lunchGame(arbitre)
     print("partie lancée")
     
+    agent.placeCard(2, EnumPlacement["CENTER"])
+    
     while not game_is_finised(arbitre=arbitre) and can_start_game(arbitre):
         arbitre.ruleArena("map", battleField.getMap())
         arbitre.update()
         time.sleep(0.1)
 
 main()
-
-
