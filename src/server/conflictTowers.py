@@ -1,41 +1,28 @@
-from enum import Enum
-import j2l.pytactx.agent as pytactx
 from dotenv import load_dotenv
 import os
 import time
 import sys
 import threading
 
-from agentTower import AgentTower
+from res.BattleField import BattleField
+from res.game.MapFrictionWrapper import MapFrictionWrapper
+from res.game.globaleVariable import COLUMNS, ROWS, TIME, TIME_TO_GET_COPPER, MAX_COPPER
+from res.troops.enums.EnumTroop import EnumTroop
 
 # Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
 current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
 parent_directory = os.path.dirname(os.path.dirname(current_file))  # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
-from server.res.BattleField import BattleField
-
-from server.res.cards.enums.EnumSide import EnumSide
-from server.res.cards.enums.EnumPlacement import EnumPlacement
-from server.res.cards.BallonCard import BallonCard
-from server.res.cards.BowlerCard import BowlerCard
-from server.res.cards.GoblinCard import GoblinCard
-from server.res.cards.HogRiderCard import HogRiderCard
-from server.res.cards.InterfaceCard import InterfaceCard
-from api.enums.TroopEnum import TroopEnum
-import api.towerFinder as tf
-from api.MapFrictionWrapper import MapFrictionWrapper
-
-from globaleVariable import COLUMNS, ROWS, TIME, TIME_TO_GET_COPPER, MAX_COPPER
+from api.j2l.pytactx.agent import Agent
 
 load_dotenv()
 arbitrerSecret = os.getenv('arbitrerSecret')
 
 battleField = BattleField.getInstance()
 
-
 def initArbitrers():
-    arbitre = pytactx.Agent(playerId=arbitrerSecret,
+    arbitre = Agent(playerId=arbitrerSecret,
                              arena="conflicttower",
                              username="demo",
                              password="demo",
@@ -70,7 +57,13 @@ def initArbitrers():
 
     return arbitre
 
-def changeColorListener(arbitre: pytactx.Agent, callback):
+def getAgentById(arbitre: Agent, id: int):
+    for key, value in arbitre.range.items():
+        if value['x'] == id:
+            return key, value
+    return False
+
+def changeColorListener(arbitre: Agent, callback):
     playerColor = getColorOfPlayers(arbitre.range)
     while True:
         newPlayerColor = getColorOfPlayers(arbitre.range)
@@ -78,7 +71,7 @@ def changeColorListener(arbitre: pytactx.Agent, callback):
             if playerColor[name] != color:
                 print(name, ' changement de couleur : ', color)
                 playerColor[name] = color
-                callback(playerColor[name])
+                callback(arbitre, playerColor[name])
 
 def getColorOfPlayers(agents: dict):
     playerColor = {}
@@ -86,21 +79,26 @@ def getColorOfPlayers(agents: dict):
         playerColor[key] = value['led']
     return playerColor
 
-def placeCardOnBattlefield(player):
-    playerTeam = EnumSide.SIDE_1
-    if player[0] == 2: playerTeam = EnumSide.SIDE_2
-    selectCard: InterfaceCard = BowlerCard(playerTeam)
-    for troop in TroopEnum:
-        spawnTroop = troop.value(playerTeam)
-        if spawnTroop.getId() == player[1]:
+def decode_coords(encoded):
+    x = (encoded >> 4) & 0b1111  # Récupération des 4 premiers bits pour x
+    y = encoded & 0b1111  # Récupération des 4 derniers bits pour y
+    return x, y + 1
+
+def placeCardOnBattlefield(arbitre: Agent, playerColor):
+    playerName, player = getAgentById(arbitre, playerColor[0])
+    for troop in EnumTroop: 
+        spawnTroop = troop.value(player['team'])
+        if spawnTroop.getId() == playerColor[1]:
             selectCard = spawnTroop
-    print('player: ', player)
-    if selectCard.getCopperCost() <= player["ammo"]:   
-        selectCard.setPosition(5, 5)
-        player["ammo"] -= selectCard.getCopperCost()
-        battleField.addTroop(selectCard)
+            if selectCard.getCopperCost() <= player["ammo"]: 
+                x, y = decode_coords(playerColor[2])
+                if player['team'] == 2:
+                    y = ROWS - y - 1
+                selectCard.setPosition(y, x)
+                arbitre.rulePlayer(playerName, "ammo", player["ammo"] - selectCard.getCopperCost())
+            battleField.addTroop(selectCard)
     
-def changeLifeListener(arbitre: pytactx.Agent, callback):
+def changeLifeListener(arbitre: Agent, callback):
     playerLife = getLifeOfPlayers(arbitre.range)
     while True:
         newPlayerColor = getLifeOfPlayers(arbitre.range)
@@ -129,7 +127,7 @@ def minuteur(arbitre):
         temps_restant -= 1
     print("Temps écoulé !")
     
-def add_copper(arbitre: pytactx.Agent):
+def add_copper(arbitre: Agent):
     while True:
         for key, value in arbitre.range.items():
             new_copper_amount = value['ammo'] + 10
@@ -137,16 +135,15 @@ def add_copper(arbitre: pytactx.Agent):
                 arbitre.rulePlayer(key, "ammo", new_copper_amount)
         time.sleep(TIME_TO_GET_COPPER)
 
-def can_start_game(arbitre: pytactx.Agent):
+def can_start_game(arbitre: Agent):
     if len(arbitre.range.keys()) < 2: return False
     return True
     
-def lunchGame(arbitre: pytactx.Agent):
-    robotId = 0
+def lunchGame(arbitre: Agent):
+    id = 0
     for key, value in arbitre.range.items():
-        robotId += 1
-        arbitre.rulePlayer("EKIP", "profile", 0)
-        arbitre.rulePlayer(key, "robotId", str(robotId))
+        id += 1
+        arbitre.rulePlayer(key, "x", id)
         arbitre.rulePlayer(key, "team", value['led'][0])
         arbitre.rulePlayer(key, "ammo", 60)
         
@@ -162,40 +159,13 @@ def lunchGame(arbitre: pytactx.Agent):
     copper_thread.daemon = True
     copper_thread.start()
 
-def game_is_finised(arbitre: pytactx.Agent):
+def game_is_finised(arbitre: Agent):
     map_rule_manager = MapFrictionWrapper(arbitre)
     if map_rule_manager.getTime() < 0: return True
     return False
 
 def main():
     arbitre = initArbitrers()
-
-    agent = AgentTower(playerId="667VELIB",
-						arena="conflicttower",
-						username="demo",
-						password="demo",
-						server="mqtt.jusdeliens.com",
-						verbosity=2)
-    
-    agent2 = AgentTower(playerId="EKIP",
-						arena="conflicttower",
-						username="demo",
-						password="demo",
-						server="mqtt.jusdeliens.com",
-						verbosity=2)
-    
-    agent2.generateDeck()
-
-    agent2.selectTeam(EnumSide.SIDE_2)
-    agent2.launchGame()
-    
-    agent.generateDeck()
-
-    agent.selectTeam(EnumSide.SIDE_1)
-    agent.launchGame()
-
-    agent.getDeck()
-    agent.getDeck()
     
     while not can_start_game(arbitre):
         print("La game ne peux pas être lancée")
@@ -203,8 +173,6 @@ def main():
         
     lunchGame(arbitre)
     print("partie lancée")
-    
-    agent.placeCard(2, EnumPlacement["CENTER"])
     
     while not game_is_finised(arbitre=arbitre) and can_start_game(arbitre):
         arbitre.ruleArena("map", battleField.getMap())

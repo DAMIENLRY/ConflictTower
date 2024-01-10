@@ -7,17 +7,16 @@ current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
 parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))  # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
-from server.res.cards.BallonCard import BallonCard
-from server.res.cards.BowlerCard import BowlerCard
-from server.res.cards.GoblinCard import GoblinCard
-from server.res.cards.HogRiderCard import HogRiderCard
-from server.res.cards.RoyalGiantCard import RoyalGiantCard
-from server.res.cards.ArcherCard import ArcherCard
-from server.res.cards.KnightCard import KnightCard
-from server.res.cards.MinionCard import MinionCard
+from cards.BallonCard import BallonCard
+from cards.BowlerCard import BowlerCard
+from cards.GoblinCard import GoblinCard
+from cards.HogRiderCard import HogRiderCard
+from cards.RoyalGiantCard import RoyalGiantCard
+from cards.ArcherCard import ArcherCard
+from cards.KnightCard import KnightCard
+from cards.MinionCard import MinionCard
 
-
-class TroopEnum(Enum):
+class EnumCard(Enum):
     BALLON = BallonCard
     BOWLER = BowlerCard
     GOBLIN = GoblinCard
@@ -26,4 +25,3 @@ class TroopEnum(Enum):
     ARCHER = ArcherCard
     KNIGHT = KnightCard
     MINION = MinionCard
-    

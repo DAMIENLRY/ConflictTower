@@ -1,27 +1,31 @@
 from abc import ABC
 from .InterfaceCase import InterfaceCase
+from .DamageCase import DamageCase
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .enums.EnumSide import EnumSide
 from .states.StateCard import StateCard
+from .states.FocusTowerState import FocusTowerState
 import time
 import sys
 import os
 import threading
-import api.towerFinder as tf
-
-from api.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
 
 # Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
 current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
-parent_directory = os.path.dirname(current_file) # Chemin du répertoire parent
+parent_directory = os.path.dirname(os.path.dirname(current_file)) # Chemin du répertoire parent
 sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
-from server.res.cases.DamageCase import DamageCase
-from server.res.cards.states.FocusTowerState import FocusTowerState
+from game.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
+from game.towerFinder import pathToTower
 
-class InterfaceCard(InterfaceCase):
+class InterfaceTroop(InterfaceCase, ABC):
 
+    _ID: int
+    _NAME: str
+    _x_position: int
+    _y_position: int
+    _x_prev_position: int
+    _y_prev_position: int
     _SPEED: EnumEntitySpeed
     _RANGE: int
     _ATTAQUE_SPEED: EnumEntitySpeed
@@ -29,10 +33,14 @@ class InterfaceCard(InterfaceCase):
     _HEALTH_POINT: int
     _COPPER_COST: int
     _state: StateCard
-    _side: EnumSide
+    _side: int
     _stop_movement = True
     _stop_attack = False
     _battlefield = None
+    
+    def __init__(self):
+        from res.BattleField import BattleField
+        self._battlefield = BattleField.getInstance()
 
     @property
     def state(self):
@@ -42,7 +50,7 @@ class InterfaceCard(InterfaceCase):
     def state(self, new_state: StateCard):
         self._state = new_state
 
-    def getSide(self) -> EnumSide:
+    def getSide(self) -> int:
         return self._side
 
     def setPosition(self, x: int, y: int) -> None:
@@ -51,7 +59,6 @@ class InterfaceCard(InterfaceCase):
 
     def isWithinBounds(self, x, y):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
-
 
     def reduceHealth(self, damage_amount):
         self._HEALTH_POINT -= damage_amount
@@ -75,6 +82,7 @@ class InterfaceCard(InterfaceCase):
         self._stop_attack = False
         while not self._stop_attack and self._HEALTH_POINT > 0:
             opponent = self.opponentInRange()
+            print('opponent : ', opponent)
             if opponent:
                 opponentEmptyCase = self.getNearestEmptyCase(opponent._x_position, opponent._y_position, opponent._RANGE)
                 if opponentEmptyCase is not False:
@@ -98,7 +106,7 @@ class InterfaceCard(InterfaceCase):
 
 
     def start_movement_thread(self):
-        path = tf.pathToTower((self.getX(),self.getY()),self.getTowerFocusCoordoonates())
+        path = pathToTower((self.getX(),self.getY()),self.getTowerFocusCoordoonates())
         self.movement_thread = threading.Thread(target=self.movement_loop, args=(path,))
         self.movement_thread.start()
 
@@ -110,6 +118,7 @@ class InterfaceCard(InterfaceCase):
         for x, y in path:
             if self._stop_movement:
                 break
+            self.opponentInRange()
             self.setLocation(x, y)
             time.sleep(self.getMoveSpeedInterval())
         print("Movement thread stopped.")
@@ -122,7 +131,7 @@ class InterfaceCard(InterfaceCase):
         return self._SPEED.value
 
     def getTowerFocusCoordoonates(self):
-        return TOWER_SIDE_2[0] if self.getSide() == EnumSide.SIDE_1 else TOWER_SIDE_1[0]
+        return TOWER_SIDE_2[0] if self.getSide() == 1 else TOWER_SIDE_1[0]
 
     def setLocation(self, x: int, y: int):
         if x>=1 and x<=ROWS-1 and y>=0 and y<=COLUMNS-1:
@@ -157,7 +166,6 @@ class InterfaceCard(InterfaceCase):
             for dy in range(-self._RANGE, self._RANGE + 1)
             if not (dx == 0 and dy == 0)
         ]
-
         for dx, dy in offsets:
             targetX, targetY = dx + self._x_position, dy + self._y_position
             if self.isWithinBounds(targetX, targetY):

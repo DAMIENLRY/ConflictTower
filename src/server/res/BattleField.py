@@ -1,36 +1,24 @@
 from typing import List
-import sys
-import os
-
-# Chemin absolu du répertoire parent de conflictTowers.py
-current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
-parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))  # Chemin du répertoire parent du parent du parent
-sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
 
 # Maintenant, vous pouvez importer COLUMNS et ROWS depuis conflictTowers
-from api.globaleVariable import COLUMNS, ROWS
+from res.game.globaleVariable import COLUMNS, ROWS
 
 # Maintenant, importez InterfaceCard
-from server.res.cards.InterfaceCase import InterfaceCase
-from server.res.cards.InterfaceCard import InterfaceCard
-from server.res.cards.EmptyCase import EmptyCase
-from server.res.cards.ObstacleCase import ObstacleCase
-from server.res.cards.ObstacleCase import ObstacleCase
-from server.res.cases.DamageCase import DamageCase
-
-from server.res.cards.states.FocusTowerState import FocusTowerState
-from server.res.cards.states.AttackState import AttackState
-
-import time
-import threading
-import queue
-from queue import Queue
+from res.troops.InterfaceCase import InterfaceCase
+from res.troops.InterfaceTroop import InterfaceTroop
+from res.troops.EmptyCase import EmptyCase
+from res.troops.ObstacleCase import ObstacleCase
+from res.troops.ObstacleCase import ObstacleCase
+from res.troops.states.FocusTowerState import FocusTowerState
+from res.troops.states.AttackState import AttackState
+from res.troops.DamageCase import DamageCase
 
 class BattleField:
 
     _instance: 'BattleField' = None
     _map: List[List[InterfaceCase]]
-    _troops: List[InterfaceCard]
+    _troops: List[InterfaceTroop]
+    #_players: List[pytactx.Agent]
 
     @classmethod
     def getInstance(cls):
@@ -71,12 +59,12 @@ class BattleField:
     def onUpdateMap(self):
         self.updateMap()
 
-    def addTroop(self, troop: InterfaceCard):
+    def addTroop(self, troop: InterfaceTroop):
         self._troops.append(troop)
         self.onUpdateMap()
         troop.state.handle_request(troop)
 
-    def removeTroop(self, troop: InterfaceCard):
+    def removeTroop(self, troop: InterfaceTroop):
         self._troops.remove(troop)
         self._map[troop._x_position][troop._y_position] = EmptyCase()
         self.onUpdateMap()
@@ -104,7 +92,8 @@ class BattleField:
         self._map = map
 
     def isOccupiedByOpponent(self,entity,x,y):
-        if isinstance(self._map[x][y], InterfaceCard):
+        #print(self._map[x][y].__class__.__name__, ' ----> ', isinstance(self._map[x][y], InterfaceCase))
+        if isinstance(self._map[x][y], InterfaceTroop):
             if(entity._side != self._map[x][y]._side):
                 return self._map[x][y]
         else:

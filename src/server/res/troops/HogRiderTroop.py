@@ -1,14 +1,12 @@
-from .InterfaceCard import InterfaceCard
+from .InterfaceTroop import InterfaceTroop
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .enums.EnumSide import EnumSide
-from server.res.BattleField import BattleField
+from .states.FocusTowerState import FocusTowerState
+from res.BattleField import BattleField
 
-from api.globaleVariable import COLUMNS, ROWS
-
-class HogRiderCard(InterfaceCard):
+class HogRiderTroop(InterfaceTroop):
         
-    def __init__(self, side: EnumSide) -> None:
+    def __init__(self, side: int) -> None:
         self._ID = 5
         self._NAME = "Chevaucheur de cochon"
         self._SPEED = EnumEntitySpeed['AVERAGE']
@@ -23,13 +21,3 @@ class HogRiderCard(InterfaceCard):
         self._y_prev_position = None
         self._side = side
         self._battlefield = BattleField.getInstance()
-
-    def setLocation(self, x: int, y: int):
-        if x>=1 and x<=ROWS-1 and y>=0 and y<=COLUMNS-1:
-            if self._x_position and self._y_position:
-                self._x_prev_position = self._x_position
-                self._y_prev_position = self._y_position
-            self._x_position = x
-            self._y_position = y
-        else:
-            return False

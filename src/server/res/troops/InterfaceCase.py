@@ -1,6 +1,5 @@
 from abc import ABC
 
-
 class InterfaceCase(ABC):
     
     _ID: int

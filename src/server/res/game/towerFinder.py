@@ -1,6 +1,4 @@
 from queue import Queue
-from turtle import back
-
 
 def displayGraph(graph):
     for y,x in graph:
@@ -63,4 +61,5 @@ def pathToTower(start,end):
     adjacencyList = createAdjacencyListFromList(map)
     bfs = breadthFirstSearch(adjacencyList,start,end)
     shortestPath = findShortestPath(bfs,end)
+    print(shortestPath)
     return shortestPath
