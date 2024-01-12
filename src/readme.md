@@ -1,22 +1,35 @@
-# Titre du jeu
-Description courte du projet
+# ConflictTower
+Jeu de défense de tour en 1vs1, utilisez vos cartes pour se défendre ou attaquer.
 
-## ðŸŽ² RÃ¨gles du jeu 
-Maquette, dÃ©roulÃ© d'une partie, conditions de victoire
+## 🎲 Règles du jeu 
+Les deux joueurs possèdent un terrain, celui du haut ou du bas de l'arène. Chacun reçoit des cartes et peuvent les utiliser dans le but d'attaquer la tour adversaire. La partie se termine par la destruction d'une tour, le joueur dont la tour est toujours debout en ressort vainqueur.
 
-## ðŸŽ® Use cases
-Actions possibles du joueur via l'API
+## 🎮 Use cases
+- generateDeck() # permet au joueur de lui générer son Deck (sa liste de toutes ses cartes).
+- selectTeam(EnumSide side) # sélectionner son terrain : il y a deux côtés (side) sur la zone de jeu.
+- launchGame() # permet de démarrer une partie (le jeu est en 1vs1, les deux joueurs doivent lancer cette méthode).
+- getDeck() # permet de récupérer le contenu de son Deck.
+- placeCard(Int slot, Int x, Int y) # permet de placer une carte depuis son slot <slot> sur le terrain à la position <x> et <y> de SON terrain.
 
-## âœ… PrÃ©-requis
-MatÃ©riel et logiciel requis pour executer votre projet
+## ✅ Pré-requis
+- Python 3
+- API ConflictTower
+- Editeur de code ou en ligne avec Replit
 
-## âš™ï¸ Installation 
-Step by step : commandes Ã  executer, paquets Ã  installer ...
+## ⚙️ Installation 
+- Paquets nécessaires
+  - Turtle
+  - python-dotenv
 
-## ðŸ§‘â€ðŸ’» Auteur(s)
-Rendre Ã  CÃ©sar ce qui appartient Ã  CÃ©sar !
-N'oublier pas de citer toutes les personnes qui ont contribuÃ© directement (vous) ou indirectement (les auteurs des dÃ©pendances de votre projet, des ressources rÃ©cupÃ©rÃ©es ou gÃ©nÃ©rÃ©es ...)
+- Commandes à exécuter
+  - python3 conflictTowers.py
 
-## âš–ï¸ License
-S'appuyer sur https://choosealicense.com/ ou la doc de github
-Attention Ã  vÃ©rifier la compatibilitÃ© de votre licence avec celles des modules utilisÃ©s
+## 🧑‍💻 Auteurs
+- Développeur Pytactx API : Julien ARNE
+- Développeurs ConflictTowers :
+  - Damien Leroy
+  - Thibaud Lebrasseur
+  - Gaëtan Langlois
+
+## ⚖️ License
+Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (CC BY-NC-ND 3.0)
