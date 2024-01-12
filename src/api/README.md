@@ -1,5 +1,5 @@
 # ConflictTower
-Jeu de défense de tour en 1vs1, utilisez vos cartes pour se défendre ou attaquer.
+Lâche ton meilleur "C'est Ciao" à ton ennemi en détruisant sa tour avec tes troupes
 
 ## 🎲 Règles du jeu 
 Les deux joueurs possèdent un terrain, celui du haut ou du bas de l'arène. Chacun reçoit des cartes et peuvent les utiliser dans le but d'attaquer la tour adversaire. La partie se termine par la destruction d'une tour, le joueur dont la tour est toujours debout en ressort vainqueur.

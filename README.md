@@ -1,9 +1,9 @@
 ## A la racine du projet : pour l'administrateur
 - **Titre** ConflictTowers
-- **Description** Lâche ton meilleur "C'est Ciao" à ton ennemi en détruisant sa tour avec tes troupes
+- **Description** Jeu de défense de tour en 1vs1, utilisez vos cartes pour se défendre ou attaquer.
 - **🎯 Contexte & cahier des charges** : développé dans le cadre d'une formation, pour un formateur pour monter en compétence en Python ...
 - **🎲 Règles** du jeu : maquette, déroulé d'une partie, conditions de victoire
-- **🎮 Use cases**: 
+- **🎮 Use cases**:
     - pour l'administrateur : expliquer ce que peut/doit faire un administrateur qui souhaite lancer/administrer une arène de jeu avec des apprenants 
     - pour le joueur : renvoyer vers README API
     - pour le joueur : poser une carte dans son camp du côté gauche ou du côté droit
@@ -14,12 +14,24 @@
 - **🖧 Architecture matériel** (optionnel, peut être décrit avec le diagramme de séquence) : schéma overview présentant les machines et protocoles (serveurs, clients, broker) avec texte expliquant le choix des technologies 
 - **📞 Diagramme de séquence**: expliquer le déroulé d'une partie, les principales étapes à faire dans l'ordre et qui/quoi/comment, les couches s'échangent quelles données pour qui/pour quoi
 - **✅ Pré-requis** 
-    - matériel et logiciel requis pour executer votre projet, pour l'administrateur 
-    - pour les apprenants rediriger vers README API
-- **⚙️ Installation** : step by step (commandes à executer par l'administrateur, paquets à installer ...)
+    - Python 3
+    - API ConflictTower
+    - Editeur de code ou en ligne avec Replit
+- **⚙️ Installation** :
+    - Paquets nécessaires
+        - Turtle
+        - python-dotenv
+    - Installer l'API depuis le dossier src/api
+    - Après, vous pouvez importer la classe AgentTower, et créer votre agent pour jouer
 - **🧪 Tests**: 
-    - définition du plan de test ce qu'on attend quand on fait quoi 
-    - step by step pour lancer les tests
+    - Les tests se trouvent dans le répertoire src/tests.
+    - vous pouvez lancer les classes de tests avec la commande :
+        - python3 agent.py # avec tests de agent par exemple
 - **🛣️ Roadmap**
-- **🧑‍💻 Auteur**
+- **🧑‍💻 Auteurs**
+    - Développeur Pytactx API : Julien ARNE
+    - Développeurs ConflictTowers :
+        - Damien Leroy
+        - Thibaud Lebrasseur
+        - Gaëtan Langlois
 - **⚖️ License** Image de preview (preview.png) générée à l'aide de l'IA DALL-E
