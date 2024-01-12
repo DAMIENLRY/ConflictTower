@@ -9,7 +9,7 @@ Les deux joueurs possèdent un terrain, celui du haut ou du bas de l'arène. Cha
 - selectTeam(EnumSide side) # sélectionner son terrain : il y a deux côtés (side) sur la zone de jeu.
 - launchGame() # permet de démarrer une partie (le jeu est en 1vs1, les deux joueurs doivent lancer cette méthode).
 - getDeck() # permet de récupérer le contenu de son Deck.
-- placeCard(Int slot, Int x, Int y) # permet de placer une carte depuis son slot <slot> sur le terrain à la position <x> et <y> de SON terrain.
+- placeCard(Int slot, Int x, Int y) # permet de placer une carte depuis son slot "slot" sur le terrain à la position "x" et "y" de SON terrain.
 
 ## ✅ Pré-requis
 - Python 3
