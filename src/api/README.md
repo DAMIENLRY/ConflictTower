@@ -8,6 +8,8 @@ Les deux joueurs possèdent un terrain, celui du haut ou du bas de l'arène. Cha
 - generateDeck() # permet au joueur de lui générer son Deck (sa liste de toutes ses cartes).
 - selectTeam(EnumSide side) # sélectionner son terrain : il y a deux côtés (side) sur la zone de jeu.
 - launchGame() # permet de démarrer une partie (le jeu est en 1vs1, les deux joueurs doivent lancer cette méthode).
+- addDeckCard(EnumCard troop) # permet d'ajouter une carte à son Deck, troop est une carte
+- removeDeckCard(EnumCard troop) # permet de retirer une carte de son Deck, troop est une carte
 - getDeck() # permet de récupérer le contenu de son Deck.
 - placeCard(Int slot, Int x, Int y) # permet de placer une carte depuis son slot "slot" sur le terrain à la position "x" et "y" de SON terrain.
 
