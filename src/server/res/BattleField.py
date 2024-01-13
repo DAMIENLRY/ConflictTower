@@ -182,12 +182,6 @@ class BattleField:
             Union[InterfaceCase, bool]: The troop occupying the position if it belongs to the opponent, otherwise False
         """
         troop_on_map: InterfaceCase | InterfaceTroop = self._map[x][y]
-        #print(troop_on_map,'--------->', InterfaceTroop.__class__)
-        # print(self._map[x][y].__class__.__name__, ' ----> ',type(self._map[x][y]))
-        # print("Type of self._map[x][y]:", type(self._map[x][y]))
-        # print("Is self._map[x][y] an instance of InterfaceTroop?", isinstance(self._map[x][y], InterfaceTroop))
-        # print("BowlerTroop bases:", BowlerTroop.__bases__)
-        # print("InterfaceTroop bases:", InterfaceTroop.__bases__)
         if isinstance(troop_on_map, InterfaceTroop):
             if(entity._side != self._map[x][y]._side):
                 return troop_on_map

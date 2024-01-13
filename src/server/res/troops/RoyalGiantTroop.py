@@ -1,4 +1,4 @@
-from .InterfaceTroop import InterfaceTroop
+from res.troops.InterfaceTroop import InterfaceTroop
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
 from .states.FocusTowerState import FocusTowerState

@@ -12,10 +12,9 @@ import sys
 import os
 import threading
 
-# Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
-current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
-parent_directory = os.path.dirname(os.path.dirname(current_file)) # Chemin du répertoire parent
-sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
+current_file = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(current_file))
+sys.path.append(parent_directory)
 
 from game.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
 from game.towerFinder import path_to_tower
@@ -73,6 +72,7 @@ class InterfaceTroop(InterfaceCase, ABC):
     def handle_defeat(self):
         print(f"{self.__class__.__name__} a été vaincu.")
         self._battlefield.remove_troop(self)
+        self.clear_AI()
 
 
     def start_attack_thread(self):
@@ -138,7 +138,6 @@ class InterfaceTroop(InterfaceCase, ABC):
             self.opponent_in_range()
             self.set_location(x, y)
             time.sleep(self.get_move_speed_interval())
-            print(path)
             if len(path) == 0:
                 self.state = AttackTowerState()
                 self._state.handle_request(self)
