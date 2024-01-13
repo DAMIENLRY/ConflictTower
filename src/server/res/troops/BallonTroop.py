@@ -22,4 +22,4 @@ class BallonTroop(InterfaceTroop):
         self._y_position = None
         self._x_prev_position = None
         self._y_prev_position = None
-        self._battlefield = BattleField.getInstance()
+        self._battlefield = BattleField.get_instance()

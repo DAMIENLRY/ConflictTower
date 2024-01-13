@@ -53,5 +53,5 @@ class MapFrictionWrapper:
     def get_map_imgs(self):
         return self.map_imgs
     
-    def getTime(self):
-        return self.countdown;
+    def get_time(self):
+        return self.countdown

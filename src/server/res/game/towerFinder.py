@@ -1,11 +1,11 @@
 from queue import Queue
 
-def displayGraph(graph):
+def display_graph(graph):
     for y,x in graph:
         print(str((y,x))+" : "+str(graph[(y,x)]))
 
 
-def createAdjacencyListFromList(grid):
+def create_adjacency_list_from_list(grid):
     graph = {}
 
     for i in range(len(grid)):
@@ -23,19 +23,20 @@ def createAdjacencyListFromList(grid):
     return graph
 
 
-def findShortestPath(backtrackPaths, targetNode):
-    shortestPath = []
-    current = targetNode
+def find_shortest_path(backtrack_paths, target_node):
+    if not backtrack_paths: return []
+    shortest_path = []
+    current = target_node
 
     while current is not None:
-        shortestPath.append(current)
-        current = backtrackPaths[current]
+        shortest_path.append(current)
+        current = backtrack_paths[current]
 
-    shortestPath.reverse()
-    return shortestPath
+    shortest_path.reverse()
+    return shortest_path
 
 
-def breadthFirstSearch(adjacencyList, start, end):
+def breadth_first_search(adjacency_list, start, end):
     visited = {start: None}
     q = Queue()
     q.put(start)
@@ -43,7 +44,7 @@ def breadthFirstSearch(adjacencyList, start, end):
     while not q.empty():
         element = q.get()
 
-        values = adjacencyList[element]
+        values = adjacency_list[element]
         for v in values:
             if(v not in visited):
                 visited[v] = element #add visited node and keep track of predecessor, to finally build the shortest path using backtracking
@@ -52,14 +53,13 @@ def breadthFirstSearch(adjacencyList, start, end):
                 q.put(v)
     return False
 
-def pathToTower(start,end):
+def path_to_tower(start,end):
     map = [[1 for j in range(13)] for i in range(21)]
     for i in range(13):
         if i not in (2,3,9,10):
             map[10][i] = -1
 
-    adjacencyList = createAdjacencyListFromList(map)
-    bfs = breadthFirstSearch(adjacencyList,start,end)
-    shortestPath = findShortestPath(bfs,end)
-    print(shortestPath)
-    return shortestPath
+    adjacency_list = create_adjacency_list_from_list(map)
+    bfs = breadth_first_search(adjacency_list,start,end)
+    shortest_path = find_shortest_path(bfs,end)
+    return shortest_path

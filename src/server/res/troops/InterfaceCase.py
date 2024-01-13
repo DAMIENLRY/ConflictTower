@@ -9,20 +9,20 @@ class InterfaceCase(ABC):
     _x_prev_position: int
     _y_prev_position: int
     
-    def getId(self) -> int:
+    def get_id(self) -> int:
         return self._ID
     
-    def getName(self) -> str:
+    def get_name(self) -> str:
         return self._NAME
     
-    def getX(self) -> int:
+    def get_x(self) -> int:
         return self._x_position
 
-    def getY(self) -> int:
+    def get_y(self) -> int:
         return self._y_position
     
-    def getPreviousX(self) -> int:
+    def get_previous_x(self) -> int:
         return self._x_prev_position
 
-    def getPreviousY(self) -> int:
+    def get_previous_y(self) -> int:
         return self._y_prev_position

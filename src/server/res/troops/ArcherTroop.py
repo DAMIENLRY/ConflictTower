@@ -20,4 +20,4 @@ class ArcherTroop(InterfaceTroop):
         self._x_prev_position = None
         self._y_prev_position = None
         self._side = side
-        self._battlefield = BattleField.getInstance()
+        self._battlefield = BattleField.get_instance()

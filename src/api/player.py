@@ -1,6 +1,5 @@
 from agentTower import AgentTower
 from enums.EnumSide import EnumSide
-from enums.EnumPlacement import EnumPlacement
 
 agent = AgentTower(playerId="667VELIB",
 						arena="conflicttower",
@@ -16,17 +15,17 @@ agent2 = AgentTower(playerId="EKIP",
                     server="mqtt.jusdeliens.com",
                     verbosity=2)
 
-agent.generateDeck()
+agent.generate_deck()
 
-agent.selectTeam(EnumSide.SIDE_1)
-agent.launchGame()
+agent.select_team(EnumSide.SIDE_1)
+agent.launch_game()
 
-agent2.generateDeck()
+agent2.generate_deck()
 
-agent2.selectTeam(EnumSide.SIDE_2)
-agent2.launchGame()
+agent2.select_team(EnumSide.SIDE_2)
+agent2.launch_game()
 
-print(agent.getDeck())
+print(agent.get_deck())
 
-agent.placeCard(2, 12, 5)
-agent2.placeCard(2, 12, 5)
+agent.place_card(2, 3, 6)
+agent2.place_card(2, 3, 6)

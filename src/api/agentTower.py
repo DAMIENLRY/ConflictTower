@@ -4,7 +4,6 @@ from j2l.pytactx.agent import Agent
 
 from enums.EnumCard import EnumCard
 from enums.EnumSide import EnumSide
-from enums.EnumPlacement import EnumPlacement
 
 class AgentTower:
     
@@ -17,25 +16,25 @@ class AgentTower:
         self._agent = Agent(playerId, arena, username, password, server, port, imgOutputPath, autoconnect, waitArenaConnection, verbosity, robotId, welcomePrint, sourcesdir)
         self._deck = set()
         
-    def setDeck(self, deck:List[EnumCard]) -> None:
+    def set_deck(self, deck:List[EnumCard]) -> None:
         self._deck = deck
         
-    def getDeck(self) -> List[EnumCard]:
+    def get_deck(self) -> List[EnumCard]:
         return self._deck
     
-    def addDeckCard(self, troop: EnumCard) -> None:
+    def add_deck_card(self, troop: EnumCard) -> None:
         if troop in self._deck: return
         self._deck.add(troop)
         
-    def removeDeckCard(self, troop: EnumCard) -> None:
+    def remove_deck_card(self, troop: EnumCard) -> None:
         if not(troop in self._deck): return
         self._deck.remove(troop)
         
-    def selectTeam(self, team: EnumSide):
+    def select_team(self, team: EnumSide):
         self._team = team
         self._agent.team = team.value
         
-    def launchGame(self) -> None:
+    def launch_game(self) -> None:
         if len(self._deck) != 8:
             raise Exception(f"Votre deck de carte doit contenir 8 cartes ! Utiliser l'énumération EnumCard avec les méthodes 'addDeckCard' et 'removeDeckCard'")
         if not hasattr(self, '_team'):
@@ -48,7 +47,7 @@ class AgentTower:
         #self._agent.moveTowards(6, 18)
         self._agent.update()
     
-    def generateDeck(self) -> None:
+    def generate_deck(self) -> None:
         deckGenerated = random.sample(list(EnumCard), 8)
         self._deck = set(deckGenerated)
         
@@ -59,23 +58,25 @@ class AgentTower:
         # Encodage des coordonnées
         return (x << 4) | y
         
-    def placeCard(self, slot: int, x: int, y: int) -> None:
+    def place_card(self, slot: int, x: int, y: int) -> None:
         if(not( 1 <= slot <= 4)): raise("Vous devez choisir votre carte situé sur le slot 1, 2, 3, 4")
         card = (self._deckPlayed.pop(slot)).value()
-        print("playerINFO :", self._agent.x)
         #self._agent.setColor(self._team.value, card.getId(), placement.value)
         self._agent.setColor(self._agent.x, 3, self.encode_coords(x, y))
         self._agent.update()
         self._deckPlayed.append(card)
         
-    def getDeck(self) -> None:
+    def get_deck(self) -> None:
         return self._deckPlayed[:4]
     
-    def getCopper(self) -> int:
+    def get_copper(self) -> int:
         return self._agent.ammo
         
     def update(self) -> None:
         self._agent.update()
+    
+    def disconect(self) -> None:
+        self._agent.disconnect()
     
     def print(self):
         print("Deck: " + str(self._deck))
