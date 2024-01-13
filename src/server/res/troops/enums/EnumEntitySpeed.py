@@ -1,7 +1,16 @@
 from enum import Enum
 
-# Définition de l'énumération des types
 class EnumEntitySpeed(Enum):
+    """
+    Enumeration representing different speeds for entities in the game.
+
+    Attributes:
+        SLOW: Speed value for slow entities.
+        AVERAGE: Speed value for average entities.
+        FAST: Speed value for fast entities.
+        LIGHT_SPEED: Speed value for entities with light speed.
+    """
+
     SLOW = 3
     AVERAGE = 1.5
     FAST = 1

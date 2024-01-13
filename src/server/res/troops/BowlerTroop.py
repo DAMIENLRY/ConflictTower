@@ -5,10 +5,38 @@ from .states.FocusTowerState import FocusTowerState
 from res.BattleField import BattleField
 
 class BowlerTroop(InterfaceTroop):
+    """
+    Class representing a Bowler troop in the game.
+
+    Attributes:
+        _ID (int): Unique identifier for the troop.
+        _NAME (str): Name of the troop.
+        _SPEED (EnumEntitySpeed): Speed of the troop.
+        _RANGE (int): Attack range of the troop.
+        _ATTAQUE_SPEED (EnumEntitySpeed): Attack speed of the troop.
+        _ATTACK_DAMAGE (int): Damage inflicted by the troop's attack.
+        _TYPE (EnumEntityType): Type of the troop (e.g., GROUND, AIR).
+        _HEALTH_POINT (int): Health points of the troop.
+        _COPPER_COST (int): Cost of deploying the troop.
+        _x_position (int): X-coordinate of the troop's current position.
+        _y_position (int): Y-coordinate of the troop's current position.
+        _x_prev_position (int): X-coordinate of the troop's previous position.
+        _y_prev_position (int): Y-coordinate of the troop's previous position.
+        _battlefield (BattleField): Instance of the BattleField.
+    """
 
     def __init__(self, side: int) -> None:
+        """
+        Initializes a BowlerTroop instance.
+
+        Args:
+            side (int): Team side of the troop.
+
+        Returns:
+            None
+        """
         self._ID = 3
-        self._NAME = "Bouliste"
+        self._NAME = "Bowler"
         self._SPEED = EnumEntitySpeed['LIGHT_SPEED']
         self._state = FocusTowerState()
         self._side = side

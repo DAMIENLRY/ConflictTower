@@ -1,3 +1,5 @@
+#PLAYER FILE
+
 from agentTower import AgentTower
 from enums.EnumSide import EnumSide
 

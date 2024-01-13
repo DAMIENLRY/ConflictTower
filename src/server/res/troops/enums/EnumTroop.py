@@ -2,10 +2,9 @@ from enum import Enum
 import os
 import sys
 
-# Obtenez le chemin du répertoire parent de ConflictTower (c'est-à-dire le dossier contenant ConflictTower)
-current_file = os.path.abspath(__file__)  # Chemin actuel du script en cours
-parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))  # Chemin du répertoire parent
-sys.path.append(parent_directory)  # Ajoute le répertoire parent au chemin de recherche
+current_file = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+sys.path.append(parent_directory)
 
 from troops.BallonTroop import BallonTroop
 from troops.BowlerTroop import BowlerTroop
@@ -17,6 +16,20 @@ from troops.KnightTroop import KnightTroop
 from troops.MinionTroop import MinionTroop
 
 class EnumTroop(Enum):
+    """
+    Enumeration representing different troop types in the game.
+
+    Attributes:
+        BALLON: BallonTroop class.
+        BOWLER: BowlerTroop class.
+        GOBLIN: GoblinTroop class.
+        HOGRIDER: HogRiderTroop class.
+        ROYALEGIANT: RoyalGiantTroop class.
+        ARCHER: ArcherTroop class.
+        KNIGHT: KnightTroop class.
+        MINION: MinionTroop class.
+    """
+
     BALLON = BallonTroop
     BOWLER = BowlerTroop
     GOBLIN = GoblinTroop
@@ -25,4 +38,3 @@ class EnumTroop(Enum):
     ARCHER = ArcherTroop
     KNIGHT = KnightTroop
     MINION = MinionTroop
-    
