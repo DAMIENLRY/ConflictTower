@@ -1,7 +1,6 @@
 from res.troops.InterfaceTroop import InterfaceTroop
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .states.FocusTowerState import FocusTowerState
 
 class GoblinTroop(InterfaceTroop):
     """
@@ -24,6 +23,16 @@ class GoblinTroop(InterfaceTroop):
         _state (FocusTowerState): State of the troop.
         _battlefield (BattleField): Instance of the BattleField.
     """
+    
+    _ID = 4
+    _NAME = "Goblin"
+    _SPEED = EnumEntitySpeed.AVERAGE
+    _RANGE = 5
+    _ATTAQUE_SPEED = EnumEntitySpeed.AVERAGE
+    _ATTACK_DAMAGE = 5
+    _TYPE = EnumEntityType.GROUND
+    _HEALTH_POINT = 100
+    _COPPER_COST = 30
 
     def __init__(self, side: int, x: int = 0, y: int = 0) -> None:
         """
@@ -33,11 +42,11 @@ class GoblinTroop(InterfaceTroop):
             side (int): Team side of the troop.
         """
         super().__init__(side, x, y)
-        self._ID = 4
-        self._NAME = "Goblin"
-        self._SPEED = EnumEntitySpeed['AVERAGE']
-        self._RANGE = 5
-        self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
-        self._ATTACK_DAMAGE = 5
-        self._TYPE = EnumEntityType['GROUND']
-        self._HEALTH_POINT = 100
+    
+    @staticmethod
+    def get_troop_id() -> int:
+        return GoblinTroop._ID
+    
+    @staticmethod
+    def get_troop_cost() -> int:
+        return GoblinTroop._COPPER_COST

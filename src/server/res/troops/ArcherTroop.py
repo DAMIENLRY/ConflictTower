@@ -1,7 +1,6 @@
 from res.troops.InterfaceTroop import InterfaceTroop
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .states.FocusTowerState import FocusTowerState
 
 class ArcherTroop(InterfaceTroop):
     """
@@ -24,6 +23,16 @@ class ArcherTroop(InterfaceTroop):
         _state (FocusTowerState): State of the troop.
         _battlefield (BattleField): Instance of the BattleField.
     """
+    
+    _ID = 7
+    _NAME = "Archer"
+    _SPEED = EnumEntitySpeed.AVERAGE
+    _RANGE = 5
+    _ATTAQUE_SPEED = EnumEntitySpeed.AVERAGE
+    _ATTACK_DAMAGE = 8
+    _TYPE = EnumEntityType.GROUND
+    _HEALTH_POINT = 100
+    _COPPER_COST = 20
 
     def __init__(self, side: int, x: int = 0, y: int = 0) -> None:
         """
@@ -33,11 +42,11 @@ class ArcherTroop(InterfaceTroop):
             side (int): Team side of the troop.
         """
         super().__init__(side, x, y)
-        self._ID = 7
-        self._NAME = "Archer"
-        self._SPEED = EnumEntitySpeed['AVERAGE']
-        self._RANGE = 5
-        self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
-        self._ATTACK_DAMAGE = 8
-        self._TYPE = EnumEntityType['GROUND']
-        self._HEALTH_POINT = 100
+        
+    @staticmethod
+    def get_troop_id() -> int:
+        return ArcherTroop._ID
+    
+    @staticmethod
+    def get_troop_cost() -> int:
+        return ArcherTroop._COPPER_COST

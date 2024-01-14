@@ -29,13 +29,16 @@ class InterfaceTroop(InterfaceCase, ABC):
     _thread_ia_state: bool
     _battlefield = None
     
-    def __init__(self, side: int, x: int = 0, y: int = 0):
+    def __init__(self, side: int, x: int, y: int):
         from res.BattleField import BattleField
         super().__init__(x, y)
         self._battlefield = BattleField.get_instance()
         self._side = side
         self._state = FocusTowerState()
         self._thread_ia_state = True
+        thread_ia = threading.Thread(target=self.handle_request)
+        thread_ia.daemon = True
+        thread_ia.start()
 
     def get_state(self):
         return self._state
@@ -63,9 +66,6 @@ class InterfaceTroop(InterfaceCase, ABC):
     
     def is_thread_ia_alive(self) -> bool:
         return self._thread_ia_state
-    
-    def start_thread(self):
-        threading.Thread(target=self.handle_request()).start()
     
     def stop_thread(self):
         self._thread_ia_state = False

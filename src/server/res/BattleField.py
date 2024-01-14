@@ -83,8 +83,7 @@ class BattleField:
             x = troop.get_x()
             y = troop.get_y()
             self._map[x][y] = troop
-        #self.check_and_update_card_states()
-
+            
     def on_update_map(self) -> None:
         """
         Wrapper function for updating the map. Called when a troop is added or removed.
@@ -100,7 +99,6 @@ class BattleField:
         """
         self._troops.append(troop)
         self.on_update_map()
-        troop.handle_request()
 
     def remove_troop(self, troop: InterfaceTroop) -> None:
         """

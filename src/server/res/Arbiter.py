@@ -89,6 +89,9 @@ class Arbiter():
         map_rule_manager.add_friction(3, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/bowler.png")
         map_rule_manager.add_friction(4, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/gobelin.png")
         map_rule_manager.add_friction(5, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/hog-rider.png")
+        map_rule_manager.add_friction(6, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/royal-giant.png")
+        map_rule_manager.add_friction(7, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/archer.png")
+        map_rule_manager.add_friction(8, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/knight.png")
 
         #damages
         map_rule_manager.add_friction(13, 0, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/damages/3.png")
@@ -117,6 +120,18 @@ class Arbiter():
             if value['x'] == id:
                 return key, value
         return False
+    
+    def get_agent_by_name(self, name: str) -> Union[str, dict]:
+        """
+        Retrieves the agent information based on the provided name.
+
+        Args:
+            name (str): The name of the agent
+
+        Returns:
+            Union[str, dict]: Name and information of the agent if found, False otherwise
+        """
+        return self._agent.range[name]
     
     def get_agents_by_team(self, team: int) -> List[Union[str, dict]]:
         """
@@ -175,7 +190,7 @@ class Arbiter():
                 if player_color[name] != color:
                     print(name, ' changement de couleur : ', color)
                     player_color[name] = color
-                    callback(player_color[name])
+                    callback(name, player_color[name])
     
     def add_copper(self) -> None:
         """Periodically adds copper to players based on a timer."""
@@ -186,27 +201,33 @@ class Arbiter():
                     self._agent.rulePlayer(key, "ammo", new_copper_amount)
             time.sleep(TIME_TO_GET_COPPER)
     
-    def place_card_on_battlefield(self, player_color) -> None:
-        """
-        Places a troop card on the battlefield based on the player's input.
-
-        Args:
-            player_color (tuple): Tuple containing player information (ID, troop ID, encoded position)
-        """
-        player_name, player = self.get_agent_by_id(player_color[0])
+    def change_color_actions(self, player_name, player_color) -> None:
+        player = self.get_agent_by_name(player_name)
+        color_action = player_color[0]
+        self.switch_case_color_action()[color_action](player_name, player, player_color)
+        
+    def select_team(self, player_name, player, player_color):
+        print('team selectyed : ', player_color[1])
+        self._agent.rulePlayer(player_name, "team", player_color[1])
+        self.update()
+    
+    def place_card_on_battlefield(self, player_name, player, player_color):
         for troop in EnumTroop: 
-            spawn_troop = troop.value(player['team'])
-            if spawn_troop.get_id() == player_color[1]:
-                select_card = spawn_troop
-                if select_card.get_copper_cost() <= player["ammo"]: 
+            if troop.value.get_troop_id() == player_color[1]:
+                if troop.value.get_troop_cost() <= player["ammo"]: 
                     x, y = self.decode_coords(player_color[2])
                     if player['team'] == 2:
                         y = ROWS - y - 1
-                    select_card.set_position(y, x)
+                    select_card = troop.value(player['team'], y, x)
                     self._agent.rulePlayer(player_name, "ammo", player["ammo"] - select_card.get_copper_cost())
-                self._battlefield.add_troop(select_card)
-                select_card.start_thread()
+                    self._battlefield.add_troop(select_card)
     
+    def switch_case_color_action(self):
+        return {
+            0: self.select_team,
+            1: self.place_card_on_battlefield,
+        }
+                
     def decode_coords(self, encoded) -> tuple[int, int]:
         """
         Decodes the encoded position information into x and y coordinates.
@@ -249,7 +270,7 @@ class Arbiter():
         countdown_thread.start()
 
         self._color_listener_thread_state.clear()
-        color_listener_thread = threading.Thread(target=self.change_color_listener, args=(self.place_card_on_battlefield,))
+        color_listener_thread = threading.Thread(target=self.change_color_listener, args=(self.change_color_actions,))
         color_listener_thread.daemon = True
         color_listener_thread.start()
         

@@ -1,7 +1,6 @@
 from res.troops.InterfaceTroop import InterfaceTroop
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .states.FocusTowerState import FocusTowerState
 
 class HogRiderTroop(InterfaceTroop):
     """
@@ -25,6 +24,16 @@ class HogRiderTroop(InterfaceTroop):
         _battlefield (BattleField): Instance of the BattleField.
     """
 
+    _ID = 5
+    _NAME = "Hog Rider"
+    _SPEED = EnumEntitySpeed.FAST
+    _RANGE = 5
+    _ATTAQUE_SPEED = EnumEntitySpeed.AVERAGE
+    _ATTACK_DAMAGE = 6
+    _TYPE = EnumEntityType.GROUND
+    _HEALTH_POINT = 100
+    _COPPER_COST = 40
+    
     def __init__(self, side: int, x: int = 0, y: int = 0) -> None:
         """
         Initializes a HogRiderTroop instance.
@@ -33,11 +42,11 @@ class HogRiderTroop(InterfaceTroop):
             side (int): Team side of the troop.
         """
         super().__init__(side, x, y)
-        self._ID = 5
-        self._NAME = "Hog Rider"
-        self._SPEED = EnumEntitySpeed['AVERAGE']
-        self._RANGE = 5
-        self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
-        self._ATTACK_DAMAGE = 6
-        self._TYPE = EnumEntityType['GROUND']
-        self._HEALTH_POINT = 100
+    
+    @staticmethod
+    def get_troop_id() -> int:
+        return HogRiderTroop._ID
+    
+    @staticmethod
+    def get_troop_cost() -> int:
+        return HogRiderTroop._COPPER_COST

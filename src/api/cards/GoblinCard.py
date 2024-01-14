@@ -9,9 +9,16 @@ class GoblinCard(InterfaceCard):
         _NAME (str): Name of the card.
     """
 
+    _ID = 4
+    _NAME = "Gobelin"
+        
     def __init__(self) -> None:
         """
         Initializes the GoblinCard object.
         """
-        self._ID = 4
-        self._NAME = "Gobelin"
+        super().__init__()
+    
+    @staticmethod
+    def get_card_id() -> int:
+        return GoblinCard._ID
+

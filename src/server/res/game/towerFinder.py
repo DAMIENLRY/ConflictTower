@@ -84,7 +84,6 @@ def breadth_first_search(adjacency_list, start, end) -> Union[dict, bool]:
 
     while not q.empty():
         element = q.get()
-
         values = adjacency_list[element]
         for v in values:
             if v not in visited:

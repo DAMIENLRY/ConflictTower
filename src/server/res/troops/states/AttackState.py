@@ -11,7 +11,6 @@ class AttackState(StateTroop):
         print("Troop is attacking.")
         while troop.get_health() > 0 and troop.is_thread_ia_alive():
             opponent = troop.opponent_in_range()
-            print('opponent : ', opponent)
             if opponent:
                 opponent_empty_case = troop.get_nearest_empty_case(opponent._x_position, opponent._y_position, opponent._RANGE)
                 if opponent_empty_case is not False:
@@ -21,8 +20,8 @@ class AttackState(StateTroop):
                     time.sleep(0.3)
                     troop.get_battlefield().remove_damage_case(dmgCase)
 
-                    opponent_card = troop.get_battlefield().is_occupied_by_opponent(self, opponent._x_position, opponent._y_position)
-                    opponent_card.reduce_health(troop.get_attack_damage)
+                    opponent_card = troop.get_battlefield().is_occupied_by_opponent(troop, opponent._x_position, opponent._y_position)
+                    opponent_card.reduce_health(troop.get_attack_damage())
                     if opponent_card._HEALTH_POINT <= 0:
                         troop.set_state(FocusTowerState())
                         troop.handle_request()
