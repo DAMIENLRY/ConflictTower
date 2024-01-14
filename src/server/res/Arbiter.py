@@ -171,7 +171,7 @@ class Arbiter():
         map_rule_manager = MapFrictionWrapper(self._agent)
 
         temps_restant = TIME
-        while temps_restant >= -1 and not self._countdown_thread_state.is_set():
+        while temps_restant > -1 and not self._countdown_thread_state.is_set():
             map_rule_manager.update_status_bar("countdown", temps_restant)
             time.sleep(1)
             temps_restant -= 1
@@ -257,10 +257,8 @@ class Arbiter():
         Starts the game and manages various threads for game events.
         """
         self.init_arbitrer()
-        id = 0
+
         for key, value in self._agent.range.items():
-            id += 1
-            self._agent.rulePlayer(key, "x", id)
             self._agent.rulePlayer(key, "team", value['led'][0])
             self._agent.rulePlayer(key, "ammo", 60)
             
@@ -280,12 +278,14 @@ class Arbiter():
         copper_thread.start()
         
         print("Partie lancée")
+        print(self._agent.range)
         while not self.game_is_finised():
             self._agent.ruleArena("map", self._battlefield.get_map())
             map_rule_manager = MapFrictionWrapper(self._agent)
             map_rule_manager.update_status_bar('life', self._battlefield.get_life_tower_1(), 1)
             map_rule_manager.update_status_bar('life', self._battlefield.get_life_tower_2(), 2)
             self.update()
+        self.reset_game()
         
     def time_out(self) -> bool:
         """
@@ -295,7 +295,7 @@ class Arbiter():
             bool: True if the game has timed out, False otherwise
         """
         map_rule_manager = MapFrictionWrapper(self._agent)
-        if map_rule_manager.get_time() < 0: return True
+        if map_rule_manager.get_time() <= 0: return True
         return False
     
     def game_is_finised(self) -> bool:
@@ -305,7 +305,7 @@ class Arbiter():
         Returns:
             bool: True if the game has finished, False otherwise
         """
-        return self.time_out and self._battlefield.tower_defeated()
+        return self.time_out() or self._battlefield.tower_defeated()
     
     def disconnect_all_agent(self) -> None:
         """
@@ -323,4 +323,6 @@ class Arbiter():
         self._copper_thread_state.set()
         self._battlefield.reset()
         self.disconnect_all_agent()
+        self.update()
+        print(self._agent.range)
         time.sleep(10) 
