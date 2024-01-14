@@ -205,6 +205,7 @@ class Arbiter():
                     select_card.set_position(y, x)
                     self._agent.rulePlayer(player_name, "ammo", player["ammo"] - select_card.get_copper_cost())
                 self._battlefield.add_troop(select_card)
+                select_card.start_thread()
     
     def decode_coords(self, encoded) -> tuple[int, int]:
         """
@@ -257,6 +258,7 @@ class Arbiter():
         copper_thread.daemon = True
         copper_thread.start()
         
+        print("Partie lancée")
         while not self.game_is_finised():
             self._agent.ruleArena("map", self._battlefield.get_map())
             map_rule_manager = MapFrictionWrapper(self._agent)

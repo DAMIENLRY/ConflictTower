@@ -83,7 +83,7 @@ class BattleField:
             x = troop.get_x()
             y = troop.get_y()
             self._map[x][y] = troop
-        self.check_and_update_card_states()
+        #self.check_and_update_card_states()
 
     def on_update_map(self) -> None:
         """
@@ -100,7 +100,7 @@ class BattleField:
         """
         self._troops.append(troop)
         self.on_update_map()
-        troop.state.handle_request(troop)
+        troop.handle_request()
 
     def remove_troop(self, troop: InterfaceTroop) -> None:
         """
@@ -205,14 +205,14 @@ class BattleField:
         """
         Checks and updates the states of troops on the battlefield based on their proximity to opponents or towers.
         """
-        for card in self._troops:
-            opponent = card.opponent_in_range()
-            if opponent and not isinstance(card.state, AttackState):
-                card.state = AttackState()
-                card.state.handle_request(card)
-            elif not opponent and not isinstance(card.state, FocusTowerState) and not isinstance(card.state, AttackState):
-                card.state = FocusTowerState()
-                card.state.handle_request(card)
+        for troop in self._troops:
+            opponent = troop.opponent_in_range()
+            if opponent and not isinstance(troop.state, AttackState):
+                troop.state = AttackState()
+                troop.state.handle_request(troop)
+            elif not opponent and not isinstance(troop.get_state(), FocusTowerState) and not isinstance(troop.get_state(), AttackState):
+                troop.state = FocusTowerState()
+                troop.state.handle_request(troop)
     
     def get_life_tower_1(self) -> int:
         """

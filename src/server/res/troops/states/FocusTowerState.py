@@ -1,7 +1,23 @@
-from .StateCard import StateCard
+import time
 
-class FocusTowerState(StateCard):
-    def handle_request(self, card):
+from .StateTroop import StateTroop
+from res.troops.states.AttackTowerState import AttackTowerState
+from res.troops.states.DeadState import DeadState
+from res.game.towerFinder import path_to_tower
+
+class FocusTowerState(StateTroop):
+        
+    def handle_request(self, troop):
+        path = path_to_tower((troop.get_x(),troop.get_y()),troop.get_tower_focus_coordoonates())
         print("Troop is focusing on the tower.")
-        card.stop_attack_thread()
-        card.start_movement_thread()
+        while len(path) != 0 and troop.is_thread_ia_alive():
+            x, y = path.pop(0)
+            troop.opponent_in_range()
+            troop.set_location(x, y)
+            time.sleep(troop.get_speed())
+            if troop.get_health() <= 0:
+                troop.set_state(DeadState())
+                troop.handle_request()
+        print("Movement thread stopped.")
+        troop.set_state(AttackTowerState())
+        troop.handle_request()

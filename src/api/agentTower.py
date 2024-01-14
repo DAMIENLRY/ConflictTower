@@ -103,7 +103,7 @@ class AgentTower:
         listDeck = list(self._deck)
         random.shuffle(listDeck)
         self._deckPlayed = list(listDeck)
-        self._agent.setColor(self._team.value, 0, 0)
+        self._agent.setColor(0, 0, 0)
         #self._agent.moveTowards(6, 18)
         self._agent.update()
     
