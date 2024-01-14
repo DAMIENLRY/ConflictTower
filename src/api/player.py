@@ -15,6 +15,7 @@ agent.generate_deck()
 agent.select_team(EnumSide.DOWN)
 agent.launch_game()
 
-print(agent.get_deck())
+print(agent.get_my_tower_life())
+print(agent.get_enemy_tower_life())
 
 agent.place_card(2, 3, 2)

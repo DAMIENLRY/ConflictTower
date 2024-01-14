@@ -106,7 +106,7 @@ class AgentTower:
         self._deckPlayed = list(listDeck)
         self._agent.setColor(0, self._team.value, 0)
         self._agent.update()
-        time.sleep(5)
+        time.sleep(2)
     
     def generate_deck(self) -> None:
         """
@@ -164,7 +164,21 @@ class AgentTower:
             int: Amount of copper.
         """
         return self._agent.ammo
+    
+    def get_my_tower_life(self) -> int:
+        game_info = self._agent.game['info']
+        if self._agent.team == 1:
+            return int(game_info.split()[3])
+        else:
+            return int(game_info.split()[1])
         
+    def get_enemy_tower_life(self) -> int:
+        game_info = self._agent.game['info']
+        if self._agent.team == 1:
+            return int(game_info.split()[1])
+        else:
+            return int(game_info.split()[3])
+            
     def update(self) -> None:
         """
         Updates the agent.

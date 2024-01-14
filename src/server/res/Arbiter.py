@@ -278,7 +278,6 @@ class Arbiter():
         copper_thread.start()
         
         print("Partie lancée")
-        print(self._agent.range)
         while not self.game_is_finised():
             self._agent.ruleArena("map", self._battlefield.get_map())
             map_rule_manager = MapFrictionWrapper(self._agent)
@@ -324,5 +323,4 @@ class Arbiter():
         self._battlefield.reset()
         self.disconnect_all_agent()
         self.update()
-        print(self._agent.range)
         time.sleep(10) 
