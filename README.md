@@ -1,4 +1,3 @@
-## A la racine du projet : pour l'administrateur
 - **Titre** ConflictTowers
 - **Description** Jeu de défense de tour en 1vs1, utilisez vos cartes pour se défendre ou attaquer.
 - **🎯 Contexte & cahier des charges** : développé dans le cadre d'une formation, pour un formateur pour monter en compétence en Python ...
@@ -12,7 +11,114 @@
     - pour le joueur : accès à toutes les cartes de son inventaire
     - pour le joueur : accès à sa quantité de points pour poser une carte
 - **🖧 Architecture matériel** (optionnel, peut être décrit avec le diagramme de séquence) : schéma overview présentant les machines et protocoles (serveurs, clients, broker) avec texte expliquant le choix des technologies 
-- **📞 Diagramme de séquence**: expliquer le déroulé d'une partie, les principales étapes à faire dans l'ordre et qui/quoi/comment, les couches s'échangent quelles données pour qui/pour quoi
+- **📞 Diagramme de séquence**: 
+
+```mermaid
+sequenceDiagram
+    participant Player
+    participant AgentTower
+    participant Agent
+    participant EnumCard
+    participant EnumSide
+
+    Player->>AgentTower: Instancie
+    activate AgentTower
+
+    AgentTower->>EnumCard: Accède aux cartes disponibles
+    loop Pour chaque carte choisie
+        Player->>AgentTower: add_deck_card(EnumCard)
+    end
+
+    Player->>EnumSide: Sélectionne un côté (UP/DOWN)
+    Player->>AgentTower: select_team(EnumSide)
+
+    AgentTower->>Agent: Se connecte
+    activate Agent
+    AgentTower->>Agent: setColor()
+    AgentTower->>Agent: update()
+    deactivate Agent
+
+    loop Pendant le jeu
+        Player->>AgentTower: place_card(slot, x, y)
+        AgentTower->>EnumCard: Obtient les détails de la carte
+        AgentTower->>Agent: place_card (à l'arène)
+        activate Agent
+        AgentTower->>Agent: update()
+        deactivate Agent
+    end
+
+    Player->>AgentTower: Fin du jeu
+    AgentTower->>Agent: disconnect()
+    deactivate AgentTower
+```
+
+- **📞 Diagramme de classes**:
+
+```mermaid
+classDiagram
+    class AgentTower {
+      -Agent _agent
+      -Set[EnumCard] _deck
+      -List[EnumCard] _deckPlayed
+      -EnumSide _team
+      +__init__(...)
+      +set_deck(deck)
+      +get_deck() List[EnumCard]
+      +add_deck_card(troop)
+      +remove_deck_card(troop)
+      +select_team(team)
+      +launch_game()
+      +generate_deck()
+      +encode_coords(x, y) int
+      +place_card(slot, x, y)
+      +get_deck() List[EnumCard]
+      +get_copper() int
+      +update()
+      +disconect()
+      +print()
+    }
+
+    class Agent {
+      <<external>>
+    }
+
+    class EnumCard {
+      BALLON BallonCard
+      BOWLER BowlerCard
+      GOBLIN GoblinCard
+      HOGRIDER HogRiderCard
+      ROYALEGIANT RoyalGiantCard
+      ARCHER ArcherCard
+      KNIGHT KnightCard
+      MINION MinionCard
+    }
+
+    class EnumSide {
+      UP int
+      DOWN int
+    }
+
+    class InterfaceCard {
+      <<interface>>
+      -int _ID
+      -String _NAME
+    }
+
+    class ArcherCard {
+      -int _ID
+      -String _NAME
+      +__init__()
+      +get_card_id() int
+    }
+
+    AgentTower --> Agent : uses
+    AgentTower --> EnumCard : uses
+    AgentTower --> EnumSide : uses
+
+    InterfaceCard <|.. ArcherCard : implements
+    EnumCard --> ArcherCard : includes
+```
+
 - **✅ Pré-requis** 
     - Python 3
     - API ConflictTower
