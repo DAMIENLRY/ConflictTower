@@ -44,9 +44,80 @@ class ArcherTroop(InterfaceTroop):
         super().__init__(side, x, y)
         
     @staticmethod
+    def set_troop_speed(new_speed: EnumEntitySpeed) -> None:
+        ArcherTroop._SPEED = new_speed
+        
+    @staticmethod
+    def set_troop_range(new_range: int) -> None:
+        ArcherTroop._RANGE = new_range
+        
+    @staticmethod
+    def set_troop_attack_speed(new_attack_speed: EnumEntitySpeed) -> None:
+        ArcherTroop._ATTAQUE_SPEED = new_attack_speed
+        
+    @staticmethod
+    def set_troop_attack_damage(new_attack_damage: int) -> None:
+        ArcherTroop._ATTACK_DAMAGE = new_attack_damage
+        
+    @staticmethod
+    def set_troop_type(new_type: EnumEntityType) -> None:
+        ArcherTroop._TYPE = new_type
+        
+    @staticmethod
+    def set_troop_total_health(new_total_health: int) -> None:
+        ArcherTroop._HEALTH_POINT = new_total_health
+        
+    @staticmethod
+    def set_troop_cost(new_cost: int) -> None:
+        ArcherTroop._COPPER_COST = new_cost
+        
+    @staticmethod
     def get_troop_id() -> int:
         return ArcherTroop._ID
     
     @staticmethod
+    def get_troop_name() -> int:
+        return ArcherTroop._NAME
+    
+    @staticmethod
+    def get_troop_speed() -> int:
+        return ArcherTroop._SPEED.value
+    
+    @staticmethod
+    def get_troop_range() -> int:
+        return ArcherTroop._RANGE
+    
+    @staticmethod
+    def get_troop_attack_speed() -> int:
+        return ArcherTroop._ATTAQUE_SPEED.value
+    
+    @staticmethod
+    def get_troop_attack_damage() -> int:
+        return ArcherTroop._ATTACK_DAMAGE
+    
+    @staticmethod
+    def get_troop_type() -> int:
+        return ArcherTroop._TYPE.value
+    
+    @staticmethod
+    def get_troop_total_health() -> int:
+        return ArcherTroop._HEALTH_POINT
+    
+    @staticmethod
     def get_troop_cost() -> int:
         return ArcherTroop._COPPER_COST
+    
+    @staticmethod
+    def get_troop_data() -> dict:
+        return {
+            ArcherTroop.get_troop_id(): {
+                'name': ArcherTroop.get_troop_name(),
+                'speed': ArcherTroop.get_troop_speed(),
+                'range': ArcherTroop.get_troop_range(),
+                'attack_speed': ArcherTroop.get_troop_attack_speed(),
+                'attack_damage': ArcherTroop.get_troop_attack_damage(),
+                'type': ArcherTroop.get_troop_type(),
+                'total_health': ArcherTroop.get_troop_total_health(),
+                'cost': ArcherTroop.get_troop_cost()
+            }
+        }

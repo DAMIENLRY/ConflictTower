@@ -44,9 +44,80 @@ class GoblinTroop(InterfaceTroop):
         super().__init__(side, x, y)
     
     @staticmethod
+    def set_troop_speed(new_speed: EnumEntitySpeed) -> None:
+        GoblinTroop._SPEED = new_speed
+        
+    @staticmethod
+    def set_troop_range(new_range: int) -> None:
+        GoblinTroop._RANGE = new_range
+        
+    @staticmethod
+    def set_troop_attack_speed(new_attack_speed: EnumEntitySpeed) -> None:
+        GoblinTroop._ATTAQUE_SPEED = new_attack_speed
+        
+    @staticmethod
+    def set_troop_attack_damage(new_attack_damage: int) -> None:
+        GoblinTroop._ATTACK_DAMAGE = new_attack_damage
+        
+    @staticmethod
+    def set_troop_type(new_type: EnumEntityType) -> None:
+        GoblinTroop._TYPE = new_type
+        
+    @staticmethod
+    def set_troop_total_health(new_total_health: int) -> None:
+        GoblinTroop._HEALTH_POINT = new_total_health
+        
+    @staticmethod
+    def set_troop_cost(new_cost: int) -> None:
+        GoblinTroop._COPPER_COST = new_cost
+    
+    @staticmethod
     def get_troop_id() -> int:
         return GoblinTroop._ID
     
     @staticmethod
+    def get_troop_name() -> int:
+        return GoblinTroop._NAME
+    
+    @staticmethod
+    def get_troop_speed() -> int:
+        return GoblinTroop._SPEED.value
+    
+    @staticmethod
+    def get_troop_range() -> int:
+        return GoblinTroop._RANGE
+    
+    @staticmethod
+    def get_troop_attack_speed() -> int:
+        return GoblinTroop._ATTAQUE_SPEED.value
+    
+    @staticmethod
+    def get_troop_attack_damage() -> int:
+        return GoblinTroop._ATTACK_DAMAGE
+    
+    @staticmethod
+    def get_troop_type() -> int:
+        return GoblinTroop._TYPE.value
+    
+    @staticmethod
+    def get_troop_total_health() -> int:
+        return GoblinTroop._HEALTH_POINT
+    
+    @staticmethod
     def get_troop_cost() -> int:
         return GoblinTroop._COPPER_COST
+    
+    @staticmethod
+    def get_troop_data() -> dict:
+        return {
+            GoblinTroop.get_troop_id(): {
+                'name': GoblinTroop.get_troop_name(),
+                'speed': GoblinTroop.get_troop_speed(),
+                'range': GoblinTroop.get_troop_range(),
+                'attack_speed': GoblinTroop.get_troop_attack_speed(),
+                'attack_damage': GoblinTroop.get_troop_attack_damage(),
+                'type': GoblinTroop.get_troop_type(),
+                'total_health': GoblinTroop.get_troop_total_health(),
+                'cost': GoblinTroop.get_troop_cost()
+            }
+        }

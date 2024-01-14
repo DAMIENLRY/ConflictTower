@@ -41,9 +41,80 @@ class RoyalGiantTroop(InterfaceTroop):
         super().__init__(side, x, y)
     
     @staticmethod
+    def set_troop_speed(new_speed: EnumEntitySpeed) -> None:
+        RoyalGiantTroop._SPEED = new_speed
+        
+    @staticmethod
+    def set_troop_range(new_range: int) -> None:
+        RoyalGiantTroop._RANGE = new_range
+        
+    @staticmethod
+    def set_troop_attack_speed(new_attack_speed: EnumEntitySpeed) -> None:
+        RoyalGiantTroop._ATTAQUE_SPEED = new_attack_speed
+        
+    @staticmethod
+    def set_troop_attack_damage(new_attack_damage: int) -> None:
+        RoyalGiantTroop._ATTACK_DAMAGE = new_attack_damage
+        
+    @staticmethod
+    def set_troop_type(new_type: EnumEntityType) -> None:
+        RoyalGiantTroop._TYPE = new_type
+        
+    @staticmethod
+    def set_troop_total_health(new_total_health: int) -> None:
+        RoyalGiantTroop._HEALTH_POINT = new_total_health
+        
+    @staticmethod
+    def set_troop_cost(new_cost: int) -> None:
+        RoyalGiantTroop._COPPER_COST = new_cost
+    
+    @staticmethod
     def get_troop_id() -> int:
         return RoyalGiantTroop._ID
     
     @staticmethod
+    def get_troop_name() -> int:
+        return RoyalGiantTroop._NAME
+    
+    @staticmethod
+    def get_troop_speed() -> int:
+        return RoyalGiantTroop._SPEED.value
+    
+    @staticmethod
+    def get_troop_range() -> int:
+        return RoyalGiantTroop._RANGE
+    
+    @staticmethod
+    def get_troop_attack_speed() -> int:
+        return RoyalGiantTroop._ATTAQUE_SPEED.value
+    
+    @staticmethod
+    def get_troop_attack_damage() -> int:
+        return RoyalGiantTroop._ATTACK_DAMAGE
+    
+    @staticmethod
+    def get_troop_type() -> int:
+        return RoyalGiantTroop._TYPE.value
+    
+    @staticmethod
+    def get_troop_total_health() -> int:
+        return RoyalGiantTroop._HEALTH_POINT
+    
+    @staticmethod
     def get_troop_cost() -> int:
         return RoyalGiantTroop._COPPER_COST
+    
+    @staticmethod
+    def get_troop_data() -> dict:
+        return {
+            RoyalGiantTroop.get_troop_id(): {
+                'name': RoyalGiantTroop.get_troop_name(),
+                'speed': RoyalGiantTroop.get_troop_speed(),
+                'range': RoyalGiantTroop.get_troop_range(),
+                'attack_speed': RoyalGiantTroop.get_troop_attack_speed(),
+                'attack_damage': RoyalGiantTroop.get_troop_attack_damage(),
+                'type': RoyalGiantTroop.get_troop_type(),
+                'total_health': RoyalGiantTroop.get_troop_total_health(),
+                'cost': RoyalGiantTroop.get_troop_cost()
+            }
+        }

@@ -44,9 +44,80 @@ class BallonTroop(InterfaceTroop):
         super().__init__(side, x, y)
         
     @staticmethod
+    def set_troop_speed(new_speed: EnumEntitySpeed) -> None:
+        BallonTroop._SPEED = new_speed
+        
+    @staticmethod
+    def set_troop_range(new_range: int) -> None:
+        BallonTroop._RANGE = new_range
+        
+    @staticmethod
+    def set_troop_attack_speed(new_attack_speed: EnumEntitySpeed) -> None:
+        BallonTroop._ATTAQUE_SPEED = new_attack_speed
+        
+    @staticmethod
+    def set_troop_attack_damage(new_attack_damage: int) -> None:
+        BallonTroop._ATTACK_DAMAGE = new_attack_damage
+        
+    @staticmethod
+    def set_troop_type(new_type: EnumEntityType) -> None:
+        BallonTroop._TYPE = new_type
+        
+    @staticmethod
+    def set_troop_total_health(new_total_health: int) -> None:
+        BallonTroop._HEALTH_POINT = new_total_health
+        
+    @staticmethod
+    def set_troop_cost(new_cost: int) -> None:
+        BallonTroop._COPPER_COST = new_cost
+        
+    @staticmethod
     def get_troop_id() -> int:
         return BallonTroop._ID
     
     @staticmethod
+    def get_troop_name() -> int:
+        return BallonTroop._NAME
+    
+    @staticmethod
+    def get_troop_speed() -> int:
+        return BallonTroop._SPEED.value
+    
+    @staticmethod
+    def get_troop_range() -> int:
+        return BallonTroop._RANGE
+    
+    @staticmethod
+    def get_troop_attack_speed() -> int:
+        return BallonTroop._ATTAQUE_SPEED.value
+    
+    @staticmethod
+    def get_troop_attack_damage() -> int:
+        return BallonTroop._ATTACK_DAMAGE
+    
+    @staticmethod
+    def get_troop_type() -> int:
+        return BallonTroop._TYPE.value
+    
+    @staticmethod
+    def get_troop_total_health() -> int:
+        return BallonTroop._HEALTH_POINT
+    
+    @staticmethod
     def get_troop_cost() -> int:
         return BallonTroop._COPPER_COST
+    
+    @staticmethod
+    def get_troop_data() -> dict:
+        return {
+            BallonTroop.get_troop_id(): {
+                'name': BallonTroop.get_troop_name(),
+                'speed': BallonTroop.get_troop_speed(),
+                'range': BallonTroop.get_troop_range(),
+                'attack_speed': BallonTroop.get_troop_attack_speed(),
+                'attack_damage': BallonTroop.get_troop_attack_damage(),
+                'type': BallonTroop.get_troop_type(),
+                'total_health': BallonTroop.get_troop_total_health(),
+                'cost': BallonTroop.get_troop_cost()
+            }
+        }

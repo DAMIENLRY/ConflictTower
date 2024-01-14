@@ -2,6 +2,7 @@
 
 from res.Arbiter import Arbiter
 from dotenv import load_dotenv
+from res.troops.ArcherTroop import ArcherTroop
 import os
 
 load_dotenv()
@@ -14,5 +15,6 @@ admin = Arbiter(playerId=arbitrerSecret,
                     server="mqtt.jusdeliens.com",
                     verbosity=2)
 
-if admin.can_start_game():
-    admin.lunch_game()
+ArcherTroop.set_troop_total_health(80)
+
+admin.lunch_game()

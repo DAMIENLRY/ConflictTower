@@ -62,13 +62,25 @@ class Arbiter():
         if not self.__class__._instance:
             self._battlefield = BattleField.get_instance()
             self._agent = Agent(playerId, arena, username, password, server, port, imgOutputPath, autoconnect, waitArenaConnection, verbosity, robotId, welcomePrint, sourcesdir)
-            self.init_arbitrer()
             self._copper_thread_state = threading.Event()
             self._countdown_thread_state = threading.Event()
             self._color_listener_thread_state = threading.Event()
         else:
             raise Exception("Cette classe est un singleton !")
     
+    def format_data_troops(self) -> dict[str, int]:
+        format_troops = {}
+        for troop in EnumTroop:
+            format_troops.update(troop.value.get_troop_data())
+        return self.sorted_dict(format_troops)
+            
+    def sorted_dict(self, unordonned_dict: dict) -> dict:
+        dict = {}
+        for key in sorted(unordonned_dict.keys()):
+            value = unordonned_dict[key]
+            dict.update({key: value})
+        return dict
+        
     def init_arbitrer(self) -> None:
         """
         Initializes the Arbiter with initial rules for the game arena and map.
@@ -78,6 +90,8 @@ class Arbiter():
         self._agent.ruleArena("gridColumns", COLUMNS)
         self._agent.ruleArena("gridRows", ROWS)
         self._agent.ruleArena("map", self._battlefield.get_map())
+        self._agent.ruleArena("weapons", [self.format_data_troops()])
+        self.update()
 
         map_rule_manager = MapFrictionWrapper(self._agent)
 
@@ -133,7 +147,7 @@ class Arbiter():
         """
         return self._agent.range[name]
     
-    def get_agents_by_team(self, team: int) -> List[Union[str, dict]]:
+    def get_agents_by_team(self, team: int) -> List[str]:
         """
         Retrieves a list of agents belonging to a specific team.
 
@@ -146,7 +160,7 @@ class Arbiter():
         agents = []
         for key, value in self._agent.range.items():
             if value['team'] == team:
-                return agents.append(key)
+                agents.append(key)
         return agents
     
     def get_color_of_players(self, agents: dict) -> dict[str, tuple[int, int, int]]:
@@ -187,13 +201,15 @@ class Arbiter():
         while not self._color_listener_thread_state.is_set():
             new_player_color = self.get_color_of_players(self._agent.range)
             for name, color in new_player_color.items():
-                if player_color[name] != color:
+                if name not in player_color or player_color[name] != color:
                     print(name, ' changement de couleur : ', color)
                     player_color[name] = color
                     callback(name, player_color[name])
     
     def add_copper(self) -> None:
-        """Periodically adds copper to players based on a timer."""
+        """
+        Periodically adds copper to players based on a timer.
+        """
         while not self._copper_thread_state.is_set():
             for key, value in self._agent.range.items():
                 new_copper_amount = value['ammo'] + 10
@@ -204,10 +220,10 @@ class Arbiter():
     def change_color_actions(self, player_name, player_color) -> None:
         player = self.get_agent_by_name(player_name)
         color_action = player_color[0]
-        self.switch_case_color_action()[color_action](player_name, player, player_color)
+        if color_action in self.switch_case_color_action():
+            self.switch_case_color_action()[color_action](player_name, player, player_color)
         
     def select_team(self, player_name, player, player_color):
-        print('team selectyed : ', player_color[1])
         self._agent.rulePlayer(player_name, "team", player_color[1])
         self.update()
     
@@ -249,7 +265,7 @@ class Arbiter():
         Returns:
             bool: True if the game can start, False otherwise
         """
-        if len(self._agent.range.keys()) < 2: return False
+        #if len(self.get_agents_by_team(1)) == 0 or len(self.get_agents_by_team(2)) == 0: return False
         return True
     
     def lunch_game(self) -> None:
@@ -259,23 +275,25 @@ class Arbiter():
         self.init_arbitrer()
 
         for key, value in self._agent.range.items():
-            self._agent.rulePlayer(key, "team", value['led'][0])
             self._agent.rulePlayer(key, "ammo", 60)
-            
-        self._countdown_thread_state.clear()
-        countdown_thread = threading.Thread(target=self.minuteur, args=())
-        countdown_thread.daemon = True
-        countdown_thread.start()
 
         self._color_listener_thread_state.clear()
         color_listener_thread = threading.Thread(target=self.change_color_listener, args=(self.change_color_actions,))
         color_listener_thread.daemon = True
         color_listener_thread.start()
         
+        # while not self.can_start_game():
+        #     pass
+        
         self._copper_thread_state.clear()
         copper_thread = threading.Thread(target=self.add_copper, args=())
         copper_thread.daemon = True
         copper_thread.start()
+        
+        self._countdown_thread_state.clear()
+        countdown_thread = threading.Thread(target=self.minuteur, args=())
+        countdown_thread.daemon = True
+        countdown_thread.start()
         
         print("Partie lancée")
         while not self.game_is_finised():

@@ -44,9 +44,80 @@ class HogRiderTroop(InterfaceTroop):
         super().__init__(side, x, y)
     
     @staticmethod
+    def set_troop_speed(new_speed: EnumEntitySpeed) -> None:
+        HogRiderTroop._SPEED = new_speed
+        
+    @staticmethod
+    def set_troop_range(new_range: int) -> None:
+        HogRiderTroop._RANGE = new_range
+        
+    @staticmethod
+    def set_troop_attack_speed(new_attack_speed: EnumEntitySpeed) -> None:
+        HogRiderTroop._ATTAQUE_SPEED = new_attack_speed
+        
+    @staticmethod
+    def set_troop_attack_damage(new_attack_damage: int) -> None:
+        HogRiderTroop._ATTACK_DAMAGE = new_attack_damage
+        
+    @staticmethod
+    def set_troop_type(new_type: EnumEntityType) -> None:
+        HogRiderTroop._TYPE = new_type
+        
+    @staticmethod
+    def set_troop_total_health(new_total_health: int) -> None:
+        HogRiderTroop._HEALTH_POINT = new_total_health
+        
+    @staticmethod
+    def set_troop_cost(new_cost: int) -> None:
+        HogRiderTroop._COPPER_COST = new_cost
+    
+    @staticmethod
     def get_troop_id() -> int:
         return HogRiderTroop._ID
     
     @staticmethod
+    def get_troop_name() -> int:
+        return HogRiderTroop._NAME
+    
+    @staticmethod
+    def get_troop_speed() -> int:
+        return HogRiderTroop._SPEED.value
+    
+    @staticmethod
+    def get_troop_range() -> int:
+        return HogRiderTroop._RANGE
+    
+    @staticmethod
+    def get_troop_attack_speed() -> int:
+        return HogRiderTroop._ATTAQUE_SPEED.value
+    
+    @staticmethod
+    def get_troop_attack_damage() -> int:
+        return HogRiderTroop._ATTACK_DAMAGE
+    
+    @staticmethod
+    def get_troop_type() -> int:
+        return HogRiderTroop._TYPE.value
+    
+    @staticmethod
+    def get_troop_total_health() -> int:
+        return HogRiderTroop._HEALTH_POINT
+    
+    @staticmethod
     def get_troop_cost() -> int:
         return HogRiderTroop._COPPER_COST
+    
+    @staticmethod
+    def get_troop_data() -> dict:
+        return {
+            HogRiderTroop.get_troop_id(): {
+                'name': HogRiderTroop.get_troop_name(),
+                'speed': HogRiderTroop.get_troop_speed(),
+                'range': HogRiderTroop.get_troop_range(),
+                'attack_speed': HogRiderTroop.get_troop_attack_speed(),
+                'attack_damage': HogRiderTroop.get_troop_attack_damage(),
+                'type': HogRiderTroop.get_troop_type(),
+                'total_health': HogRiderTroop.get_troop_total_health(),
+                'cost': HogRiderTroop.get_troop_cost()
+            }
+        }

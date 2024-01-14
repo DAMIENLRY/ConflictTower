@@ -44,6 +44,8 @@ class AgentTower:
         """
         self._agent = Agent(playerId, arena, username, password, server, port, imgOutputPath, autoconnect, waitArenaConnection, verbosity, robotId, welcomePrint, sourcesdir)
         self._deck = set()
+        self._agent.setColor(255, 0, 0)
+        self.update()
         
     def set_deck(self, deck:List[EnumCard]) -> None:
         """
@@ -104,6 +106,7 @@ class AgentTower:
         listDeck = list(self._deck)
         random.shuffle(listDeck)
         self._deckPlayed = list(listDeck)
+        time.sleep(2)
         self._agent.setColor(0, self._team.value, 0)
         self._agent.update()
         time.sleep(2)
@@ -178,6 +181,9 @@ class AgentTower:
             return int(game_info.split()[1])
         else:
             return int(game_info.split()[3])
+    
+    def get_troops_stats(self):
+        return self._agent.game["weapons"]
             
     def update(self) -> None:
         """

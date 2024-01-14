@@ -1,19 +1,13 @@
 from enum import Enum
-import os
-import sys
 
-current_file = os.path.abspath(__file__)
-parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
-sys.path.append(parent_directory)
-
-from troops.BallonTroop import BallonTroop
-from troops.BowlerTroop import BowlerTroop
-from troops.GoblinTroop import GoblinTroop
-from troops.HogRiderTroop import HogRiderTroop
-from troops.RoyalGiantTroop import RoyalGiantTroop
-from troops.ArcherTroop import ArcherTroop
-from troops.KnightTroop import KnightTroop
-from troops.MinionTroop import MinionTroop
+from res.troops.BallonTroop import BallonTroop
+from res.troops.BowlerTroop import BowlerTroop
+from res.troops.GoblinTroop import GoblinTroop
+from res.troops.HogRiderTroop import HogRiderTroop
+from res.troops.RoyalGiantTroop import RoyalGiantTroop
+from res.troops.ArcherTroop import ArcherTroop
+from res.troops.KnightTroop import KnightTroop
+from res.troops.MinionTroop import MinionTroop
 
 class EnumTroop(Enum):
     """

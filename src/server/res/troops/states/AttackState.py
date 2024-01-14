@@ -21,10 +21,14 @@ class AttackState(StateTroop):
                     troop.get_battlefield().remove_damage_case(dmgCase)
 
                     opponent_card = troop.get_battlefield().is_occupied_by_opponent(troop, opponent._x_position, opponent._y_position)
-                    opponent_card.reduce_health(troop.get_attack_damage())
-                    if opponent_card._HEALTH_POINT <= 0:
-                        troop.set_state(FocusTowerState())
-                        troop.handle_request()
+                    if opponent_card:
+                        opponent_card.reduce_health(troop.get_attack_damage())
+                        if opponent_card._HEALTH_POINT <= 0:
+                            troop.set_state(FocusTowerState())
+                            troop.handle_request()
+            else:
+                troop.set_state(FocusTowerState())
+                troop.handle_request()
 
             if troop.get_health() > 0:
                 time.sleep(troop.get_attack_speed())
