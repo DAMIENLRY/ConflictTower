@@ -1,13 +1,10 @@
 from abc import ABC
 from .InterfaceCase import InterfaceCase
-from .DamageCase import DamageCase
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .states.StateCard import StateCard
+from .states.StateTroop import StateTroop
 from .states.FocusTowerState import FocusTowerState
-from .states.AttackTowerState import AttackTowerState
-from .states.NoAIState import NoAIState
-import time
+from .states.DeadState import DeadState
 import sys
 import os
 import threading
@@ -17,16 +14,9 @@ parent_directory = os.path.dirname(os.path.dirname(current_file))
 sys.path.append(parent_directory)
 
 from game.globaleVariable import COLUMNS, ROWS, TOWER_SIDE_1, TOWER_SIDE_2
-from game.towerFinder import path_to_tower
 
 class InterfaceTroop(InterfaceCase, ABC):
 
-    _ID: int
-    _NAME: str
-    _x_position: int
-    _y_position: int
-    _x_prev_position: int
-    _y_prev_position: int
     _SPEED: EnumEntitySpeed
     _RANGE: int
     _ATTAQUE_SPEED: EnumEntitySpeed
@@ -34,27 +24,54 @@ class InterfaceTroop(InterfaceCase, ABC):
     _TYPE: EnumEntityType
     _HEALTH_POINT: int
     _COPPER_COST: int
-    _state: StateCard
+    _state: StateTroop
     _side: int
-    _stop_movement = True
-    _stop_attack = False
-    _stop_attack_tower_thread = False
+    _thread_ia_state: bool
     _battlefield = None
     
-    def __init__(self):
+    def __init__(self, side: int, x: int, y: int):
         from res.BattleField import BattleField
+        super().__init__(x, y)
         self._battlefield = BattleField.get_instance()
+        self._side = side
+        self._state = FocusTowerState()
+        self._thread_ia_state = True
+        thread_ia = threading.Thread(target=self.handle_request)
+        thread_ia.daemon = True
+        thread_ia.start()
 
-    @property
-    def state(self):
+    def get_state(self):
         return self._state
 
-    @state.setter
-    def state(self, new_state: StateCard):
+    def set_state(self, new_state: StateTroop):
         self._state = new_state
 
     def get_side(self) -> int:
         return self._side
+    
+    def get_health(self) -> int:
+        return self._HEALTH_POINT
+    
+    def get_attack_damage(self) -> int:
+        return self._ATTACK_DAMAGE
+    
+    def get_battlefield(self):
+        return self._battlefield
+    
+    def get_attack_speed(self) -> int:
+        return self._ATTAQUE_SPEED.value
+    
+    def get_speed(self) -> int:
+        return self._SPEED.value
+    
+    def is_thread_ia_alive(self) -> bool:
+        return self._thread_ia_state
+    
+    def stop_thread(self):
+        self._thread_ia_state = False
+    
+    def handle_request(self) -> None:
+        self._state.handle_request(self)
 
     def set_position(self, x: int, y: int) -> None:
         self._x_position = x
@@ -73,77 +90,7 @@ class InterfaceTroop(InterfaceCase, ABC):
         print(f"{self.__class__.__name__} a été vaincu.")
         self._battlefield.remove_troop(self)
         self.clear_AI()
-
-
-    def start_attack_thread(self):
-        self.attack_thread = threading.Thread(target=self.attack_loop)
-        self.attack_thread.start()
-
-    def stop_attack_thread(self):
-        self._stop_attack = True
         
-    def stop_attack_tower_thread(self):
-        self._stop_attack_tower_thread = True
-        
-
-    def attack_loop(self):
-        self._stop_attack = False
-        while not self._stop_attack and self._HEALTH_POINT > 0:
-            opponent = self.opponent_in_range()
-            print('opponent : ', opponent)
-            if opponent:
-                opponent_empty_case = self.get_nearest_empty_case(opponent._x_position, opponent._y_position, opponent._RANGE)
-                if opponent_empty_case is not False:
-                    dmgCase = DamageCase(self._ATTACK_DAMAGE, opponent_empty_case[0], opponent_empty_case[1])
-
-                    self._battlefield.add_damage_case(dmgCase)
-                    time.sleep(0.3)
-                    self._battlefield.remove_damage_case(dmgCase)
-
-                    opponent_card = self._battlefield.is_occupied_by_opponent(self, opponent._x_position, opponent._y_position)
-                    opponent_card.reduce_health(self._ATTACK_DAMAGE)
-                    if opponent_card._HEALTH_POINT <= 0:
-                        self._stop_attack = True
-
-            if not self._stop_attack and self._HEALTH_POINT > 0:
-                time.sleep(self.get_attack_speed_interval())
-
-        self.state = FocusTowerState()
-        self.state.handle_request(self)
-
-    def start_attack_tower_thread(self):
-        self.attack_tower_thread = threading.Thread(target=self.attack_tower_loop)
-        self.attack_tower_thread.start()
-        
-    def attack_tower_loop(self):
-        self._stop_attack_tower_thread = False
-        while not self._stop_attack_tower_thread:
-            self._battlefield.attack_tower(self._side, self._ATTACK_DAMAGE)
-            time.sleep(self.get_attack_speed_interval())
-
-    def start_movement_thread(self):
-        path = path_to_tower((self.get_x(),self.get_y()),self.get_tower_focus_coordoonates())
-        self.movement_thread = threading.Thread(target=self.movement_loop, args=(path,))
-        self.movement_thread.start()
-
-    def stop_movement_thread(self):
-        self._stop_movement = True
-
-    def movement_loop(self, path):
-        self._stop_movement = False
-        while len(path) != 0:
-            x, y = path.pop(0)
-            if self._stop_movement:
-                break
-            self.opponent_in_range()
-            self.set_location(x, y)
-            time.sleep(self.get_move_speed_interval())
-            if len(path) == 0:
-                self.state = AttackTowerState()
-                self._state.handle_request(self)
-        print("Movement thread stopped.")
-
-
     def get_attack_speed_interval(self):
         return self._ATTAQUE_SPEED.value
 
@@ -195,5 +142,5 @@ class InterfaceTroop(InterfaceCase, ABC):
         return False
     
     def clear_AI(self):
-        self._state = NoAIState()
-        self._state.handle_request(self)
+        self._state = DeadState()
+        self.handle_request()

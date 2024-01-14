@@ -9,9 +9,15 @@ class BowlerCard(InterfaceCard):
         _NAME (str): Name of the card.
     """
 
+    _ID = 3
+    _NAME = "Bouliste"
+     
     def __init__(self) -> None:
         """
         Initializes the BowlerCard object.
         """
-        self._ID = 3
-        self._NAME = "Bouliste"
+        super().__init__()
+    
+    @staticmethod
+    def get_card_id() -> int:
+        return BowlerCard._ID

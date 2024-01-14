@@ -1,4 +1,6 @@
 import random
+import time
+
 from typing import List, Set
 from j2l.pytactx.agent import Agent
 
@@ -89,7 +91,6 @@ class AgentTower:
             team (EnumSide): The team to be selected.
         """
         self._team = team
-        self._agent.team = team.value
         
     def launch_game(self) -> None:
         """
@@ -103,9 +104,9 @@ class AgentTower:
         listDeck = list(self._deck)
         random.shuffle(listDeck)
         self._deckPlayed = list(listDeck)
-        self._agent.setColor(self._team.value, 0, 0)
-        #self._agent.moveTowards(6, 18)
+        self._agent.setColor(0, self._team.value, 0)
         self._agent.update()
+        time.sleep(5)
     
     def generate_deck(self) -> None:
         """
@@ -141,9 +142,8 @@ class AgentTower:
             y (int): Y-coordinate for placement.
         """
         if(not( 1 <= slot <= 4)): raise("You must choose a card located on slot 1, 2, 3, 4.")
-        card = (self._deckPlayed.pop(slot)).value()
-        #self._agent.setColor(self._team.value, card.getId(), placement.value)
-        self._agent.setColor(self._agent.x, 3, self.encode_coords(x, y))
+        card = (self._deckPlayed.pop(slot)).value
+        self._agent.setColor(1, card.get_card_id(), self.encode_coords(x, y))
         self._agent.update()
         self._deckPlayed.append(card)
         

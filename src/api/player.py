@@ -12,7 +12,7 @@ agent = AgentTower(playerId="667VELIB",
 
 agent.generate_deck()
 
-agent.select_team(EnumSide.SIDE_1)
+agent.select_team(EnumSide.DOWN)
 agent.launch_game()
 
 print(agent.get_deck())

@@ -1,8 +1,6 @@
 from res.troops.InterfaceTroop import InterfaceTroop
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .states.FocusTowerState import FocusTowerState
-from res.BattleField import BattleField
 
 class RoyalGiantTroop(InterfaceTroop):
     """
@@ -28,20 +26,24 @@ class RoyalGiantTroop(InterfaceTroop):
         _state (FocusTowerState): State representing the focus on a tower.
         _battlefield (BattleField): Reference to the game's battlefield.
     """
+    
+    _ID = 6
+    _NAME = "Géant Royal"
+    _SPEED = EnumEntitySpeed.SLOW
+    _RANGE = 1
+    _ATTAQUE_SPEED = EnumEntitySpeed.SLOW
+    _ATTACK_DAMAGE = 20
+    _TYPE = EnumEntityType.GROUND
+    _HEALTH_POINT = 100
+    _COPPER_COST = 70
         
-    def __init__(self, side: int) -> None:
-        self._ID = 6
-        self._NAME = "Géant Royal"
-        self._SPEED = EnumEntitySpeed['SLOW']
-        self._RANGE = 5
-        self._ATTAQUE_SPEED = EnumEntitySpeed['SLOW']
-        self._ATTACK_DAMAGE = 20
-        self._TYPE = EnumEntityType['GROUND']
-        self._HEALTH_POINT = 100
-        self._x_position = None
-        self._y_position = None
-        self._x_prev_position = None
-        self._y_prev_position = None
-        self._side = side
-        self._state = FocusTowerState()
-        self._battlefield = BattleField.get_instance()
+    def __init__(self, side: int, x: int = 0, y: int = 0) -> None:
+        super().__init__(side, x, y)
+    
+    @staticmethod
+    def get_troop_id() -> int:
+        return RoyalGiantTroop._ID
+    
+    @staticmethod
+    def get_troop_cost() -> int:
+        return RoyalGiantTroop._COPPER_COST

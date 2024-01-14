@@ -8,10 +8,16 @@ class ArcherCard(InterfaceCard):
         _ID (int): Identifier for the card.
         _NAME (str): Name of the card.
     """
+    
+    _ID = 7
+    _NAME = "Archer"
         
     def __init__(self) -> None:
         """
         Initializes the ArcherCard object.
         """
-        self._ID = 7
-        self._NAME = "Archer"
+        super().__init__()
+    
+    @staticmethod
+    def get_card_id() -> int:
+        return ArcherCard._ID

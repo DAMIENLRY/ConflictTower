@@ -5,8 +5,8 @@ class EnumSide(Enum):
     Enum class representing different sides in the game.
 
     Attributes:
-        SIDE_1 (int): Side 1.
-        SIDE_2 (int): Side 2.
+        UP (int): Side 1.
+        DOWN (int): Side 2.
     """
-    SIDE_1 = 1
-    SIDE_2 = 2
+    UP = 1
+    DOWN = 2

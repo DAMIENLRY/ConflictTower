@@ -1,8 +1,6 @@
 from res.troops.InterfaceTroop import InterfaceTroop
 from .enums.EnumEntitySpeed import EnumEntitySpeed
 from .enums.EnumEntityType import EnumEntityType
-from .states.FocusTowerState import FocusTowerState
-from res.BattleField import BattleField
 
 class KnightTroop(InterfaceTroop):
     """
@@ -21,27 +19,31 @@ class KnightTroop(InterfaceTroop):
         _TYPE (EnumEntityType): Type of the troop.
         _HEALTH_POINT (int): Health points of the troop.
         _x_position (int): X-coordinate of the troop's current position.
-        _y_position (int): Y-coordinate of the troop's current position.
+        sition (int): Y-coordinate of the troop's current position.
         _x_prev_position (int): X-coordinate of the troop's previous position.
         _y_prev_position (int): Y-coordinate of the troop's previous position.
         _side (int): The side or team to which the troop belongs.
         _state (FocusTowerState): The state of focus on the tower.
         _battlefield (BattleField): Instance of the game battlefield.
     """
+    
+    _ID = 8
+    _NAME = "Chevalier"
+    _SPEED = EnumEntitySpeed.AVERAGE
+    _RANGE = 5
+    _ATTAQUE_SPEED = EnumEntitySpeed.AVERAGE
+    _ATTACK_DAMAGE = 15
+    _TYPE = EnumEntityType.GROUND
+    _HEALTH_POINT = 100
+    _COPPER_COST = 30
         
-    def __init__(self, side: int) -> None:
-        self._ID = 8
-        self._NAME = "Chevalier"
-        self._SPEED = EnumEntitySpeed['AVERAGE']
-        self._RANGE = 5
-        self._ATTAQUE_SPEED = EnumEntitySpeed['AVERAGE']
-        self._ATTACK_DAMAGE = 15
-        self._TYPE = EnumEntityType['GROUND']
-        self._HEALTH_POINT = 100
-        self._x_position = None
-        self._y_position = None
-        self._x_prev_position = None
-        self._y_prev_position = None
-        self._side = side
-        self._state = FocusTowerState()
-        self._battlefield = BattleField.get_instance()
+    def __init__(self, side: int, x: int = 0, y: int = 0) -> None:
+        super().__init__(side, x, y)
+    
+    @staticmethod
+    def get_troop_id() -> int:
+        return KnightTroop._ID
+    
+    @staticmethod
+    def get_troop_cost() -> int:
+        return KnightTroop._COPPER_COST

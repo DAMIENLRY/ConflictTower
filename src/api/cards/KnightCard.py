@@ -9,9 +9,15 @@ class KnightCard(InterfaceCard):
         _NAME (str): Name of the card.
     """
 
+    _ID = 8
+    _NAME = "Chevalier"
+    
     def __init__(self) -> None:
         """
         Initializes the KnightCard object.
         """
-        self._ID = 8
-        self._NAME = "Chevalier"
+        super().__init__()
+    
+    @staticmethod
+    def get_card_id() -> int:
+        return KnightCard._ID
