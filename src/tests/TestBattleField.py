@@ -7,18 +7,18 @@ grandparent_directory = os.path.dirname(parent_directory)
 sys.path.append(grandparent_directory)
 
 from server.res.BattleField import BattleField
-from server.res.cards.BallonCard import BallonCard
-from server.res.cards.InterfaceCase import InterfaceCase
-from server.res.cards.EmptyCase import EmptyCase
-from server.res.cards.ObstacleCase import ObstacleCase
-from server.res.cards.states import AttackState
-from server.res.cards.enums.EnumSide import EnumSide
+from server.res.troops.BallonTroop import BallonTroop
+from server.res.troops.InterfaceTroop import InterfaceTroop
+from server.res.troops.EmptyCase import EmptyCase
+from server.res.troops.ObstacleCase import ObstacleCase
+from server.res.troops.states import AttackState
+from api.enums.EnumSide import EnumSide
 
 class TestBattleField(unittest.TestCase):
 
     def setUp(self):
         self.battlefield = BattleField.getInstance()
-        self.card = BallonCard(EnumSide.SIDE_1, 0, 0)
+        self.card = BallonTroop(EnumSide.SIDE_1, 0, 0)
 
     def test_getInstance(self):
         self.assertEqual(self.battlefield, BattleField.getInstance())
