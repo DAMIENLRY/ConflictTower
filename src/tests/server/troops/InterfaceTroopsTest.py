@@ -6,20 +6,21 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.dirname(current_directory)
 grandparent_directory = os.path.dirname(parent_directory)
 sys.path.append(grandparent_directory)
-from server.res.cards.enums.EnumEntitySpeed import EnumEntitySpeed
-from server.res.cards.enums.EnumSide import EnumSide
-from server.res.cards.states.AttackState import AttackState
-from server.res.cards.states.FocusTowerState import FocusTowerState
-from api.enums.TroopEnum import TroopEnum
 
-class TestCards(unittest.TestCase):
+from server.res.troops.enums.EnumTroop import EnumTroop
+from server.res.troops.enums.EnumEntitySpeed import EnumEntitySpeed
+from api.enums.EnumSide import EnumSide
+from server.res.troops.states.FocusTowerState import FocusTowerState
+from server.res.troops.states.AttackState import AttackState
+
+class InterfaceTroopsTest(unittest.TestCase):
 
     def setUp(self):
-        troops = list(TroopEnum)
+        troops = list(EnumTroop)
         random.shuffle(troops)
         self.cards = []
         for troop in troops:
-            if troop is TroopEnum.BALLON or troop is TroopEnum.BOWLER:
+            if troop is EnumTroop.BALLON or troop is EnumTroop.BOWLER:
                 self.cards.append(troop.value(EnumSide.SIDE_1, 0, 0))
             else:
                 self.cards.append(troop.value())

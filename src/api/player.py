@@ -17,3 +17,5 @@ agent.generate_deck()
 
 agent.select_team(EnumSide.DOWN)
 agent.launch_game()
+
+agent.place_card(2,2,2)

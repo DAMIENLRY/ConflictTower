@@ -241,6 +241,25 @@ class AgentTower:
                 enemy.append(troop)
         return enemy
     
+    def my_tower_is_attacked() -> bool:
+        """
+        Checks if the player's tower is being attacked.
+
+        Returns:
+            bool: True if the player's tower is being attacked, False otherwise
+        """
+        pass
+    
+    def enemie_tower_is_attacked() -> bool:
+        """
+        Checks if the enemy's tower is being attacked.
+
+        Returns:
+            bool: True if the enemy's tower is being attacked, False otherwise
+        """
+        pass
+
+    
     def get_allied_troops(self) -> List[dict[str, Union[int, str]]]:
         """
         Gets information about allied troops currently on the map.

@@ -6,7 +6,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.dirname(current_directory)
 sys.path.append(parent_directory)
 
-from towerFinder import createAdjacencyListFromList, findShortestPath, breadthFirstSearch, pathToTower
+from server.res.game.towerFinder import createAdjacencyListFromList, findShortestPath, breadthFirstSearch, pathToTower
 
 class TestTowerFinder(unittest.TestCase):
 
