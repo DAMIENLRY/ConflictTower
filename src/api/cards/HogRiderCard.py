@@ -9,7 +9,7 @@ class HogRiderCard(InterfaceCard):
         _NAME (str): Name of the card.
     """
     _ID = 5
-    _NAME = "Chevaucheur de cochon"
+    _NAME = "Hog Rider"
 
     def __init__(self) -> None:
         """
@@ -19,6 +19,10 @@ class HogRiderCard(InterfaceCard):
     
     @staticmethod
     def get_card_id() -> int:
+        """
+        Gets the identifier of the Hog Rider card.
+
+        Returns:
+            int: Identifier of the Hog Rider card.
+        """
         return HogRiderCard._ID
-        
-        

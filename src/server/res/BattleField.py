@@ -86,6 +86,12 @@ class BattleField:
         }
     
     def get_troops_dict(self) -> List[dict]:
+        """
+        Retrieves a list of dictionaries containing information about all troops on the battlefield.
+
+        Returns:
+            List[dict]: List of dictionaries, each containing troop information
+        """
         troops = []
         for troop in self._troops:
             troops.append(self.get_troop_dict(troop))

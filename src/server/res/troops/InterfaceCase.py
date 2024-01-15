@@ -20,12 +20,18 @@ class InterfaceCase(ABC):
     _x_prev_position: int
     _y_prev_position: int
     
-    def __init__(self, x: int = 0, y: int = 0) -> None:
+    def __init__(self) -> None:
+        """
+        Initializes an instance of InterfaceCase.
+
+        Args:
+            x (int): X-coordinate of the case's initial position.
+            y (int): Y-coordinate of the case's initial position.
+        """
         super().__init__()
-        self._x_position = x
-        self._y_position = y
         self._x_prev_position = None
         self._y_prev_position = None
+
         
     
     def get_id(self) -> int:

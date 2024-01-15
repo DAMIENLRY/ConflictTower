@@ -20,4 +20,10 @@ class ArcherCard(InterfaceCard):
     
     @staticmethod
     def get_card_id() -> int:
+        """
+        Gets the identifier of the Archer card.
+
+        Returns:
+            int: Identifier of the Archer card.
+        """
         return ArcherCard._ID

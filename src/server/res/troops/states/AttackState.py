@@ -6,8 +6,26 @@ from res.troops.states.DeadState import DeadState
 from res.troops.states.FocusTowerState import FocusTowerState
 
 class AttackState(StateTroop):
-        
-    def handle_request(self, troop):
+    """
+    Represents the attack state of a troop.
+
+    Methods:
+        handle_request(troop): Handles the troop's attack behavior.
+
+    Attributes:
+        None
+    """
+
+    def handle_request(self, troop) -> None:
+        """
+        Handles the troop's attack behavior.
+
+        Parameters:
+            troop: Troop object representing the attacking troop.
+
+        Returns:
+            None
+        """
         print("Troop is attacking.")
         while troop.get_health() > 0 and troop.is_thread_ia_alive():
             opponent = troop.opponent_in_range()
