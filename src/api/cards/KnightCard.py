@@ -10,7 +10,7 @@ class KnightCard(InterfaceCard):
     """
 
     _ID = 8
-    _NAME = "Chevalier"
+    _NAME = "Knight"
     
     def __init__(self) -> None:
         """
@@ -20,4 +20,10 @@ class KnightCard(InterfaceCard):
     
     @staticmethod
     def get_card_id() -> int:
+        """
+        Gets the identifier of the Knight card.
+
+        Returns:
+            int: Identifier of the Knight card.
+        """
         return KnightCard._ID

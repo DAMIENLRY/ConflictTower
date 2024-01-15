@@ -10,7 +10,7 @@ class GoblinCard(InterfaceCard):
     """
 
     _ID = 4
-    _NAME = "Gobelin"
+    _NAME = "Goblin"
         
     def __init__(self) -> None:
         """
@@ -20,5 +20,10 @@ class GoblinCard(InterfaceCard):
     
     @staticmethod
     def get_card_id() -> int:
-        return GoblinCard._ID
+        """
+        Gets the identifier of the Goblin card.
 
+        Returns:
+            int: Identifier of the Goblin card.
+        """
+        return GoblinCard._ID

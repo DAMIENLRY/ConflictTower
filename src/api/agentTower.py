@@ -1,7 +1,7 @@
 import random
 import time
 
-from typing import List, Set
+from typing import List, Set, Union
 from j2l.pytactx.agent import Agent
 
 from enums.EnumCard import EnumCard
@@ -44,6 +44,8 @@ class AgentTower:
         """
         self._agent = Agent(playerId, arena, username, password, server, port, imgOutputPath, autoconnect, waitArenaConnection, verbosity, robotId, welcomePrint, sourcesdir)
         self._deck = set()
+        self._agent.setColor(255, 0, 0)
+        self.update()
         
     def set_deck(self, deck:List[EnumCard]) -> None:
         """
@@ -83,7 +85,7 @@ class AgentTower:
         if not(troop in self._deck): return
         self._deck.remove(troop)
         
-    def select_team(self, team: EnumSide):
+    def select_team(self, team: EnumSide) -> None:
         """
         Selects the team for the agent.
 
@@ -104,9 +106,10 @@ class AgentTower:
         listDeck = list(self._deck)
         random.shuffle(listDeck)
         self._deckPlayed = list(listDeck)
+        time.sleep(2)
         self._agent.setColor(0, self._team.value, 0)
         self._agent.update()
-        time.sleep(5)
+        time.sleep(2)
     
     def generate_deck(self) -> None:
         """
@@ -163,21 +166,108 @@ class AgentTower:
         Returns:
             int: Amount of copper.
         """
+        self.update()
         return self._agent.ammo
+    
+    def get_team(self) -> int:
+        """
+        Gets the team ID of the agent.
+
+        Returns:
+            int: Team ID of the agent.
+        """
+        self.update()
+        return self._agent.team
+    
+    def get_my_tower_life(self) -> int:
+        """
+        Gets the remaining life of the agent's tower.
+
+        Returns:
+            int: Remaining life of the agent's tower.
+        """
+        self.update()
+        game_info = self._agent.game['info']
+        if self.get_team() == 1:
+            return int(game_info.split()[3])
+        else:
+            return int(game_info.split()[1])
+
         
+    def get_enemy_tower_life(self) -> int:
+        """
+        Gets the remaining life of the enemy's tower.
+
+        Returns:
+            int: Remaining life of the enemy's tower.
+        """
+        game_info = self._agent.game['info']
+        if self.get_team() == 1:
+            return int(game_info.split()[1])
+        else:
+            return int(game_info.split()[3])
+    
+    def get_troops_stats(self) -> List[dict[str, Union[int, str]]]:
+        """
+        Gets statistics for all troops in the game.
+
+        Returns:
+            List[dict[str, Union[int, str]]]: List of dictionaries containing troop statistics.
+        """
+        self.update()
+        return self._agent.game["weapons"][0]["troops"]
+    
+    def get_troops_on_map(self) -> List[dict[str, Union[int, str]]]:
+        """
+        Gets information about troops currently on the map.
+
+        Returns:
+            List[dict[str, Union[int, str]]]: List of dictionaries containing information about troops on the map.
+        """
+        self.update()
+        return self._agent.game["weapons"][0]["troops_map"]
+    
+    def get_enemy_troops(self) -> List[dict[str, Union[int, str]]]:
+        """
+        Gets information about enemy troops currently on the map.
+
+        Returns:
+            List[dict[str, Union[int, str]]]: List of dictionaries containing information about enemy troops.
+        """
+        troops = self.get_troops_on_map()
+        enemy = []
+        for troop in troops:
+            if troop["team"] != self.get_team():
+                enemy.append(troop)
+        return enemy
+    
+    def get_allied_troops(self) -> List[dict[str, Union[int, str]]]:
+        """
+        Gets information about allied troops currently on the map.
+
+        Returns:
+            List[dict[str, Union[int, str]]]: List of dictionaries containing information about allied troops.
+        """
+        troops = self.get_troops_on_map()
+        allies = []
+        for troop in troops:
+            if troop["team"] == self.get_team():
+                allies.append(troop)
+        return allies
+    
     def update(self) -> None:
         """
-        Updates the agent.
+        Updates the agent to fetch the latest game state.
         """
         self._agent.update()
     
-    def disconect(self) -> None:
+    def disconnect(self) -> None:
         """
-        Disconnects the agent.
+        Disconnects the agent from the game.
         """
         self._agent.disconnect()
     
-    def print(self):
+    def print_info(self) -> None:
         """
         Prints information about the agent.
         """

@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Callable, List, Union
 import time
 import threading
 
@@ -62,13 +62,25 @@ class Arbiter():
         if not self.__class__._instance:
             self._battlefield = BattleField.get_instance()
             self._agent = Agent(playerId, arena, username, password, server, port, imgOutputPath, autoconnect, waitArenaConnection, verbosity, robotId, welcomePrint, sourcesdir)
-            self.init_arbitrer()
             self._copper_thread_state = threading.Event()
             self._countdown_thread_state = threading.Event()
             self._color_listener_thread_state = threading.Event()
         else:
             raise Exception("Cette classe est un singleton !")
     
+    def format_data_troops(self) -> dict[str, int]:
+        format_troops = {}
+        for troop in EnumTroop:
+            format_troops.update(troop.value.get_troop_data())
+        return self.sorted_dict(format_troops)
+            
+    def sorted_dict(self, unordonned_dict: dict) -> dict:
+        dict = {}
+        for key in sorted(unordonned_dict.keys()):
+            value = unordonned_dict[key]
+            dict.update({key: value})
+        return dict
+        
     def init_arbitrer(self) -> None:
         """
         Initializes the Arbiter with initial rules for the game arena and map.
@@ -78,6 +90,9 @@ class Arbiter():
         self._agent.ruleArena("gridColumns", COLUMNS)
         self._agent.ruleArena("gridRows", ROWS)
         self._agent.ruleArena("map", self._battlefield.get_map())
+        self._agent.ruleArena("api", "https://github.com/DAMIENLRY/ConflictTower/blob/main/src/api/player.py")
+        self._agent.ruleArena("help", "https://github.com/DAMIENLRY/ConflictTower/blob/main/src/api/README.md")
+        self.update()
 
         map_rule_manager = MapFrictionWrapper(self._agent)
 
@@ -133,7 +148,7 @@ class Arbiter():
         """
         return self._agent.range[name]
     
-    def get_agents_by_team(self, team: int) -> List[Union[str, dict]]:
+    def get_agents_by_team(self, team: int) -> List[str]:
         """
         Retrieves a list of agents belonging to a specific team.
 
@@ -146,7 +161,7 @@ class Arbiter():
         agents = []
         for key, value in self._agent.range.items():
             if value['team'] == team:
-                return agents.append(key)
+                agents.append(key)
         return agents
     
     def get_color_of_players(self, agents: dict) -> dict[str, tuple[int, int, int]]:
@@ -171,12 +186,12 @@ class Arbiter():
         map_rule_manager = MapFrictionWrapper(self._agent)
 
         temps_restant = TIME
-        while temps_restant >= -1 and not self._countdown_thread_state.is_set():
+        while temps_restant > -1 and not self._countdown_thread_state.is_set():
             map_rule_manager.update_status_bar("countdown", temps_restant)
             time.sleep(1)
             temps_restant -= 1
     
-    def change_color_listener(self, callback) -> None:
+    def change_color_listener(self, callback: Callable) -> None:
         """
         Monitors color changes of players and triggers a callback on color change.
 
@@ -187,13 +202,15 @@ class Arbiter():
         while not self._color_listener_thread_state.is_set():
             new_player_color = self.get_color_of_players(self._agent.range)
             for name, color in new_player_color.items():
-                if player_color[name] != color:
+                if name not in player_color or player_color[name] != color:
                     print(name, ' changement de couleur : ', color)
                     player_color[name] = color
                     callback(name, player_color[name])
     
     def add_copper(self) -> None:
-        """Periodically adds copper to players based on a timer."""
+        """
+        Periodically adds copper to players based on a timer.
+        """
         while not self._copper_thread_state.is_set():
             for key, value in self._agent.range.items():
                 new_copper_amount = value['ammo'] + 10
@@ -201,17 +218,40 @@ class Arbiter():
                     self._agent.rulePlayer(key, "ammo", new_copper_amount)
             time.sleep(TIME_TO_GET_COPPER)
     
-    def change_color_actions(self, player_name, player_color) -> None:
+    def change_color_actions(self, player_name: str, player_color: tuple[int, int, int]) -> None:
+        """
+        Handles color change actions based on the provided player name and color.
+
+        Args:
+            player_name (str): The name of the player
+            player_color (tuple[int, int, int]): The new color of the player
+        """
         player = self.get_agent_by_name(player_name)
         color_action = player_color[0]
-        self.switch_case_color_action()[color_action](player_name, player, player_color)
+        if color_action in self.switch_case_color_action():
+            self.switch_case_color_action()[color_action](player_name, player, player_color)
         
-    def select_team(self, player_name, player, player_color):
-        print('team selectyed : ', player_color[1])
+    def select_team(self, player_name: str, player: dict[str, Union[int, str]], player_color: tuple[int, int, int]):
+        """
+        Handles the action of selecting a team based on the provided player name, player information, and color.
+
+        Args:
+            player_name (str): The name of the player
+            player (dict[str, Union[int, str]]): Player information
+            player_color (tuple[int, int, int]): The new color of the player
+        """
         self._agent.rulePlayer(player_name, "team", player_color[1])
         self.update()
     
-    def place_card_on_battlefield(self, player_name, player, player_color):
+    def place_card_on_battlefield(self, player_name: str, player: dict[str, Union[int, str]], player_color: tuple[int, int, int]):
+        """
+        Handles the action of placing a card on the battlefield based on the provided player name, player information, and color.
+
+        Args:
+            player_name (str): The name of the player
+            player (dict[str, Union[int, str]]): Player information
+            player_color (tuple[int, int, int]): The new color of the player
+        """
         for troop in EnumTroop: 
             if troop.value.get_troop_id() == player_color[1]:
                 if troop.value.get_troop_cost() <= player["ammo"]: 
@@ -222,13 +262,19 @@ class Arbiter():
                     self._agent.rulePlayer(player_name, "ammo", player["ammo"] - select_card.get_copper_cost())
                     self._battlefield.add_troop(select_card)
     
-    def switch_case_color_action(self):
+    def switch_case_color_action(self) -> dict[int, Callable]:
+        """
+        Defines a dictionary mapping color action IDs to corresponding methods.
+
+        Returns:
+            dict[int, Callable]: Dictionary mapping color action IDs to methods
+        """
         return {
             0: self.select_team,
             1: self.place_card_on_battlefield,
         }
                 
-    def decode_coords(self, encoded) -> tuple[int, int]:
+    def decode_coords(self, encoded: int) -> tuple[int, int]:
         """
         Decodes the encoded position information into x and y coordinates.
 
@@ -249,7 +295,7 @@ class Arbiter():
         Returns:
             bool: True if the game can start, False otherwise
         """
-        if len(self._agent.range.keys()) < 2: return False
+        #if len(self.get_agents_by_team(1)) == 0 or len(self.get_agents_by_team(2)) == 0: return False
         return True
     
     def lunch_game(self) -> None:
@@ -257,35 +303,38 @@ class Arbiter():
         Starts the game and manages various threads for game events.
         """
         self.init_arbitrer()
-        id = 0
+
         for key, value in self._agent.range.items():
-            id += 1
-            self._agent.rulePlayer(key, "x", id)
-            self._agent.rulePlayer(key, "team", value['led'][0])
             self._agent.rulePlayer(key, "ammo", 60)
-            
-        self._countdown_thread_state.clear()
-        countdown_thread = threading.Thread(target=self.minuteur, args=())
-        countdown_thread.daemon = True
-        countdown_thread.start()
 
         self._color_listener_thread_state.clear()
         color_listener_thread = threading.Thread(target=self.change_color_listener, args=(self.change_color_actions,))
         color_listener_thread.daemon = True
         color_listener_thread.start()
         
+        # while not self.can_start_game():
+        #     pass
+        
         self._copper_thread_state.clear()
         copper_thread = threading.Thread(target=self.add_copper, args=())
         copper_thread.daemon = True
         copper_thread.start()
         
+        self._countdown_thread_state.clear()
+        countdown_thread = threading.Thread(target=self.minuteur, args=())
+        countdown_thread.daemon = True
+        countdown_thread.start()
+        
         print("Partie lancée")
+        troops_stat = self.format_data_troops()
         while not self.game_is_finised():
             self._agent.ruleArena("map", self._battlefield.get_map())
+            self._agent.ruleArena("weapons", [{'troops': troops_stat, "troops_map": self._battlefield.get_troops_dict()}])
             map_rule_manager = MapFrictionWrapper(self._agent)
             map_rule_manager.update_status_bar('life', self._battlefield.get_life_tower_1(), 1)
             map_rule_manager.update_status_bar('life', self._battlefield.get_life_tower_2(), 2)
             self.update()
+        self.reset_game()
         
     def time_out(self) -> bool:
         """
@@ -295,7 +344,7 @@ class Arbiter():
             bool: True if the game has timed out, False otherwise
         """
         map_rule_manager = MapFrictionWrapper(self._agent)
-        if map_rule_manager.get_time() < 0: return True
+        if map_rule_manager.get_time() <= 0: return True
         return False
     
     def game_is_finised(self) -> bool:
@@ -305,7 +354,7 @@ class Arbiter():
         Returns:
             bool: True if the game has finished, False otherwise
         """
-        return self.time_out and self._battlefield.tower_defeated()
+        return self.time_out() or self._battlefield.tower_defeated()
     
     def disconnect_all_agent(self) -> None:
         """
@@ -313,6 +362,28 @@ class Arbiter():
         """
         for key, value in self._agent.range.items():
             self._agent.rulePlayer(key, "connected", False)
+    
+    def ban_card(self) -> None:
+        """
+        Bans a card.
+
+        This method is responsible for implementing the logic to ban a card in the game.
+
+        Returns:
+            None
+        """
+        pass
+    
+    def create_card(self) -> None:
+        """
+        Creates a card.
+
+        This method is responsible for implementing the logic to create a card in the game.
+
+        Returns:
+            None
+        """
+        pass
     
     def reset_game(self) -> None:
         """
@@ -322,5 +393,8 @@ class Arbiter():
         self._color_listener_thread_state.set()
         self._copper_thread_state.set()
         self._battlefield.reset()
+        self._agent.ruleArena("map", self._battlefield.get_map())
+        self._agent.ruleArena("weapons", [{'troops': self.format_data_troops(), "troops_map": []}])
         self.disconnect_all_agent()
+        self.update()
         time.sleep(10) 

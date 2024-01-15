@@ -31,11 +31,13 @@ class InterfaceTroop(InterfaceCase, ABC):
     
     def __init__(self, side: int, x: int, y: int):
         from res.BattleField import BattleField
-        super().__init__(x, y)
+        super().__init__()
         self._battlefield = BattleField.get_instance()
         self._side = side
         self._state = FocusTowerState()
         self._thread_ia_state = True
+        self._x_position = x
+        self._y_position = y
         thread_ia = threading.Thread(target=self.handle_request)
         thread_ia.daemon = True
         thread_ia.start()
@@ -76,6 +78,18 @@ class InterfaceTroop(InterfaceCase, ABC):
     def set_position(self, x: int, y: int) -> None:
         self._x_position = x
         self._y_position = y
+        
+    def get_x(self) -> int:
+        return self._x_position
+    
+    def get_y(self) -> int:
+        return self._y_position
+    
+    def get_range(self) -> int:
+        return self._RANGE
+    
+    def get_type(self) -> int:
+        return self._TYPE.value
 
     def is_within_bounds(self, x, y):
         return 0 <= x < ROWS and 0 <= y < COLUMNS
@@ -97,7 +111,7 @@ class InterfaceTroop(InterfaceCase, ABC):
     def get_move_speed_interval(self):
         return self._SPEED.value
 
-    def get_tower_focus_coordoonates(self):
+    def get_tower_focus_coordinates(self):
         return TOWER_SIDE_2[0] if self.get_side() == 1 else TOWER_SIDE_1[0]
 
     def set_location(self, x: int, y: int):

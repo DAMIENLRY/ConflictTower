@@ -20,4 +20,10 @@ class BallonCard(InterfaceCard):
     
     @staticmethod
     def get_card_id() -> int:
+        """
+        Gets the identifier of the Ballon card.
+
+        Returns:
+            int: Identifier of the Ballon card.
+        """
         return BallonCard._ID

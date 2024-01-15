@@ -6,8 +6,26 @@ from res.troops.states.DeadState import DeadState
 from res.troops.states.FocusTowerState import FocusTowerState
 
 class AttackState(StateTroop):
-        
-    def handle_request(self, troop):
+    """
+    Represents the attack state of a troop.
+
+    Methods:
+        handle_request(troop): Handles the troop's attack behavior.
+
+    Attributes:
+        None
+    """
+
+    def handle_request(self, troop) -> None:
+        """
+        Handles the troop's attack behavior.
+
+        Parameters:
+            troop: Troop object representing the attacking troop.
+
+        Returns:
+            None
+        """
         print("Troop is attacking.")
         while troop.get_health() > 0 and troop.is_thread_ia_alive():
             opponent = troop.opponent_in_range()
@@ -21,10 +39,14 @@ class AttackState(StateTroop):
                     troop.get_battlefield().remove_damage_case(dmgCase)
 
                     opponent_card = troop.get_battlefield().is_occupied_by_opponent(troop, opponent._x_position, opponent._y_position)
-                    opponent_card.reduce_health(troop.get_attack_damage())
-                    if opponent_card._HEALTH_POINT <= 0:
-                        troop.set_state(FocusTowerState())
-                        troop.handle_request()
+                    if opponent_card:
+                        opponent_card.reduce_health(troop.get_attack_damage())
+                        if opponent_card._HEALTH_POINT <= 0:
+                            troop.set_state(FocusTowerState())
+                            troop.handle_request()
+            else:
+                troop.set_state(FocusTowerState())
+                troop.handle_request()
 
             if troop.get_health() > 0:
                 time.sleep(troop.get_attack_speed())

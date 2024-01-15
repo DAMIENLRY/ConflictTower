@@ -68,6 +68,35 @@ class BattleField:
                 line.append(self._map[row][column].get_id())
             map.append(line)
         return map
+    
+    def get_troop_dict(self, troop: InterfaceTroop) -> dict:
+        return {
+            'id': troop.get_id(),
+            'name': troop.get_name(),
+            'health': troop.get_health(),
+            'attack_damage': troop.get_attack_damage(),
+            'attack_speed': troop.get_attack_speed(),
+            'team': troop.get_side(),
+            'speed': troop.get_speed(),
+            'x': troop.get_x(),
+            'y': troop.get_y(),
+            'range': troop.get_range(),
+            'type': troop.get_type(),
+            'cost': troop.get_copper_cost()
+        }
+    
+    def get_troops_dict(self) -> List[dict]:
+        """
+        Retrieves a list of dictionaries containing information about all troops on the battlefield.
+
+        Returns:
+            List[dict]: List of dictionaries, each containing troop information
+        """
+        troops = []
+        for troop in self._troops:
+            troops.append(self.get_troop_dict(troop))
+        return troops
+            
 
     def update_map(self) -> None:
         """

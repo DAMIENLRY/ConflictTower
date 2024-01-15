@@ -10,7 +10,7 @@ class RoyalGiantCard(InterfaceCard):
     """
     
     _ID = 6
-    _NAME = "Géant Royal"
+    _NAME = "Royal Giant"
 
     def __init__(self) -> None:
         """
@@ -20,5 +20,10 @@ class RoyalGiantCard(InterfaceCard):
     
     @staticmethod
     def get_card_id() -> int:
+        """
+        Gets the identifier of the Royal Giant card.
+
+        Returns:
+            int: Identifier of the Royal Giant card.
+        """
         return RoyalGiantCard._ID
-        

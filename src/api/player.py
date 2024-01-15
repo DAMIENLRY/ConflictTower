@@ -2,6 +2,7 @@
 
 from agentTower import AgentTower
 from enums.EnumSide import EnumSide
+from enums.EnumCard import EnumCard
 
 agent = AgentTower(playerId="667VELIB",
 						arena="conflicttower",
@@ -12,9 +13,7 @@ agent = AgentTower(playerId="667VELIB",
 
 agent.generate_deck()
 
+#agent.add_deck_card(EnumCard.BOWLER)
+
 agent.select_team(EnumSide.DOWN)
 agent.launch_game()
-
-print(agent.get_deck())
-
-agent.place_card(2, 3, 2)

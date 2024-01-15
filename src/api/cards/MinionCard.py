@@ -10,15 +10,20 @@ class MinionCard(InterfaceCard):
     """
 
     _ID = 9
-    _NAME = "Gargouilles"
+    _NAME = "Minion"
     
     def __init__(self) -> None:
         """
         Initializes the MinionCard object.
         """
-        super().__init()
+        super().__init__()
     
     @staticmethod
     def get_card_id() -> int:
+        """
+        Gets the identifier of the Minion card.
+
+        Returns:
+            int: Identifier of the Minion card.
+        """
         return MinionCard._ID
-        
