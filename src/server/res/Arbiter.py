@@ -73,6 +73,9 @@ class Arbiter():
         for troop in EnumTroop:
             format_troops.update(troop.value.get_troop_data())
         return self.sorted_dict(format_troops)
+    
+    def format_data_map(self) -> dict:
+        map = {}
             
     def sorted_dict(self, unordonned_dict: dict) -> dict:
         dict = {}
@@ -297,6 +300,7 @@ class Arbiter():
         
         print("Partie lancée")
         while not self.game_is_finised():
+            #print(self._battlefield.get_troops_dict())
             self._agent.ruleArena("map", self._battlefield.get_map())
             map_rule_manager = MapFrictionWrapper(self._agent)
             map_rule_manager.update_status_bar('life', self._battlefield.get_life_tower_1(), 1)

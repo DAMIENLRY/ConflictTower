@@ -15,7 +15,7 @@ agent.generate_deck()
 agent.select_team(EnumSide.DOWN)
 agent.launch_game()
 
-print(agent.get_troops_stats())
+print(agent._agent.game)
 
 agent.place_card(2, 3, 2)
 
