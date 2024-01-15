@@ -25,29 +25,29 @@ sequenceDiagram
     activate AgentTower
 
     AgentTower->>EnumCard: Accède aux cartes disponibles
-    loop Pour chaque carte choisie
-        Player->>AgentTower: add_deck_card(EnumCard)
-    end
 
-    Player->>EnumSide: Sélectionne un côté (UP/DOWN)
+    Player->>AgentTower: generate_deck()
+    Player->>EnumCard: Récupère 8 cartes aléatoirement
+
     Player->>AgentTower: select_team(EnumSide)
+    Player->>EnumSide: Sélectionne un côté (UP/DOWN)
 
-    AgentTower->>Agent: Se connecte
+    Player->>AgentTower: launch_game()
+    loop
     activate Agent
-    AgentTower->>Agent: setColor()
+    AgentTower->>Agent: connect()
+    AgentTower->>Agent: setColor(0, team.value, 0)
     AgentTower->>Agent: update()
     deactivate Agent
 
-    loop Pendant le jeu
-        Player->>AgentTower: place_card(slot, x, y)
-        AgentTower->>EnumCard: Obtient les détails de la carte
-        AgentTower->>Agent: place_card (à l'arène)
-        activate Agent
-        AgentTower->>Agent: update()
-        deactivate Agent
-    end
+    Player->>AgentTower: place_card()
+    activate Agent
+    AgentTower->>Agent: setColor(1, card.get_card_id(), self.encode_coords(x, y))
+    AgentTower->>Agent: update()
+    deactivate Agent
 
     Player->>AgentTower: Fin du jeu
+    end
     AgentTower->>Agent: disconnect()
     deactivate AgentTower
 ```
