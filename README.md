@@ -156,7 +156,7 @@ classDiagram
 - ** Diagramme de classes**:
 
 ```mermaid
-- stateDiagram-v2
+stateDiagram-v2
     [*] --> FocusTowerState: Initialisation
     FocusTowerState --> DeadState: troop.get_health() <= 0
     FocusTowerState --> AttackState: troop.opponent_in_range()
