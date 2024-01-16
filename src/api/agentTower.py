@@ -197,7 +197,6 @@ class AgentTower:
         if(not( 1 <= slot <= 4)): raise("You must choose a card located on slot 1, 2, 3, 4.")
         selected_card = self._deckPlayed.get_hand_slot(slot)
         selected_card_cost = self.get_cost_card(selected_card)
-        print(self.get_hand())
         if selected_card_cost <= self.get_copper():
             card = (selected_card).value
             self._agent.setColor(1, card.get_card_id(), self.encode_coords(x, y))
