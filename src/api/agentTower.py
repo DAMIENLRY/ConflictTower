@@ -209,7 +209,7 @@ class AgentTower:
         pass
     
     def get_deck_card_slot(self, card: EnumCard) -> int:
-        self._deck
+        pass
         
     def get_hand(self) -> None:
         """
