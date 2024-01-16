@@ -179,11 +179,12 @@ stateDiagram-v2
     - Les tests se trouvent dans le répertoire src/tests.
     - vous pouvez lancer les classes de tests avec la commande :
         - python3 agent.py # avec tests de agent par exemple
-- **🛣️ Roadmap**
 - **🧑‍💻 Auteurs**
-    - Développeur Pytactx API : Julien ARNE
+    - Développeur Pytactx API : Julien ARNÉ
     - Développeurs ConflictTowers :
         - Damien Leroy
         - Thibaud Lebrasseur
         - Gaëtan Langlois
-- **⚖️ License** Image de preview (preview.png) générée à l'aide de l'IA DALL-E
+- **⚖️ License**
+Image de preview (preview.png) générée à l'aide de l'IA DALL-E
+Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported (CC BY-NC-ND 3.0)
