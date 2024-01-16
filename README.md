@@ -38,7 +38,6 @@
 - **🎲 Règles** du jeu : maquette, déroulé d'une partie, conditions de victoire
 - **🎮 Use cases**:
     - pour l'administrateur : changer les statistiques par défaults des troupes
-    - pour le joueur : renvoyer vers README API
     - pour le joueur : poser une carte dans son camp du côté gauche ou du côté droit
     - pour le joueur : connaître la position de toutes les entités (alliées et ennemies)
     - pour le joueur : choisir les cartes de combat par défaut (ou laisser par défaut : attribution de cartes aléatoire)
