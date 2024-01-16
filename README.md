@@ -153,6 +153,19 @@ classDiagram
     EnumCard --> ArcherCard : includes
 ```
 
+- ** Diagramme de classes**:
+
+```mermaid
+- stateDiagram-v2
+    [*] --> FocusTowerState: Initialisation
+    FocusTowerState --> DeadState: troop.get_health() <= 0
+    FocusTowerState --> AttackState: troop.opponent_in_range()
+    FocusTowerState --> AttackTowerState: len(path) != 0
+    AttackState --> FocusTowerState: opponent_card._HEALTH_POINT <= 0 or 
+    AttackState --> DeadState: troop.get_health() <= 0 not troop.opponent_in_range()
+    AttackTowerState --> DeadState: troop.get_health() <= 0
+```
+
 - **✅ Pré-requis** 
     - Python 3
     - API ConflictTower
