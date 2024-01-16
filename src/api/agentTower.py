@@ -6,6 +6,7 @@ from j2l.pytactx.agent import Agent
 
 from enums.EnumCard import EnumCard
 from enums.EnumSide import EnumSide
+from Deck import Deck
 
 class AgentTower:
     """
@@ -20,7 +21,7 @@ class AgentTower:
 
     _agent: Agent
     _deck: Set[EnumCard]
-    _deckPlayed: List[EnumCard]
+    _deckPlayed: Deck
     _team: EnumSide
     
     def __init__(self,playerId:str or None=None, arena:str or None=None, username:str or None=None, password:str or None=None, server:str or None=None, port:int=1883, imgOutputPath:str or None="img.jpeg", autoconnect:bool=True, waitArenaConnection:bool=True, verbosity:int=3, robotId:str or None="_", welcomePrint:bool=True, sourcesdir:str or None=None):
@@ -65,6 +66,52 @@ class AgentTower:
         """
         return self._deck
     
+    def get_hand_slot(self, slot: int) -> EnumCard:
+        """
+        Retrieves the card in the specified hand slot.
+
+        Args:
+            slot (int): The hand slot (1 to 4) to retrieve the card from.
+
+        Returns:
+            EnumCard: The card in the specified hand slot.
+
+        Raises:
+            Exception: If the provided slot is not between 1 and 4.
+        """
+        if slot < 1 or slot > 4:
+            raise Exception("Please select a slot between 1 and 4")
+        return self._deckPlayed.get_hand_slot(slot)
+
+    def card_is_in_hand(self, card: EnumCard) -> bool:
+        """
+        Checks if a specific card is in the player's hand.
+
+        Args:
+            card (EnumCard): The card to check for.
+
+        Returns:
+            bool: True if the card is in the hand, False otherwise.
+        """
+        return card in self._deckPlayed.get_hand()
+    
+    def get_card_slot(self, card: EnumCard) -> Union[int, bool]:
+        """
+        Retrieves the slot of a specific card in the player's hand.
+
+        Args:
+            card (EnumCard): The card to find in the hand.
+
+        Returns:
+            Union[int, bool]: The slot number (1 to 4) if the card is in the hand, False otherwise.
+        """
+        if self.card_is_in_hand(card):
+            for slot in range(1, 5):
+                if self._deckPlayed.get_hand_slot(slot) == card:
+                    return slot
+        return False
+
+    
     def add_deck_card(self, troop: EnumCard) -> None:
         """
         Adds a card to the deck.
@@ -105,7 +152,7 @@ class AgentTower:
         self._agent.connect()
         listDeck = list(self._deck)
         random.shuffle(listDeck)
-        self._deckPlayed = list(listDeck)
+        self._deckPlayed = Deck(list(listDeck))
         time.sleep(2)
         self._agent.setColor(0, self._team.value, 0)
         self._agent.update()
@@ -135,7 +182,7 @@ class AgentTower:
         # Encoding coordinates
         return (x << 4) | y
         
-    def place_card(self, slot: int, x: int, y: int) -> None:
+    def place_card(self, slot: int, x: int, y: int) -> bool:
         """
         Places a card on the arena.
 
@@ -143,21 +190,36 @@ class AgentTower:
             slot (int): Slot number for the card.
             x (int): X-coordinate for placement.
             y (int): Y-coordinate for placement.
+            
+        Returns:
+            bool: True if card placed.
         """
         if(not( 1 <= slot <= 4)): raise("You must choose a card located on slot 1, 2, 3, 4.")
-        card = (self._deckPlayed.pop(slot)).value
-        self._agent.setColor(1, card.get_card_id(), self.encode_coords(x, y))
-        self._agent.update()
-        self._deckPlayed.append(card)
+        selected_card = self._deckPlayed.get_hand_slot(slot)
+        selected_card_cost = self.get_cost_card(selected_card)
+        print(self.get_hand())
+        if selected_card_cost <= self.get_copper():
+            card = (selected_card).value
+            self._agent.setColor(1, card.get_card_id(), self.encode_coords(x, y))
+            self._deckPlayed.next_hand(slot)
+            self._agent.update()
+            return True
+        return False
+    
+    def get_next_card(self) -> EnumCard:
+        pass
+    
+    def get_deck_card_slot(self, card: EnumCard) -> int:
+        self._deck
         
-    def get_deck(self) -> None:
+    def get_hand(self) -> None:
         """
         Gets the cards in play.
 
         Returns:
             None: List of cards in play.
         """
-        return self._deckPlayed[:4]
+        return self._deckPlayed.get_hand()
     
     def get_copper(self) -> int:
         """
@@ -178,6 +240,10 @@ class AgentTower:
         """
         self.update()
         return self._agent.team
+    
+    def get_cost_card(self, troop: EnumCard) -> int:
+        troop_id = str(troop.value.get_card_id())
+        return self.get_troops_stats()[troop_id]["cost"]
     
     def get_my_tower_life(self) -> int:
         """

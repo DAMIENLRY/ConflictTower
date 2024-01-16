@@ -107,6 +107,7 @@ class Arbiter():
         map_rule_manager.add_friction(6, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/royal-giant.png")
         map_rule_manager.add_friction(7, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/archer.png")
         map_rule_manager.add_friction(8, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/knight.png")
+        map_rule_manager.add_friction(9, 1, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/minion.png")
 
         #damages
         map_rule_manager.add_friction(13, 0, "https://raw.githubusercontent.com/DAMIENLRY/ConflictTower/main/assets/damages/3.png")
