@@ -37,7 +37,6 @@
 
 - **🎲 Règles** du jeu : maquette, déroulé d'une partie, conditions de victoire
 - **🎮 Use cases**:
-    - pour l'administrateur : expliquer ce que peut/doit faire un administrateur qui souhaite lancer/administrer une arène de jeu avec des apprenants
     - pour l'administrateur : changer les statistiques par défaults des troupes
     - pour le joueur : renvoyer vers README API
     - pour le joueur : poser une carte dans son camp du côté gauche ou du côté droit
