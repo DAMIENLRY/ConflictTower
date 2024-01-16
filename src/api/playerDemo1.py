@@ -15,5 +15,7 @@ agent = AgentTower(playerId="Player1",
 
 agent.generate_deck()
 
+#agent.add_deck_card(EnumCard.BALLON)
+
 agent.select_team(EnumSide.UP)
 agent.launch_game()
