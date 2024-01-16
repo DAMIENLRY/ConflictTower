@@ -6,7 +6,7 @@
     - **Fonctionnalités :**\
         **Génération des cartes (`generate_deck`)**
         - **Objectif**: Permettre au joueur de générer une liste de cartes à utiliser pendant la partie.
-        - **Description**: Le système doit fournir une fonction pour générer une pioche de cartes composée d'unités et de sorts.
+        - **Description**: Le système doit fournir une fonction pour générer une pioche de cartes composée d'unités.
         - **Contraintes**:
           - Les cartes doivent être sélectionnées de manière aléatoire parmi un ensemble prédéfini.
           - Le deck doit être équilibré avec un nombre approprié d'unités et de sorts.
