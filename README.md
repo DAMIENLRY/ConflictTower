@@ -153,7 +153,7 @@ classDiagram
     EnumCard --> ArcherCard : includes
 ```
 
-- ** Diagramme de classes**:
+- **Diagramme de classes**:
 
 ```mermaid
 stateDiagram-v2
